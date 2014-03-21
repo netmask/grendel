@@ -1,17 +1,17 @@
 package com.wesabe.grendel.modules.tests;
 
-import static org.fest.assertions.Assertions.*;
-
-import java.security.SecureRandom;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import com.wesabe.grendel.modules.SecureRandomProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import com.wesabe.grendel.modules.SecureRandomProvider;
+import java.security.SecureRandom;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
+
+import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(Enclosed.class)
 public class SecureRandomProviderTest {
@@ -20,7 +20,7 @@ public class SecureRandomProviderTest {
 		
 		@Before
 		public void setup() throws Exception {
-			Logger.getLogger(SecureRandomProvider.class.getCanonicalName()).setLevel(Level.OFF);
+			getLogger(SecureRandomProvider.class.getCanonicalName()).setLevel(Level.OFF);
 			this.provider = new SecureRandomProvider();
 		}
 		

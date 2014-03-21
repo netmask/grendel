@@ -1,15 +1,15 @@
 package com.wesabe.grendel.resources.tests;
 
-import static org.fest.assertions.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import java.net.URI;
-import java.util.List;
-
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-
+import com.google.common.collect.ImmutableList;
+import static com.google.common.collect.ImmutableList.of;
+import com.wesabe.grendel.entities.User;
+import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.openpgp.KeySet;
+import com.wesabe.grendel.openpgp.KeySetGenerator;
+import com.wesabe.grendel.representations.CreateUserRepresentation;
+import com.wesabe.grendel.representations.UserListRepresentation.UserListItem;
+import com.wesabe.grendel.representations.ValidationException;
+import com.wesabe.grendel.resources.UsersResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -19,15 +19,17 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.google.common.collect.ImmutableList;
-import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.UserDAO;
-import com.wesabe.grendel.openpgp.KeySet;
-import com.wesabe.grendel.openpgp.KeySetGenerator;
-import com.wesabe.grendel.representations.CreateUserRepresentation;
-import com.wesabe.grendel.representations.ValidationException;
-import com.wesabe.grendel.representations.UserListRepresentation.UserListItem;
-import com.wesabe.grendel.resources.UsersResource;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
+import static java.net.URI.create;
+import java.util.List;
+import static javax.ws.rs.core.UriBuilder.fromUri;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.ArgumentCaptor.forClass;
+import static org.mockito.Mockito.*;
 
 @RunWith(Enclosed.class)
 public class UsersResourceTest {
@@ -57,7 +59,7 @@ public class UsersResourceTest {
 			when(uriInfo.getBaseUriBuilder()).thenAnswer(new Answer<UriBuilder>() {
 				@Override
 				public UriBuilder answer(InvocationOnMock invocation) throws Throwable {
-					return UriBuilder.fromUri("http://example.com");
+					return fromUri("http://example.com");
 				}
 			});
 			
@@ -65,7 +67,7 @@ public class UsersResourceTest {
 			when(user.getId()).thenReturn("mrpeeper");
 			when(user.toString()).thenReturn("mrpeeper");
 			
-			when(userDAO.findAll()).thenReturn(ImmutableList.of(user));
+			when(userDAO.findAll()).thenReturn(of(user));
 		}
 		
 		@Test
@@ -110,14 +112,14 @@ public class UsersResourceTest {
 
 			this.user = mock(User.class);
 			
-			when(generator.generate(Mockito.anyString(), Mockito.any(char[].class))).thenReturn(keySet);
+			when(generator.generate(anyString(), any(char[].class))).thenReturn(keySet);
 			
-			when(userDAO.contains(Mockito.anyString())).thenReturn(false);
-			when(userDAO.saveOrUpdate(Mockito.any(User.class))).thenReturn(user);
+			when(userDAO.contains(anyString())).thenReturn(false);
+			when(userDAO.saveOrUpdate(any(User.class))).thenReturn(user);
 			
 			this.uriBuilder = mock(UriBuilder.class);
-			when(uriBuilder.path(Mockito.any(Class.class))).thenReturn(uriBuilder);
-			when(uriBuilder.build(Mockito.anyVararg())).thenReturn(URI.create("http://example.com/woot/"));
+			when(uriBuilder.path(any(Class.class))).thenReturn(uriBuilder);
+			when(uriBuilder.build(anyVararg())).thenReturn(create("http://example.com/woot/"));
 			when(uriInfo.getBaseUriBuilder()).thenReturn(uriBuilder);
 		}
 		
@@ -146,8 +148,8 @@ public class UsersResourceTest {
 		public void itGeneratesAKeySet() throws Exception {
 			resource.create(uriInfo, request);
 			
-			final ArgumentCaptor<char[]> password = ArgumentCaptor.forClass(char[].class);
-			verify(generator).generate(Mockito.eq("username"), password.capture());
+			final ArgumentCaptor<char[]> password = forClass(char[].class);
+			verify(generator).generate(eq("username"), password.capture());
 			assertThat(password.getValue()).isEqualTo("password".toCharArray());
 		}
 		
@@ -155,7 +157,7 @@ public class UsersResourceTest {
 		public void itCreatesANewUser() throws Exception {
 			resource.create(uriInfo, request);
 			
-			final ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+			final ArgumentCaptor<User> userCaptor = forClass(User.class);
 			verify(userDAO).saveOrUpdate(userCaptor.capture());
 			
 			assertThat(userCaptor.getValue().getKeySet()).isSameAs(keySet);
@@ -166,7 +168,7 @@ public class UsersResourceTest {
 			final Response r = resource.create(uriInfo, request);
 			
 			assertThat(r.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
-			assertThat(r.getMetadata().getFirst("Location")).isEqualTo(URI.create("http://example.com/woot/"));
+			assertThat(r.getMetadata().getFirst("Location")).isEqualTo(create("http://example.com/woot/"));
 		}
 	}
 	
@@ -185,7 +187,7 @@ public class UsersResourceTest {
 			when(request.getId()).thenReturn("username");
 			when(request.getPassword()).thenReturn("password".toCharArray());
 			
-			when(userDAO.contains(Mockito.anyString())).thenReturn(true);
+			when(userDAO.contains(anyString())).thenReturn(true);
 		}
 		
 		@Test

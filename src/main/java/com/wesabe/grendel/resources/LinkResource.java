@@ -1,16 +1,5 @@
 package com.wesabe.grendel.resources;
 
-import java.security.SecureRandom;
-
-import javax.ws.rs.DELETE;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.wesabe.grendel.auth.Credentials;
@@ -22,6 +11,13 @@ import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
 import com.wideplay.warp.persist.Transactional;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.security.SecureRandom;
+import static javax.ws.rs.core.Response.noContent;
 
 @Path("/users/{user_id}/documents/{name}/links/{reader_id}")
 public class LinkResource {
@@ -51,7 +47,7 @@ public class LinkResource {
 		
 		documentDAO.saveOrUpdate(doc);
 		
-		return Response.noContent().build();
+		return noContent().build();
 	}
 	
 	@DELETE
@@ -69,7 +65,7 @@ public class LinkResource {
 		
 		documentDAO.saveOrUpdate(doc);
 		
-		return Response.noContent().build();
+		return noContent().build();
 	}
 
 	private void reEncrypt(Document doc, UnlockedKeySet ownerKeySet) {

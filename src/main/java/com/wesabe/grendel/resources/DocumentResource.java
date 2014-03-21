@@ -1,28 +1,5 @@
 package com.wesabe.grendel.resources;
 
-import java.security.SecureRandom;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.EntityTag;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.Response.Status;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.wesabe.grendel.auth.Credentials;
@@ -32,6 +9,16 @@ import com.wesabe.grendel.entities.dao.DocumentDAO;
 import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wideplay.warp.persist.Transactional;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
+import java.security.SecureRandom;
+import static javax.ws.rs.core.Response.noContent;
+import static javax.ws.rs.core.Response.ok;
 
 /**
  * A class which exposes {@link Document} as a resource.
@@ -84,7 +71,7 @@ public class DocumentResource {
 		checkPreconditions(request, doc);
 		
 		final byte[] body = doc.decryptBody(session.getKeySet());
-		return Response.ok()
+		return ok()
 				.entity(body)
 				.type(doc.getContentType())
 				.cacheControl(CACHE_SETTINGS)
@@ -112,7 +99,7 @@ public class DocumentResource {
 		checkPreconditions(request, doc);
 		
 		documentDAO.delete(doc);
-		return Response.noContent().build();
+		return noContent().build();
 	}
 	
 	/**
@@ -145,8 +132,7 @@ public class DocumentResource {
 		
 		documentDAO.saveOrUpdate(doc);
 			
-		return Response
-				.noContent()
+		return noContent()
 				.tag(doc.getEtag())
 				.build();
 	}

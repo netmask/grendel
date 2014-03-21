@@ -1,14 +1,14 @@
 package com.wesabe.grendel.openpgp.tests;
 
-import static org.fest.assertions.Assertions.*;
-
+import com.google.common.collect.ImmutableList;
+import static com.google.common.collect.ImmutableList.of;
+import com.wesabe.grendel.openpgp.SymmetricAlgorithm;
 import org.bouncycastle.bcpg.SymmetricKeyAlgorithmTags;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import com.google.common.collect.ImmutableList;
-import com.wesabe.grendel.openpgp.SymmetricAlgorithm;
+import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(Enclosed.class)
 public class SymmetricAlgorithmTest {
@@ -163,7 +163,7 @@ public class SymmetricAlgorithmTest {
 		@Test
 		public void itOnlySpecifiesAESUsage() throws Exception {
 			assertThat(SymmetricAlgorithm.ACCEPTABLE_ALGORITHMS)
-				.isEqualTo(ImmutableList.of(
+				.isEqualTo(of(
 					SymmetricAlgorithm.AES_128,
 					SymmetricAlgorithm.AES_192,
 					SymmetricAlgorithm.AES_256

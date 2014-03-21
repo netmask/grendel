@@ -1,17 +1,5 @@
 package com.wesabe.grendel.resources;
 
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-
 import com.google.inject.Inject;
 import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.entities.dao.UserDAO;
@@ -22,6 +10,14 @@ import com.wesabe.grendel.representations.CreateUserRepresentation;
 import com.wesabe.grendel.representations.UserListRepresentation;
 import com.wesabe.grendel.representations.ValidationException;
 import com.wideplay.warp.persist.Transactional;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.util.List;
+import static javax.ws.rs.core.Response.created;
 
 /**
  * A resource for managing the collection of registered {@link User}s.
@@ -77,7 +73,7 @@ public class UsersResource {
 		
 		request.sanitize();
 		
-		return Response.created(
+		return created(
 			uriInfo.getBaseUriBuilder()
 						.path(UserResource.class)
 						.build(user)

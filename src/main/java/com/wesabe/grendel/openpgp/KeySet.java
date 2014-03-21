@@ -1,17 +1,14 @@
 package com.wesabe.grendel.openpgp;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.List;
-
+import com.wesabe.grendel.util.Iterators;
+import static com.wesabe.grendel.util.Iterators.toList;
 import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPSecretKey;
 import org.bouncycastle.openpgp.PGPSecretKeyRing;
 
-import com.wesabe.grendel.util.Iterators;
+import java.io.*;
+import static java.lang.String.format;
+import java.util.List;
 
 /**
  * A {@link MasterKey} and {@link SubKey} pair.
@@ -35,7 +32,7 @@ public class KeySet {
 	 * Loads a {@link KeySet} from a {@link PGPSecretKeyRing}.
 	 */
 	public static KeySet load(PGPSecretKeyRing keyRing) throws CryptographicException {
-		final List<PGPSecretKey> secretKeys = Iterators.toList(keyRing.getSecretKeys());
+		final List<PGPSecretKey> secretKeys = toList(keyRing.getSecretKeys());
 		final MasterKey masterKey = MasterKey.load(secretKeys.get(0));
 		final SubKey subKey = SubKey.load(secretKeys.get(1), masterKey);
 		
@@ -50,9 +47,7 @@ public class KeySet {
 			final PGPSecretKeyRing keyRing = new PGPSecretKeyRing(input);
 			input.close();
 			return load(keyRing);
-		} catch (IOException e) {
-			throw new CryptographicException(e);
-		} catch (PGPException e) {
+		} catch (IOException | PGPException e) {
 			throw new CryptographicException(e);
 		}
 	}
@@ -109,7 +104,7 @@ public class KeySet {
 	
 	@Override
 	public String toString() {
-		return String.format("[%s, %s]", masterKey, subKey);
+		return format("[%s, %s]", masterKey, subKey);
 	}
 	
 	/**

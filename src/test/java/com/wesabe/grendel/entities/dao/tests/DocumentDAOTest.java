@@ -1,11 +1,9 @@
 package com.wesabe.grendel.entities.dao.tests;
 
-import static org.fest.assertions.Assertions.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-
-import javax.ws.rs.core.MediaType;
-
+import com.google.inject.Provider;
+import com.wesabe.grendel.entities.Document;
+import com.wesabe.grendel.entities.User;
+import com.wesabe.grendel.entities.dao.DocumentDAO;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.junit.Before;
@@ -15,10 +13,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 
-import com.google.inject.Provider;
-import com.wesabe.grendel.entities.Document;
-import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.DocumentDAO;
+import javax.ws.rs.core.MediaType;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
 
 @RunWith(Enclosed.class)
 public class DocumentDAOTest {
@@ -53,8 +52,8 @@ public class DocumentDAOTest {
 			this.name = "woohoo.txt";
 			
 			this.query = mock(Query.class);
-			when(query.setString(Mockito.anyString(), Mockito.anyString())).thenReturn(query);
-			when(query.setParameter(Mockito.anyString(), Mockito.anyObject())).thenReturn(query);
+			when(query.setString(anyString(), anyString())).thenReturn(query);
+			when(query.setParameter(anyString(), anyObject())).thenReturn(query);
 			when(query.uniqueResult()).thenReturn(doc);
 			
 			when(session.getNamedQuery(anyString())).thenReturn(query);

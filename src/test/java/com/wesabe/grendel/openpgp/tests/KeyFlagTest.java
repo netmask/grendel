@@ -1,13 +1,14 @@
 package com.wesabe.grendel.openpgp.tests;
 
-import static org.fest.assertions.Assertions.*;
-
+import com.google.common.collect.ImmutableSet;
+import static com.google.common.collect.ImmutableSet.of;
+import static com.google.common.collect.ImmutableSet.of;
+import com.wesabe.grendel.openpgp.KeyFlag;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import com.google.common.collect.ImmutableSet;
-import com.wesabe.grendel.openpgp.KeyFlag;
+import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(Enclosed.class)
 public class KeyFlagTest {
@@ -56,14 +57,14 @@ public class KeyFlagTest {
 	public static class Default_Flags_For_Master_Keys {
 		@Test
 		public void itCanSignBeSplitAndCanAuthenticate() throws Exception {
-			assertThat(KeyFlag.MASTER_KEY_DEFAULTS).isEqualTo(ImmutableSet.of(KeyFlag.AUTHENTICATION, KeyFlag.SIGNING, KeyFlag.SPLIT));
+			assertThat(KeyFlag.MASTER_KEY_DEFAULTS).isEqualTo(of(KeyFlag.AUTHENTICATION, KeyFlag.SIGNING, KeyFlag.SPLIT));
 		}
 	}
 	
 	public static class Default_Flags_For_Sub_Keys {
 		@Test
 		public void itCanSignBeSplitAndCanAuthenticate() throws Exception {
-			assertThat(KeyFlag.SUB_KEY_DEFAULTS).isEqualTo(ImmutableSet.of(KeyFlag.ENCRYPTION, KeyFlag.SPLIT));
+			assertThat(KeyFlag.SUB_KEY_DEFAULTS).isEqualTo(of(KeyFlag.ENCRYPTION, KeyFlag.SPLIT));
 		}
 	}
 }

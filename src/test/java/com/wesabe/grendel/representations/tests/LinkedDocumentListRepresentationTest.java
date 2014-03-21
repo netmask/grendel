@@ -1,13 +1,12 @@
 package com.wesabe.grendel.representations.tests;
 
-import static org.fest.assertions.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import java.util.List;
-
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-
+import com.google.common.collect.ImmutableList;
+import static com.google.common.collect.ImmutableList.copyOf;
+import com.google.common.collect.ImmutableSet;
+import static com.google.common.collect.ImmutableSet.of;
+import com.wesabe.grendel.entities.Document;
+import com.wesabe.grendel.entities.User;
+import com.wesabe.grendel.representations.LinkedDocumentListRepresentation;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
@@ -18,11 +17,14 @@ import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.wesabe.grendel.entities.Document;
-import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.representations.LinkedDocumentListRepresentation;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
+import java.util.List;
+import static javax.ws.rs.core.UriBuilder.fromUri;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(Enclosed.class)
 public class LinkedDocumentListRepresentationTest {
@@ -38,7 +40,7 @@ public class LinkedDocumentListRepresentationTest {
 			when(uriInfo.getBaseUriBuilder()).thenAnswer(new Answer<UriBuilder>() {
 				@Override
 				public UriBuilder answer(InvocationOnMock invocation) throws Throwable {
-					return UriBuilder.fromUri("http://example.com");
+					return fromUri("http://example.com");
 				}
 			});
 			
@@ -54,7 +56,7 @@ public class LinkedDocumentListRepresentationTest {
 			this.user = mock(User.class);
 			when(user.getId()).thenReturn("capnfrank");
 			when(user.toString()).thenReturn("capnfrank");
-			when(user.getLinkedDocuments()).thenReturn(ImmutableSet.of(doc));
+			when(user.getLinkedDocuments()).thenReturn(of(doc));
 			
 			this.rep = new LinkedDocumentListRepresentation(uriInfo, user);
 		}
@@ -65,7 +67,7 @@ public class LinkedDocumentListRepresentationTest {
 			final String json = mapper.writeValueAsString(rep);
 			
 			final ObjectNode entity = mapper.readValue(json, ObjectNode.class);
-			final List<JsonNode> documents = ImmutableList.copyOf(entity.get("linked-documents").getElements());
+			final List<JsonNode> documents = copyOf(entity.get("linked-documents").getElements());
 			
 			assertThat(documents).hasSize(1);
 			

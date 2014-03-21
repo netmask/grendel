@@ -1,9 +1,9 @@
 package com.wesabe.grendel.openpgp;
 
-import java.util.Set;
-
 import com.google.common.collect.ImmutableSet;
 import com.wesabe.grendel.util.IntegerEquivalent;
+
+import java.util.Set;
 
 /**
  * Flags for OpenPGP keys.

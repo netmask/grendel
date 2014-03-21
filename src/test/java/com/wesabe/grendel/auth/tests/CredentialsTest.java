@@ -1,18 +1,5 @@
 package com.wesabe.grendel.auth.tests;
 
-import static org.fest.assertions.Assertions.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response.Status;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
-
 import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.User;
@@ -20,6 +7,18 @@ import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.KeySet;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response.Status;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.*;
 
 @RunWith(Enclosed.class)
 public class CredentialsTest {

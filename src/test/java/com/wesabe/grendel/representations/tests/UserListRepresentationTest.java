@@ -1,13 +1,10 @@
 package com.wesabe.grendel.representations.tests;
 
-import static org.fest.assertions.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import java.util.List;
-
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-
+import com.google.common.collect.ImmutableList;
+import static com.google.common.collect.ImmutableList.copyOf;
+import static com.google.common.collect.ImmutableList.of;
+import com.wesabe.grendel.entities.User;
+import com.wesabe.grendel.representations.UserListRepresentation;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
@@ -18,9 +15,14 @@ import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.google.common.collect.ImmutableList;
-import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.representations.UserListRepresentation;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
+import java.util.List;
+import static javax.ws.rs.core.UriBuilder.fromUri;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(Enclosed.class)
 public class UserListRepresentationTest {
@@ -35,7 +37,7 @@ public class UserListRepresentationTest {
 			when(uriInfo.getBaseUriBuilder()).thenAnswer(new Answer<UriBuilder>() {
 				@Override
 				public UriBuilder answer(InvocationOnMock invocation) throws Throwable {
-					return UriBuilder.fromUri("http://example.com");
+					return fromUri("http://example.com");
 				}
 			});
 			
@@ -43,7 +45,7 @@ public class UserListRepresentationTest {
 			when(user.getId()).thenReturn("mrpeepers");
 			when(user.toString()).thenReturn("mrpeepers");
 			
-			this.rep = new UserListRepresentation(uriInfo, ImmutableList.of(user));
+			this.rep = new UserListRepresentation(uriInfo, of(user));
 		}
 		
 		@Test
@@ -52,7 +54,7 @@ public class UserListRepresentationTest {
 			final String json = mapper.writeValueAsString(rep);
 			
 			final ObjectNode entity = mapper.readValue(json, ObjectNode.class);
-			final List<JsonNode> users = ImmutableList.copyOf(entity.get("users").getElements());
+			final List<JsonNode> users = copyOf(entity.get("users").getElements());
 			
 			assertThat(users).hasSize(1);
 			

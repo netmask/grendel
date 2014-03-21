@@ -1,16 +1,15 @@
 package com.wesabe.grendel.auth.tests;
 
-import static org.fest.assertions.Assertions.*;
-import static org.mockito.Mockito.*;
-
+import com.wesabe.grendel.auth.Session;
+import com.wesabe.grendel.entities.User;
+import com.wesabe.grendel.openpgp.UnlockedKeySet;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import com.wesabe.grendel.auth.Session;
-import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.openpgp.UnlockedKeySet;
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 @RunWith(Enclosed.class)
 public class SessionTest {

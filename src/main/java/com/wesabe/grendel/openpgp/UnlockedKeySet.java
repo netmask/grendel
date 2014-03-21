@@ -1,10 +1,11 @@
 package com.wesabe.grendel.openpgp;
 
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
-
 import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPSecretKey;
+
+import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
+import static org.bouncycastle.openpgp.PGPSecretKey.copyWithNewPassword;
 
 /**
  * An unlocked {@link KeySet}.
@@ -47,7 +48,7 @@ public class UnlockedKeySet extends KeySet {
 	 */
 	public KeySet relock(char[] oldPassphrase, char[] newPassphrase, SecureRandom random) throws CryptographicException {
 		try {
-			final PGPSecretKey masterSecretKey = PGPSecretKey.copyWithNewPassword(
+			final PGPSecretKey masterSecretKey = copyWithNewPassword(
 				getUnlockedMasterKey().getSecretKey(),
 				oldPassphrase,
 				newPassphrase,
@@ -55,7 +56,7 @@ public class UnlockedKeySet extends KeySet {
 				random,
 				"BC"
 			);
-			final PGPSecretKey subSecretKey = PGPSecretKey.copyWithNewPassword(
+			final PGPSecretKey subSecretKey = copyWithNewPassword(
 				getUnlockedSubKey().getSecretKey(),
 				oldPassphrase,
 				newPassphrase,
@@ -68,9 +69,7 @@ public class UnlockedKeySet extends KeySet {
 			final SubKey newSubKey = new SubKey(subSecretKey, newMasterKey);
 			
 			return new KeySet(newMasterKey, newSubKey);
-		} catch (NoSuchProviderException e) {
-			throw new CryptographicException(e);
-		} catch (PGPException e) {
+		} catch (NoSuchProviderException | PGPException e) {
 			throw new CryptographicException(e);
 		}
 	}

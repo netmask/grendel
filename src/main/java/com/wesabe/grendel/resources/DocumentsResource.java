@@ -1,5 +1,12 @@
 package com.wesabe.grendel.resources;
 
+import com.google.inject.Inject;
+import com.wesabe.grendel.auth.Credentials;
+import com.wesabe.grendel.auth.Session;
+import com.wesabe.grendel.entities.Document;
+import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.representations.DocumentListRepresentation;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -7,13 +14,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-
-import com.google.inject.Inject;
-import com.wesabe.grendel.auth.Credentials;
-import com.wesabe.grendel.auth.Session;
-import com.wesabe.grendel.entities.Document;
-import com.wesabe.grendel.entities.dao.UserDAO;
-import com.wesabe.grendel.representations.DocumentListRepresentation;
 
 /**
  * A class which exposes a list of {@link Document}s as a resource.

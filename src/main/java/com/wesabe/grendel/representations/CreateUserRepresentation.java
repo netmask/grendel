@@ -1,9 +1,10 @@
 package com.wesabe.grendel.representations;
 
-import java.util.Arrays;
-
 import org.codehaus.jackson.annotate.JsonGetter;
 import org.codehaus.jackson.annotate.JsonSetter;
+
+import static java.util.Arrays.copyOf;
+import static java.util.Arrays.fill;
 
 
 /**
@@ -37,8 +38,8 @@ public class CreateUserRepresentation implements Validatable {
 	
 	@JsonSetter("password")
 	public void setPassword(char[] password) {
-		this.password = Arrays.copyOf(password, password.length);
-		Arrays.fill(password, '\0');
+		this.password = copyOf(password, password.length);
+		fill(password, '\0');
 	}
 	
 	@JsonSetter("id")
@@ -47,7 +48,7 @@ public class CreateUserRepresentation implements Validatable {
 	}
 	
 	public void sanitize() {
-		Arrays.fill(password, '\0');
+		fill(password, '\0');
 	}
 
 	@Override

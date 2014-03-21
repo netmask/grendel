@@ -1,27 +1,5 @@
 package com.wesabe.grendel.resources.tests;
 
-import static org.fest.assertions.Assertions.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
-import org.mockito.InOrder;
-
 import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
@@ -30,6 +8,28 @@ import com.wesabe.grendel.entities.dao.DocumentDAO;
 import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
 import com.wesabe.grendel.resources.LinkedDocumentResource;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
+import org.mockito.InOrder;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.text.DateFormat;
+import static java.text.DateFormat.getDateTimeInstance;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
+import static java.util.TimeZone.getTimeZone;
+import static javax.ws.rs.core.MediaType.valueOf;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.*;
 
 @RunWith(Enclosed.class)
 public class LinkedDocumentResourceTest {
@@ -118,12 +118,12 @@ public class LinkedDocumentResourceTest {
 		public void itReturnsTheDecryptedDocument() throws Exception {
 			final Response r = resource.show(credentials, "bob", "frank", "document1.txt");
 			
-			SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateTimeInstance();
-			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+			SimpleDateFormat formatter = (SimpleDateFormat) getDateTimeInstance();
+			formatter.setTimeZone(getTimeZone("UTC"));
 			formatter.applyPattern("EEE MMM dd HH:mm:ss z yyyy");
 			
 			assertThat(r.getStatus()).isEqualTo(Status.OK.getStatusCode());
-			assertThat(r.getMetadata().getFirst("Content-Type")).isEqualTo(MediaType.valueOf("text/plain"));
+			assertThat(r.getMetadata().getFirst("Content-Type")).isEqualTo(valueOf("text/plain"));
 			assertThat(r.getMetadata().getFirst("Cache-Control").toString()).isEqualTo("private, no-cache, no-store, no-transform");
 			assertThat(formatter.format(r.getMetadata().getFirst("Last-Modified"))).isEqualTo("Tue Dec 29 08:42:32 UTC 2009");
 			assertThat((byte[]) r.getEntity()).isEqualTo("yay for everyone".getBytes());

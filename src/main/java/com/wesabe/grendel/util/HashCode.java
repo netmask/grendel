@@ -1,6 +1,7 @@
 package com.wesabe.grendel.util;
 
 import java.util.Arrays;
+import static java.util.Arrays.deepHashCode;
 
 /**
  * A simple utility singleton for generating hash codes.
@@ -11,6 +12,6 @@ public class HashCode {
 	private HashCode() {}
 	
 	public static int calculate(Object... objects) {
-		return Arrays.deepHashCode(objects);
+		return deepHashCode(objects);
 	}
 }

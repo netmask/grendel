@@ -1,16 +1,18 @@
 package com.wesabe.grendel.openpgp;
 
-import java.security.SignatureException;
-import java.util.List;
-import java.util.Set;
-
+import com.wesabe.grendel.util.IntegerEquivalents;
+import static com.wesabe.grendel.util.IntegerEquivalents.fromBitmask;
+import static com.wesabe.grendel.util.IntegerEquivalents.fromInt;
+import static com.wesabe.grendel.util.IntegerEquivalents.fromIntArray;
 import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPSignature;
 import org.bouncycastle.openpgp.PGPSignatureSubpacketVector;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import com.wesabe.grendel.util.IntegerEquivalents;
+import java.security.SignatureException;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A signature on a {@link MasterKey} or {@link SubKey}.
@@ -35,14 +37,14 @@ public class KeySignature {
 	 * Returns the type of signature {@code this} is.
 	 */
 	public SignatureType getSignatureType() {
-		return IntegerEquivalents.fromInt(SignatureType.class, signature.getSignatureType());
+		return fromInt(SignatureType.class, signature.getSignatureType());
 	}
 	
 	/**
 	 * Returns the {@link HashAlgorithm} used to make the signature.
 	 */
 	public HashAlgorithm getHashAlgorithm() {
-		return IntegerEquivalents.fromInt(HashAlgorithm.class, signature.getHashAlgorithm());
+		return fromInt(HashAlgorithm.class, signature.getHashAlgorithm());
 	}
 	
 	/**
@@ -56,7 +58,7 @@ public class KeySignature {
 	 * Returns the {@link AsymmetricAlgorithm} used to make the signature.
 	 */
 	public AsymmetricAlgorithm getKeyAlgorithm() {
-		return IntegerEquivalents.fromInt(AsymmetricAlgorithm.class, signature.getKeyAlgorithm());
+		return fromInt(AsymmetricAlgorithm.class, signature.getKeyAlgorithm());
 	}
 
 	/**
@@ -70,28 +72,28 @@ public class KeySignature {
 	 * Returns the {@link KeyFlag}s asserted by the signature.
 	 */
 	public Set<KeyFlag> getKeyFlags() {
-		return IntegerEquivalents.fromBitmask(KeyFlag.class, subpackets.getKeyFlags());
+		return fromBitmask(KeyFlag.class, subpackets.getKeyFlags());
 	}
 	
 	/**
 	 * Returns a list of the preferred {@link SymmetricAlgorithm}s of the key.
 	 */
 	public List<SymmetricAlgorithm> getPreferredSymmetricAlgorithms() {
-		return IntegerEquivalents.fromIntArray(SymmetricAlgorithm.class, subpackets.getPreferredSymmetricAlgorithms());
+		return fromIntArray(SymmetricAlgorithm.class, subpackets.getPreferredSymmetricAlgorithms());
 	}
 	
 	/**
 	 * Returns a list of the preferred {@link CompressionAlgorithm}s of the key.
 	 */
 	public List<CompressionAlgorithm> getPreferredCompressionAlgorithms() {
-		return IntegerEquivalents.fromIntArray(CompressionAlgorithm.class, subpackets.getPreferredCompressionAlgorithms());
+		return fromIntArray(CompressionAlgorithm.class, subpackets.getPreferredCompressionAlgorithms());
 	}
 	
 	/**
 	 * Returns a list of the preferred {@link HashAlgorithm}s of the key.
 	 */
 	public List<HashAlgorithm> getPreferredHashAlgorithms() {
-		return IntegerEquivalents.fromIntArray(HashAlgorithm.class, subpackets.getPreferredHashAlgorithms());
+		return fromIntArray(HashAlgorithm.class, subpackets.getPreferredHashAlgorithms());
 	}
 	
 	/**
@@ -104,9 +106,7 @@ public class KeySignature {
 		try {
 			signature.initVerify(key.getPublicKey(), "BC");
 			return signature.verifyCertification(key.getUserID(), key.getPublicKey());
-		} catch (PGPException e) {
-			return false;
-		} catch (SignatureException e) {
+		} catch (PGPException | SignatureException e) {
 			return false;
 		} catch (Exception e) {
 			throw new RuntimeException(e);

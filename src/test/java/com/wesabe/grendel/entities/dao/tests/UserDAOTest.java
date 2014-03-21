@@ -1,10 +1,10 @@
 package com.wesabe.grendel.entities.dao.tests;
 
-import static org.fest.assertions.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import java.io.Serializable;
-
+import com.google.common.collect.ImmutableList;
+import static com.google.common.collect.ImmutableList.of;
+import com.google.inject.Provider;
+import com.wesabe.grendel.entities.User;
+import com.wesabe.grendel.entities.dao.UserDAO;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.junit.Before;
@@ -14,10 +14,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 
-import com.google.common.collect.ImmutableList;
-import com.google.inject.Provider;
-import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.UserDAO;
+import java.io.Serializable;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @RunWith(Enclosed.class)
 public class UserDAOTest {
@@ -45,7 +45,7 @@ public class UserDAOTest {
 			super.setup();
 			
 			this.query = mock(Query.class);
-			when(query.setString(Mockito.anyString(), Mockito.anyString())).thenReturn(query);
+			when(query.setString(anyString(), anyString())).thenReturn(query);
 			
 			when(session.getNamedQuery(anyString())).thenReturn(query);
 		}
@@ -87,7 +87,7 @@ public class UserDAOTest {
 		
 		@Test
 		public void itReturnsTheUser() throws Exception {
-			when(session.get(Mockito.any(Class.class), Mockito.any(Serializable.class))).thenReturn(user);
+			when(session.get(any(Class.class), any(Serializable.class))).thenReturn(user);
 			
 			assertThat(dao.findById("woo")).isEqualTo(user);
 		}
@@ -112,7 +112,7 @@ public class UserDAOTest {
 			this.user = mock(User.class);
 			this.query = mock(Query.class);
 			
-			when(session.getNamedQuery(Mockito.anyString())).thenReturn(query);
+			when(session.getNamedQuery(anyString())).thenReturn(query);
 		}
 		
 		@Test
@@ -124,7 +124,7 @@ public class UserDAOTest {
 		
 		@Test
 		public void itReturnsTheUsers() throws Exception {
-			when(query.list()).thenReturn(ImmutableList.of(user));
+			when(query.list()).thenReturn(of(user));
 
 			assertThat(dao.findAll()).containsOnly(user);
 		}

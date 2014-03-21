@@ -1,11 +1,8 @@
 package com.wesabe.grendel.entities.tests;
 
-import static org.fest.assertions.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-
+import com.wesabe.grendel.entities.User;
+import com.wesabe.grendel.openpgp.KeySet;
+import static com.wesabe.grendel.openpgp.KeySet.load;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
 import org.joda.time.DateTimeZone;
@@ -15,8 +12,14 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.openpgp.KeySet;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.joda.time.DateTimeUtils.setCurrentMillisFixed;
+import static org.joda.time.DateTimeUtils.setCurrentMillisSystem;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(Enclosed.class)
 public class UserTest {
@@ -27,7 +30,7 @@ public class UserTest {
 		@Before
 		public void setup() throws Exception {
 			this.now = new DateTime(2009, 12, 27, 10, 0, 43, 0, DateTimeZone.UTC);
-			DateTimeUtils.setCurrentMillisFixed(now.getMillis());
+			setCurrentMillisFixed(now.getMillis());
 			
 			this.keySet = mock(KeySet.class);
 			when(keySet.getUserID()).thenReturn("user");
@@ -35,7 +38,7 @@ public class UserTest {
 		
 		@After
 		public void teardown() {
-			DateTimeUtils.setCurrentMillisSystem();
+			setCurrentMillisSystem();
 		}
 		
 		@Test
@@ -87,15 +90,16 @@ public class UserTest {
 		
 		@Before
 		public void setup() throws Exception {
-			final FileInputStream keyRingFile = new FileInputStream("src/test/resources/secret-keyring.gpg");
-			final ByteArrayOutputStream output = new ByteArrayOutputStream();
-			byte[] buffer = new byte[4096];
-			int r = 0;
-			while ((r = keyRingFile.read(buffer)) >= 0) {
-				output.write(buffer, 0, r);
-			}
-			keyRingFile.close();
-			this.user = new User(KeySet.load(output.toByteArray()));
+			final ByteArrayOutputStream output;
+            try (FileInputStream keyRingFile = new FileInputStream("src/test/resources/secret-keyring.gpg")) {
+                output = new ByteArrayOutputStream();
+                byte[] buffer = new byte[4096];
+                int r = 0;
+                while ((r = keyRingFile.read(buffer)) >= 0) {
+                    output.write(buffer, 0, r);
+                }
+            }
+			this.user = new User(load(output.toByteArray()));
 		}
 		
 		@Test

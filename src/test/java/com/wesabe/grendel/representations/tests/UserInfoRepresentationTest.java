@@ -1,11 +1,8 @@
 package com.wesabe.grendel.representations.tests;
 
-import static org.fest.assertions.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-
+import com.wesabe.grendel.entities.User;
+import com.wesabe.grendel.openpgp.KeySet;
+import com.wesabe.grendel.representations.UserInfoRepresentation;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 import org.joda.time.DateTime;
@@ -17,9 +14,13 @@ import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.openpgp.KeySet;
-import com.wesabe.grendel.representations.UserInfoRepresentation;
+import javax.ws.rs.core.UriBuilder;
+import static javax.ws.rs.core.UriBuilder.fromUri;
+import javax.ws.rs.core.UriInfo;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(Enclosed.class)
 public class UserInfoRepresentationTest {
@@ -35,7 +36,7 @@ public class UserInfoRepresentationTest {
 			when(uriInfo.getBaseUriBuilder()).thenAnswer(new Answer<UriBuilder>() {
 				@Override
 				public UriBuilder answer(InvocationOnMock invocation) throws Throwable {
-					return UriBuilder.fromUri("http://example.com");
+					return fromUri("http://example.com");
 				}
 			});
 			

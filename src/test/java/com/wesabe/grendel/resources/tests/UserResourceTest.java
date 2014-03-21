@@ -1,21 +1,15 @@
 package com.wesabe.grendel.resources.tests;
 
-import static org.fest.assertions.Assertions.*;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-
-import java.security.SecureRandom;
-import java.util.Date;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.EntityTag;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Response.Status;
-
+import com.google.inject.Provider;
+import com.wesabe.grendel.auth.Credentials;
+import com.wesabe.grendel.auth.Session;
+import com.wesabe.grendel.entities.User;
+import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.openpgp.KeySet;
+import com.wesabe.grendel.openpgp.UnlockedKeySet;
+import com.wesabe.grendel.representations.UpdateUserRepresentation;
+import com.wesabe.grendel.representations.UserInfoRepresentation;
+import com.wesabe.grendel.resources.UserResource;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Before;
@@ -27,16 +21,20 @@ import org.mockito.InOrder;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.google.inject.Provider;
-import com.wesabe.grendel.auth.Credentials;
-import com.wesabe.grendel.auth.Session;
-import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.UserDAO;
-import com.wesabe.grendel.openpgp.KeySet;
-import com.wesabe.grendel.openpgp.UnlockedKeySet;
-import com.wesabe.grendel.representations.UpdateUserRepresentation;
-import com.wesabe.grendel.representations.UserInfoRepresentation;
-import com.wesabe.grendel.resources.UserResource;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.*;
+import javax.ws.rs.core.Response.Status;
+import java.security.SecureRandom;
+import java.util.Date;
+import static javax.ws.rs.core.Response.notModified;
+import static javax.ws.rs.core.UriBuilder.fromUri;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.fail;
+import static org.mockito.ArgumentCaptor.forClass;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 @RunWith(Enclosed.class)
 public class UserResourceTest {
@@ -65,7 +63,7 @@ public class UserResourceTest {
 			when(uriInfo.getBaseUriBuilder()).thenAnswer(new Answer<UriBuilder>() {
 				@Override
 				public UriBuilder answer(InvocationOnMock invocation) throws Throwable {
-					return UriBuilder.fromUri("http://example.com");
+					return fromUri("http://example.com");
 				}
 			});
 			
@@ -111,7 +109,7 @@ public class UserResourceTest {
 		
 		@Test
 		public void itReturnsIfPreconditionsFail() throws Exception {
-			when(request.evaluatePreconditions(any(Date.class), any(EntityTag.class))).thenReturn(Response.notModified());
+			when(request.evaluatePreconditions(any(Date.class), any(EntityTag.class))).thenReturn(notModified());
 			
 			try {
 				resource.show(request, uriInfo, "bob");
@@ -148,7 +146,7 @@ public class UserResourceTest {
 		
 		@Test
 		public void itReturnsIfPreconditionsFail() throws Exception {
-			when(request.evaluatePreconditions(any(Date.class), any(EntityTag.class))).thenReturn(Response.notModified());
+			when(request.evaluatePreconditions(any(Date.class), any(EntityTag.class))).thenReturn(notModified());
 			
 			try {
 				resource.delete(request, uriInfo, "bob");
@@ -195,7 +193,7 @@ public class UserResourceTest {
 		
 		@Test
 		public void itReturnsIfPreconditionsFail() throws Exception {
-			when(request.evaluatePreconditions(any(Date.class), any(EntityTag.class))).thenReturn(Response.notModified());
+			when(request.evaluatePreconditions(any(Date.class), any(EntityTag.class))).thenReturn(notModified());
 			
 			try {
 				resource.update(request, credentials, "bob", entity);
@@ -217,7 +215,7 @@ public class UserResourceTest {
 			final Response response = resource.update(request, credentials, "bob", entity);
 			assertThat(response.getStatus()).isEqualTo(Status.NO_CONTENT.getStatusCode());
 
-			final ArgumentCaptor<char[]> captor = ArgumentCaptor.forClass(char[].class);
+			final ArgumentCaptor<char[]> captor = forClass(char[].class);
 			verify(keySet).relock(captor.capture(), captor.capture(), eq(random));
 			assertThat(captor.getAllValues().get(0)).isEqualTo("secret".toCharArray());
 			assertThat(captor.getAllValues().get(1)).isEqualTo("woohoo".toCharArray());

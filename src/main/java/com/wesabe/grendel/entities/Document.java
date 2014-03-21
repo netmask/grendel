@@ -1,25 +1,23 @@
 package com.wesabe.grendel.entities;
 
-import static com.google.common.base.Objects.*;
-
-import java.io.Serializable;
-import java.security.SecureRandom;
-import java.util.Set;
-
-import javax.persistence.*;
-import javax.ws.rs.core.MediaType;
-
+import com.google.common.collect.Sets;
+import com.wesabe.grendel.openpgp.*;
+import com.wesabe.grendel.util.HashCode;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import com.google.common.collect.Sets;
-import com.wesabe.grendel.openpgp.CryptographicException;
-import com.wesabe.grendel.openpgp.KeySet;
-import com.wesabe.grendel.openpgp.MessageReader;
-import com.wesabe.grendel.openpgp.MessageWriter;
-import com.wesabe.grendel.openpgp.UnlockedKeySet;
-import com.wesabe.grendel.util.HashCode;
+import javax.persistence.*;
+import javax.ws.rs.core.MediaType;
+import java.io.Serializable;
+import java.security.SecureRandom;
+import java.util.Set;
+
+import static com.google.common.base.Objects.equal;
+import static com.google.common.collect.Sets.newHashSet;
+import static com.google.common.collect.Sets.newHashSetWithExpectedSize;
+import static com.wesabe.grendel.util.HashCode.calculate;
+import static javax.ws.rs.core.MediaType.valueOf;
 
 /**
  * A document with an abritrary body, stored as an encrypted+signed OpenPGP
@@ -62,7 +60,7 @@ public class Document implements Serializable {
 	
 	@ManyToMany(fetch=FetchType.LAZY, mappedBy="linkedDocuments", cascade={CascadeType.ALL})
 	@JoinTable(name="links")
-	private Set<User> linkedUsers = Sets.newHashSet();
+	private Set<User> linkedUsers = newHashSet();
 	
 	@Version
 	@Column(name="version", nullable=false)
@@ -140,7 +138,7 @@ public class Document implements Serializable {
 	 * Returns the document's content type.
 	 */
 	public MediaType getContentType() {
-		return MediaType.valueOf(contentType);
+		return valueOf(contentType);
 	}
 	
 	/**
@@ -190,7 +188,7 @@ public class Document implements Serializable {
 	public void encryptAndSetBody(UnlockedKeySet keySet, SecureRandom random,
 		byte[] body) throws CryptographicException {
 		
-		final Set<KeySet> recipients = Sets.newHashSetWithExpectedSize(linkedUsers.size());
+		final Set<KeySet> recipients = newHashSetWithExpectedSize(linkedUsers.size());
 		for (User linkedUser : linkedUsers) {
 			recipients.add(linkedUser.getKeySet());
 		}
@@ -223,7 +221,7 @@ public class Document implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return HashCode.calculate(
+		return calculate(
 			getClass(), body, contentType, createdAt, modifiedAt, name, owner
 		);
 	}

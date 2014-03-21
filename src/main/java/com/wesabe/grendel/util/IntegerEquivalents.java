@@ -1,11 +1,13 @@
 package com.wesabe.grendel.util;
 
+import com.google.common.collect.ImmutableSet;
+import static com.google.common.collect.ImmutableSet.builder;
+import com.google.inject.internal.ImmutableList;
+import static com.google.inject.internal.ImmutableList.builder;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.internal.ImmutableList;
 
 /**
  * Utility methods for dealing with {@link IntegerEquivalent}s.
@@ -61,7 +63,7 @@ public final class IntegerEquivalents {
 	 * @throws IllegalArgumentException if {@code value} has no equivalent
 	 */
 	public static <T extends IntegerEquivalent> List<T> fromIntArray(Class<T> enumType, int[] values) throws IllegalArgumentException {
-		final ImmutableList.Builder<T> builder = ImmutableList.builder();
+		final ImmutableList.Builder<T> builder = builder();
 		for (int value : values) {
 			builder.add(fromInt(enumType, value));
 		}
@@ -72,7 +74,7 @@ public final class IntegerEquivalents {
 	 * Returns the {@code bitMask} as a set of {@link IntegerEquivalent}s.
 	 */
 	public static <T extends IntegerEquivalent> Set<T> fromBitmask(Class<T> enumType, int bitMask) throws IllegalArgumentException {
-		final ImmutableSet.Builder<T> builder = ImmutableSet.builder();
+		final ImmutableSet.Builder<T> builder = builder();
 		for (T constant : enumType.getEnumConstants()) {
 			if ((bitMask & constant.toInteger()) != 0) {
 				builder.add(constant);

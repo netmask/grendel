@@ -1,14 +1,15 @@
 package com.wesabe.grendel.auth;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import static javax.ws.rs.core.Response.status;
 
 /**
  * A set of Basic authentication credentials.
@@ -23,7 +24,7 @@ public class Credentials {
 	 * provided credentials are invalid.
 	 */
 	public static final Response CHALLENGE =
-		Response.status(Status.UNAUTHORIZED)
+		status(Status.UNAUTHORIZED)
 			.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"Grendel\"")
 			.build();
 	

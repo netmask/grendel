@@ -1,14 +1,14 @@
 package com.wesabe.grendel.openpgp.tests;
 
-import static org.fest.assertions.Assertions.*;
-
+import com.google.inject.internal.ImmutableList;
+import static com.google.inject.internal.ImmutableList.of;
+import com.wesabe.grendel.openpgp.HashAlgorithm;
 import org.bouncycastle.bcpg.HashAlgorithmTags;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import com.google.inject.internal.ImmutableList;
-import com.wesabe.grendel.openpgp.HashAlgorithm;
+import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(Enclosed.class)
 public class HashAlgorithmTest {
@@ -163,7 +163,7 @@ public class HashAlgorithmTest {
 		@Test
 		public void itAcceptsAllSHA2Variants() throws Exception {
 			assertThat(HashAlgorithm.ACCEPTABLE_ALGORITHMS)
-				.isEqualTo(ImmutableList.of(
+				.isEqualTo(of(
 					HashAlgorithm.SHA_224,
 					HashAlgorithm.SHA_256,
 					HashAlgorithm.SHA_384,

@@ -1,18 +1,21 @@
 package com.wesabe.grendel.openpgp;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.ImmutableSet;
+import static com.google.common.collect.ImmutableSet.of;
+import com.wesabe.grendel.util.IntegerEquivalents;
+import static com.wesabe.grendel.util.IntegerEquivalents.fromInt;
+import com.wesabe.grendel.util.Iterators;
+import static com.wesabe.grendel.util.Iterators.toList;
+import static java.lang.String.format;
 import org.bouncycastle.openpgp.PGPPublicKey;
 import org.bouncycastle.openpgp.PGPSecretKey;
 import org.bouncycastle.openpgp.PGPSignature;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import com.google.common.collect.ImmutableSet;
-import com.wesabe.grendel.util.IntegerEquivalents;
-import com.wesabe.grendel.util.Iterators;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * An abstract base class for asymmetric PGP public keys and their corresponding
@@ -39,7 +42,7 @@ public abstract class AbstractKey {
 		this.publicKey = secretKey.getPublicKey();
 		this.signature = getSignature(signingKey, requiredSignatureType);
 		if (signature == null) {
-			this.flags = ImmutableSet.of();
+			this.flags = of();
 		} else {
 			this.flags = signature.getKeyFlags();
 		}
@@ -84,7 +87,7 @@ public abstract class AbstractKey {
 	 * @see #getUserID()
 	 */
 	public List<String> getUserIDs() {
-		return Iterators.toList(secretKey.getUserIDs());
+		return toList(secretKey.getUserIDs());
 	}
 	
 	/**
@@ -100,14 +103,14 @@ public abstract class AbstractKey {
 	 * <b>N.B.:</b> This returns a truncated version of the key ID.
 	 */
 	public String getHumanKeyID() {
-		return String.format("%08X", (int) secretKey.getKeyID());
+		return format("%08X", (int) secretKey.getKeyID());
 	}
 	
 	/**
 	 * Returns the key's {@link AsymmetricAlgorithm}.
 	 */
 	public AsymmetricAlgorithm getAlgorithm() {
-		return IntegerEquivalents.fromInt(
+		return fromInt(
 			AsymmetricAlgorithm.class,
 			publicKey.getAlgorithm()
 		);
@@ -164,7 +167,7 @@ public abstract class AbstractKey {
 	
 	@Override
 	public String toString() {
-		return String.format(
+		return format(
 			"%d-%s/%s",
 			getSize(), getAlgorithm(), getHumanKeyID()
 		);

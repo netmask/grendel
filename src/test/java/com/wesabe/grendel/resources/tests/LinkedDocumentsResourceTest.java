@@ -1,16 +1,7 @@
 package com.wesabe.grendel.resources.tests;
 
-import static org.fest.assertions.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import javax.ws.rs.core.UriInfo;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
-
 import com.google.common.collect.ImmutableSet;
+import static com.google.common.collect.ImmutableSet.of;
 import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
@@ -18,6 +9,16 @@ import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.representations.LinkedDocumentListRepresentation;
 import com.wesabe.grendel.resources.LinkedDocumentsResource;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
+
+import javax.ws.rs.core.UriInfo;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(Enclosed.class)
 public class LinkedDocumentsResourceTest {
@@ -35,7 +36,7 @@ public class LinkedDocumentsResourceTest {
 			this.document = mock(Document.class);
 			
 			this.user = mock(User.class);
-			when(user.getLinkedDocuments()).thenReturn(ImmutableSet.of(document));
+			when(user.getLinkedDocuments()).thenReturn(of(document));
 			
 			this.session = mock(Session.class);
 			when(session.getUser()).thenReturn(user);

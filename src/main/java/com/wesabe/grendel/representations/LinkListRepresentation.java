@@ -1,17 +1,16 @@
 package com.wesabe.grendel.representations;
 
-import java.util.List;
-
-import javax.ws.rs.core.UriInfo;
-
-import org.codehaus.jackson.annotate.JsonGetter;
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 import com.google.common.collect.Lists;
+import static com.google.common.collect.Lists.newArrayList;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.representations.UserListRepresentation.UserListItem;
 import com.wesabe.grendel.resources.LinkResource;
+import org.codehaus.jackson.annotate.JsonGetter;
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+import javax.ws.rs.core.UriInfo;
+import java.util.List;
 
 /**
  * A list of a {@link Document}'s links.
@@ -80,7 +79,7 @@ public class LinkListRepresentation {
 	
 	@JsonGetter("links")
 	public List<LinkListItem> getLinks() {
-		final List<LinkListItem> links = Lists.newArrayList();
+		final List<LinkListItem> links = newArrayList();
 		for (User user : document.getLinkedUsers()) {
 			links.add(new LinkListItem(uriInfo, document, user));
 		}

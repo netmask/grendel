@@ -1,17 +1,16 @@
 package com.wesabe.grendel.representations;
 
-import java.util.List;
-
-import javax.ws.rs.core.UriInfo;
-
-import org.codehaus.jackson.annotate.JsonGetter;
-import org.codehaus.jackson.annotate.JsonIgnore;
-
-import com.google.common.collect.Lists;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.representations.UserListRepresentation.UserListItem;
 import com.wesabe.grendel.resources.LinkedDocumentResource;
+import org.codehaus.jackson.annotate.JsonGetter;
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+import javax.ws.rs.core.UriInfo;
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 public class LinkedDocumentListRepresentation {
 	public static class DocumentListItem {
@@ -54,7 +53,7 @@ public class LinkedDocumentListRepresentation {
 	
 	@JsonGetter("linked-documents")
 	public List<DocumentListItem> listDocuments() {
-		final List<DocumentListItem> items = Lists.newArrayList();
+		final List<DocumentListItem> items = newArrayList();
 		for (Document doc : user.getLinkedDocuments()) {
 			items.add(new DocumentListItem(uriInfo, user, doc));
 		}

@@ -1,10 +1,12 @@
 package com.wesabe.grendel.openpgp.tests;
 
-import static org.fest.assertions.Assertions.*;
-
-import java.io.FileInputStream;
-import java.util.List;
-
+import com.wesabe.grendel.openpgp.MasterKey;
+import static com.wesabe.grendel.openpgp.MasterKey.load;
+import com.wesabe.grendel.openpgp.SubKey;
+import static com.wesabe.grendel.openpgp.SubKey.load;
+import com.wesabe.grendel.openpgp.UnlockedSubKey;
+import com.wesabe.grendel.util.Iterators;
+import static com.wesabe.grendel.util.Iterators.toList;
 import org.bouncycastle.openpgp.PGPSecretKey;
 import org.bouncycastle.openpgp.PGPSecretKeyRing;
 import org.junit.Before;
@@ -12,10 +14,10 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import com.wesabe.grendel.openpgp.MasterKey;
-import com.wesabe.grendel.openpgp.SubKey;
-import com.wesabe.grendel.openpgp.UnlockedSubKey;
-import com.wesabe.grendel.util.Iterators;
+import java.io.FileInputStream;
+import java.util.List;
+
+import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(Enclosed.class)
 public class UnlockedSubKeyTest {
@@ -24,14 +26,15 @@ public class UnlockedSubKeyTest {
 		
 		@Before
 		public void setup() throws Exception {
-			final FileInputStream keyRingFile = new FileInputStream("src/test/resources/secret-keyring.gpg");
-			final PGPSecretKeyRing keyRing = new PGPSecretKeyRing(keyRingFile);
-			keyRingFile.close();
+			final PGPSecretKeyRing keyRing;
+            try (FileInputStream keyRingFile = new FileInputStream("src/test/resources/secret-keyring.gpg")) {
+                keyRing = new PGPSecretKeyRing(keyRingFile);
+            }
 			
-			final List<PGPSecretKey> secretKeys = Iterators.toList(keyRing.getSecretKeys());
+			final List<PGPSecretKey> secretKeys = toList(keyRing.getSecretKeys());
 			
-			final MasterKey masterKey = MasterKey.load(secretKeys.get(0));
-			this.key = SubKey.load(secretKeys.get(1), masterKey).unlock("test".toCharArray());
+			final MasterKey masterKey = load(secretKeys.get(0));
+			this.key = load(secretKeys.get(1), masterKey).unlock("test".toCharArray());
 		}
 		
 		@Test

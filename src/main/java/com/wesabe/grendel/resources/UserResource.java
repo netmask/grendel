@@ -1,26 +1,5 @@
 package com.wesabe.grendel.resources;
 
-import java.security.SecureRandom;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.EntityTag;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.Response.Status;
-
-import org.joda.time.DateTime;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.wesabe.grendel.auth.Credentials;
@@ -33,6 +12,15 @@ import com.wesabe.grendel.openpgp.UnlockedKeySet;
 import com.wesabe.grendel.representations.UpdateUserRepresentation;
 import com.wesabe.grendel.representations.UserInfoRepresentation;
 import com.wideplay.warp.persist.Transactional;
+import org.joda.time.DateTime;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
+import java.security.SecureRandom;
+import static javax.ws.rs.core.Response.noContent;
+import static javax.ws.rs.core.Response.ok;
 
 /**
  * A resource for managing individual {@link User}s.
@@ -66,7 +54,7 @@ public class UserResource {
 		
 		checkPreconditions(request, user);
 		
-		return Response.ok(new UserInfoRepresentation(uriInfo, user))
+		return ok(new UserInfoRepresentation(uriInfo, user))
 						.tag(user.getEtag())
 						.lastModified(user.getModifiedAt().toDate())
 						.build();
@@ -104,7 +92,7 @@ public class UserResource {
 		user.setModifiedAt(new DateTime());
 		userDAO.saveOrUpdate(user);
 		
-		return Response.noContent().build();
+		return noContent().build();
 	}
 	
 	/**
@@ -119,7 +107,7 @@ public class UserResource {
 		checkPreconditions(request, user);
 		
 		userDAO.delete(user);
-		return Response.noContent().build();
+		return noContent().build();
 	}
 	
 	/**

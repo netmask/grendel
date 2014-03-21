@@ -1,8 +1,7 @@
 package com.wesabe.grendel.openpgp;
 
-import org.bouncycastle.bcpg.CompressionAlgorithmTags;
-
 import com.wesabe.grendel.util.IntegerEquivalent;
+import org.bouncycastle.bcpg.CompressionAlgorithmTags;
 
 /**
  * A compression algorithm for OpenPGP messages.

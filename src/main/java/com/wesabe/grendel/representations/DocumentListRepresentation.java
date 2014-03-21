@@ -1,16 +1,15 @@
 package com.wesabe.grendel.representations;
 
-import java.util.List;
-import java.util.Set;
-
-import javax.ws.rs.core.UriInfo;
-
+import com.google.common.collect.Lists;
+import static com.google.common.collect.Lists.newArrayListWithCapacity;
+import com.wesabe.grendel.entities.Document;
+import com.wesabe.grendel.resources.DocumentResource;
 import org.codehaus.jackson.annotate.JsonGetter;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import com.google.common.collect.Lists;
-import com.wesabe.grendel.entities.Document;
-import com.wesabe.grendel.resources.DocumentResource;
+import javax.ws.rs.core.UriInfo;
+import java.util.List;
+import java.util.Set;
 
 public class DocumentListRepresentation {
 	public static class DocumentListItem {
@@ -46,7 +45,7 @@ public class DocumentListRepresentation {
 	
 	@JsonGetter("documents")
 	public List<DocumentListItem> listDocuments() {
-		final List<DocumentListItem> items = Lists.newArrayListWithCapacity(documents.size());
+		final List<DocumentListItem> items = newArrayListWithCapacity(documents.size());
 		for (Document doc : documents) {
 			items.add(new DocumentListItem(uriInfo, doc));
 		}

@@ -1,18 +1,5 @@
 package com.wesabe.grendel.resources;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import com.google.inject.Inject;
 import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
@@ -22,6 +9,15 @@ import com.wesabe.grendel.entities.dao.DocumentDAO;
 import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wideplay.warp.persist.Transactional;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import static javax.ws.rs.core.Response.noContent;
+import static javax.ws.rs.core.Response.ok;
 
 /**
  * A class which exposes a linked {@link Document} as a resource.
@@ -68,7 +64,7 @@ public class LinkedDocumentResource {
 		
 		try {
 			final byte[] body = doc.decryptBody(session.getKeySet());
-			return Response.ok()
+			return ok()
 					.entity(body)
 					.type(doc.getContentType())
 					.cacheControl(CACHE_SETTINGS)
@@ -101,7 +97,7 @@ public class LinkedDocumentResource {
 		doc.unlinkUser(session.getUser());
 		documentDAO.saveOrUpdate(doc);
 		
-		return Response.noContent().build();
+		return noContent().build();
 	}
 	
 	private Document findDocument(User owner, String name) {

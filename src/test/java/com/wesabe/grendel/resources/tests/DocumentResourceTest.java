@@ -1,24 +1,14 @@
 package com.wesabe.grendel.resources.tests;
 
-import static org.fest.assertions.Assertions.*;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-
-import java.security.SecureRandom;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.EntityTag;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
+import com.google.inject.Provider;
+import com.wesabe.grendel.auth.Credentials;
+import com.wesabe.grendel.auth.Session;
+import com.wesabe.grendel.entities.Document;
+import com.wesabe.grendel.entities.User;
+import com.wesabe.grendel.entities.dao.DocumentDAO;
+import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.openpgp.UnlockedKeySet;
+import com.wesabe.grendel.resources.DocumentResource;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
 import org.joda.time.DateTimeZone;
@@ -29,15 +19,26 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 
-import com.google.inject.Provider;
-import com.wesabe.grendel.auth.Credentials;
-import com.wesabe.grendel.auth.Session;
-import com.wesabe.grendel.entities.Document;
-import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.DocumentDAO;
-import com.wesabe.grendel.entities.dao.UserDAO;
-import com.wesabe.grendel.openpgp.UnlockedKeySet;
-import com.wesabe.grendel.resources.DocumentResource;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.*;
+import javax.ws.rs.core.Response.Status;
+import java.security.SecureRandom;
+import java.text.DateFormat;
+import static java.text.DateFormat.getDateTimeInstance;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+import static java.util.TimeZone.getTimeZone;
+import static javax.ws.rs.core.MediaType.valueOf;
+import static javax.ws.rs.core.Response.notModified;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.joda.time.DateTimeUtils.setCurrentMillisFixed;
+import static org.joda.time.DateTimeUtils.setCurrentMillisSystem;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
 
 @RunWith(Enclosed.class)
 public class DocumentResourceTest {
@@ -118,7 +119,7 @@ public class DocumentResourceTest {
 		
 		@Test
 		public void itReturnsIfPreconditionsFail() throws Exception {
-			when(request.evaluatePreconditions(any(Date.class), any(EntityTag.class))).thenReturn(Response.notModified());
+			when(request.evaluatePreconditions(any(Date.class), any(EntityTag.class))).thenReturn(notModified());
 			
 			try {
 				resource.show(request, credentials, "bob", "document1.txt");
@@ -137,12 +138,12 @@ public class DocumentResourceTest {
 		public void itReturnsTheDecryptedDocument() throws Exception {
 			final Response response = resource.show(request, credentials, "bob", "document1.txt");
 			
-			SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateTimeInstance();
-			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+			SimpleDateFormat formatter = (SimpleDateFormat) getDateTimeInstance();
+			formatter.setTimeZone(getTimeZone("UTC"));
 			formatter.applyPattern("EEE MMM dd HH:mm:ss z yyyy");
 			
 			assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
-			assertThat(response.getMetadata().getFirst("Content-Type")).isEqualTo(MediaType.valueOf("text/plain"));
+			assertThat(response.getMetadata().getFirst("Content-Type")).isEqualTo(valueOf("text/plain"));
 			assertThat(response.getMetadata().getFirst("Cache-Control").toString()).isEqualTo("private, no-cache, no-store, no-transform");
 			assertThat(formatter.format(response.getMetadata().getFirst("Last-Modified"))).isEqualTo("Tue Dec 29 08:42:32 UTC 2009");
 			assertThat((byte[]) response.getEntity()).isEqualTo("yay for everyone".getBytes());
@@ -171,7 +172,7 @@ public class DocumentResourceTest {
 		
 		@Test
 		public void itReturnsIfPreconditionsFail() throws Exception {
-			when(request.evaluatePreconditions(any(Date.class), any(EntityTag.class))).thenReturn(Response.notModified());
+			when(request.evaluatePreconditions(any(Date.class), any(EntityTag.class))).thenReturn(notModified());
 			
 			try {
 				resource.delete(request, credentials, "bob", "document1.txt");
@@ -206,7 +207,7 @@ public class DocumentResourceTest {
 		public void setup() throws Exception {
 			super.setup();
 			
-			DateTimeUtils.setCurrentMillisFixed(now.getMillis());
+			setCurrentMillisFixed(now.getMillis());
 
 			this.body = "hey, it's something new".getBytes();
 
@@ -218,12 +219,12 @@ public class DocumentResourceTest {
 		
 		@After
 		public void teardown() {
-			DateTimeUtils.setCurrentMillisSystem();
+			setCurrentMillisSystem();
 		}
 		
 		@Test
 		public void itReturnsIfPreconditionsFail() throws Exception {
-			when(request.evaluatePreconditions(any(Date.class), any(EntityTag.class))).thenReturn(Response.notModified());
+			when(request.evaluatePreconditions(any(Date.class), any(EntityTag.class))).thenReturn(notModified());
 			
 			try {
 				resource.store(request, headers, credentials, "bob", "document1.txt", body);

@@ -1,6 +1,7 @@
 package com.wesabe.grendel.openpgp;
 
 import com.wesabe.grendel.util.IntegerEquivalents;
+import static com.wesabe.grendel.util.IntegerEquivalents.fromInt;
 import org.bouncycastle.openpgp.*;
 
 import java.io.ByteArrayInputStream;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchProviderException;
+import static org.bouncycastle.openpgp.PGPUtil.getDecoderStream;
 
 /**
  * A reader class capable of decrypting OpenPGP messages created by
@@ -97,13 +99,7 @@ public class MessageReader {
             }
 			
 			return output.toByteArray();
-		} catch (IOException e) {
-			throw new CryptographicException(e);
-		} catch (ClassCastException e) {
-			throw new CryptographicException(e);
-		} catch (GeneralSecurityException e) {
-			throw new CryptographicException(e);
-		} catch (PGPException e) {
+		} catch (IOException | ClassCastException | GeneralSecurityException | PGPException e) {
 			throw new CryptographicException(e);
 		}
 	}
@@ -113,7 +109,7 @@ public class MessageReader {
 		for (int i = 0, size = signatures.size(); i < size; i++) {
 			final PGPSignature signature = signatures.get(i);
 			if (signature.getKeyID() == owner.getMasterKey().getKeyID()) {
-				final HashAlgorithm hashAlgorithm = IntegerEquivalents.fromInt(
+				final HashAlgorithm hashAlgorithm = fromInt(
 					HashAlgorithm.class,
 					signature.getHashAlgorithm()
 				);
@@ -166,7 +162,7 @@ public class MessageReader {
 			if (encryptedData instanceof PGPPublicKeyEncryptedData) {
 				final PGPPublicKeyEncryptedData pkEncryptedData = (PGPPublicKeyEncryptedData) encryptedData;
 				if (pkEncryptedData.getKeyID() == recipient.getSubKey().getKeyID()) {
-					final SymmetricAlgorithm symmetricAlgorithm = IntegerEquivalents.fromInt(
+					final SymmetricAlgorithm symmetricAlgorithm = fromInt(
 						SymmetricAlgorithm.class,
 						pkEncryptedData.getSymmetricAlgorithm(recipient.getUnlockedSubKey().getPrivateKey(), "BC")
 					);
@@ -187,6 +183,6 @@ public class MessageReader {
 	}
 	
 	private PGPObjectFactory getFactory(InputStream input) throws IOException {
-		return new PGPObjectFactory(PGPUtil.getDecoderStream(input));
+		return new PGPObjectFactory(getDecoderStream(input));
 	}
 }

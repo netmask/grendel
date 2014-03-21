@@ -1,20 +1,20 @@
 package com.wesabe.grendel.openpgp.tests;
 
-import static org.fest.assertions.Assertions.*;
-import static org.junit.Assert.*;
-
-import java.io.FileInputStream;
-import java.security.SecureRandom;
-
+import com.wesabe.grendel.openpgp.CryptographicException;
+import com.wesabe.grendel.openpgp.KeySet;
+import static com.wesabe.grendel.openpgp.KeySet.load;
+import com.wesabe.grendel.openpgp.UnlockedKeySet;
 import org.bouncycastle.openpgp.PGPSecretKeyRing;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import com.wesabe.grendel.openpgp.CryptographicException;
-import com.wesabe.grendel.openpgp.KeySet;
-import com.wesabe.grendel.openpgp.UnlockedKeySet;
+import java.io.FileInputStream;
+import java.security.SecureRandom;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 @RunWith(Enclosed.class)
 public class UnlockedKeySetTest {
@@ -24,11 +24,12 @@ public class UnlockedKeySetTest {
 
 		@Before
 		public void setup() throws Exception {
-			final FileInputStream keyRingFile = new FileInputStream("src/test/resources/secret-keyring.gpg");
-			final PGPSecretKeyRing keyRing = new PGPSecretKeyRing(keyRingFile);
-			keyRingFile.close();
+			final PGPSecretKeyRing keyRing;
+            try (FileInputStream keyRingFile = new FileInputStream("src/test/resources/secret-keyring.gpg")) {
+                keyRing = new PGPSecretKeyRing(keyRingFile);
+            }
 
-			this.keySet = KeySet.load(keyRing);
+			this.keySet = load(keyRing);
 			this.unlockedKeySet = keySet.unlock("test".toCharArray());
 		}
 		

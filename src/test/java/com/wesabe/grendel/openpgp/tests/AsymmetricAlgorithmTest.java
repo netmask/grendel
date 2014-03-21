@@ -1,18 +1,17 @@
 package com.wesabe.grendel.openpgp.tests;
 
-import static org.fest.assertions.Assertions.*;
-import static org.junit.Assert.*;
-
-import java.security.spec.RSAKeyGenParameterSpec;
-
+import com.wesabe.grendel.openpgp.AsymmetricAlgorithm;
+import com.wesabe.grendel.openpgp.PregeneratedDHParameterSpec;
+import com.wesabe.grendel.openpgp.PregeneratedDSAParameterSpec;
 import org.bouncycastle.bcpg.PublicKeyAlgorithmTags;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import com.wesabe.grendel.openpgp.AsymmetricAlgorithm;
-import com.wesabe.grendel.openpgp.PregeneratedDHParameterSpec;
-import com.wesabe.grendel.openpgp.PregeneratedDSAParameterSpec;
+import java.security.spec.RSAKeyGenParameterSpec;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 @RunWith(Enclosed.class)
 public class AsymmetricAlgorithmTest {

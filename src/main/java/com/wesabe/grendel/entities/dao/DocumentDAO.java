@@ -1,14 +1,13 @@
 package com.wesabe.grendel.entities.dao;
 
-import javax.ws.rs.core.MediaType;
-
-import org.hibernate.Session;
-
 import com.codahale.shore.dao.AbstractDAO;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
+import org.hibernate.Session;
+
+import javax.ws.rs.core.MediaType;
 
 public class DocumentDAO extends AbstractDAO<Document> {
 	

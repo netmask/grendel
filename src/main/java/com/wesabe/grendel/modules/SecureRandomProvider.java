@@ -1,15 +1,18 @@
 package com.wesabe.grendel.modules;
 
-import java.security.GeneralSecurityException;
-import java.security.SecureRandom;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
+import com.google.inject.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Provider;
+import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
+import static java.security.SecureRandom.getInstance;
+import static java.security.SecureRandom.getSeed;
+import java.util.concurrent.Executors;
+import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * A Guice {@link Provider} which manages a {@link SecureRandom} instance.
@@ -35,13 +38,13 @@ public class SecureRandomProvider implements Provider<SecureRandom> {
 		@Override
 		public void run() {
 			logger.info("Generating new PRNG seed");
-			final byte[] seed = SecureRandom.getSeed(ENTROPY_UPDATE_SIZE);
+			final byte[] seed = getSeed(ENTROPY_UPDATE_SIZE);
 			logger.info("Updating PRNG seed");
 			random.setSeed(seed);
 		}
 	}
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(SecureRandomProvider.class);
+	private static final Logger LOGGER = getLogger(SecureRandomProvider.class);
 	private static final String PRNG_ALGORITHM = "SHA1PRNG";
 	private static final String PRNG_PROVIDER = "SUN";
 	
@@ -49,11 +52,11 @@ public class SecureRandomProvider implements Provider<SecureRandom> {
 	private final ScheduledExecutorService pool;
 	
 	public SecureRandomProvider() {
-		this.pool = Executors.newSingleThreadScheduledExecutor();
+		this.pool = newSingleThreadScheduledExecutor();
 		
 		LOGGER.info("Creating PRNG");
 		try {
-			this.random = SecureRandom.getInstance(PRNG_ALGORITHM, PRNG_PROVIDER);
+			this.random = getInstance(PRNG_ALGORITHM, PRNG_PROVIDER);
 		} catch (GeneralSecurityException e) {
 			throw new IllegalStateException(e);
 		}

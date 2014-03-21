@@ -1,20 +1,5 @@
 package com.wesabe.grendel.resources.tests;
 
-import static org.fest.assertions.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import java.security.SecureRandom;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
-import org.mockito.InOrder;
-
 import com.google.inject.Provider;
 import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
@@ -24,6 +9,19 @@ import com.wesabe.grendel.entities.dao.DocumentDAO;
 import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
 import com.wesabe.grendel.resources.LinkResource;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
+import org.mockito.InOrder;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.security.SecureRandom;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @RunWith(Enclosed.class)
 public class LinkResourceTest {

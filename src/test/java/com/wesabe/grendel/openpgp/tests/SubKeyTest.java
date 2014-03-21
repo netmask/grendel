@@ -1,9 +1,13 @@
 package com.wesabe.grendel.openpgp.tests;
 
-import static org.fest.assertions.Assertions.*;
-
-import java.io.FileInputStream;
-
+import com.google.common.collect.ImmutableList;
+import static com.google.common.collect.ImmutableList.of;
+import static com.google.common.collect.ImmutableList.of;
+import static com.google.common.collect.ImmutableList.of;
+import static com.google.common.collect.ImmutableList.of;
+import com.wesabe.grendel.openpgp.*;
+import static com.wesabe.grendel.openpgp.MasterKey.load;
+import static com.wesabe.grendel.openpgp.SubKey.load;
 import org.bouncycastle.openpgp.PGPSecretKeyRing;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -12,13 +16,9 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import com.google.common.collect.ImmutableList;
-import com.wesabe.grendel.openpgp.AsymmetricAlgorithm;
-import com.wesabe.grendel.openpgp.CompressionAlgorithm;
-import com.wesabe.grendel.openpgp.HashAlgorithm;
-import com.wesabe.grendel.openpgp.MasterKey;
-import com.wesabe.grendel.openpgp.SubKey;
-import com.wesabe.grendel.openpgp.SymmetricAlgorithm;
+import java.io.FileInputStream;
+
+import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(Enclosed.class)
 public class SubKeyTest {
@@ -28,12 +28,13 @@ public class SubKeyTest {
 
 		@Before
 		public void setup() throws Exception {
-			final FileInputStream keyRingFile = new FileInputStream("src/test/resources/secret-keyring.gpg");
-			final PGPSecretKeyRing keyRing = new PGPSecretKeyRing(keyRingFile);
-			keyRingFile.close();
+			final PGPSecretKeyRing keyRing;
+            try (FileInputStream keyRingFile = new FileInputStream("src/test/resources/secret-keyring.gpg")) {
+                keyRing = new PGPSecretKeyRing(keyRingFile);
+            }
 			
-			this.masterKey = MasterKey.load(keyRing.getSecretKey(0x8C7035EF8838238CL));
-			this.key = SubKey.load(keyRing.getSecretKey(0xA3A5D038FF30574EL), masterKey);
+			this.masterKey = load(keyRing.getSecretKey(0x8C7035EF8838238CL));
+			this.key = load(keyRing.getSecretKey(0xA3A5D038FF30574EL), masterKey);
 		}
 
 		@Test
@@ -49,7 +50,7 @@ public class SubKeyTest {
 		@Test
 		public void itHasAUserID() throws Exception {
 			assertThat(key.getUserID()).isEqualTo("Sample Key <sample@wesabe.com>");
-			assertThat(key.getUserIDs()).isEqualTo(ImmutableList.of("Sample Key <sample@wesabe.com>"));
+			assertThat(key.getUserIDs()).isEqualTo(of("Sample Key <sample@wesabe.com>"));
 		}
 		
 		@Test
@@ -81,7 +82,7 @@ public class SubKeyTest {
 		@Test
 		public void itHasPreferredSymmetricAlgorithms() throws Exception {
 			assertThat(key.getPreferredSymmetricAlgorithms())
-				.isEqualTo(ImmutableList.of(
+				.isEqualTo(of(
 					SymmetricAlgorithm.AES_256,
 					SymmetricAlgorithm.AES_192,
 					SymmetricAlgorithm.AES_128,
@@ -94,7 +95,7 @@ public class SubKeyTest {
 		@Test
 		public void itHasPreferredCompressionAlgorithms() throws Exception {
 			assertThat(key.getPreferredCompressionAlgorithms())
-				.isEqualTo(ImmutableList.of(
+				.isEqualTo(of(
 					CompressionAlgorithm.ZLIB,
 					CompressionAlgorithm.BZIP2,
 					CompressionAlgorithm.ZIP
@@ -105,7 +106,7 @@ public class SubKeyTest {
 		@Test
 		public void itHasPreferredHashAlgorithms() throws Exception {
 			assertThat(key.getPreferredHashAlgorithms())
-				.isEqualTo(ImmutableList.of(
+				.isEqualTo(of(
 					HashAlgorithm.SHA_1,
 					HashAlgorithm.SHA_256,
 					HashAlgorithm.RIPEMD_160

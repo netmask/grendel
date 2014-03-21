@@ -1,17 +1,18 @@
 package com.wesabe.grendel.openpgp.tests;
 
-import static org.fest.assertions.Assertions.*;
-
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.Signature;
-import java.security.spec.DSAParameterSpec;
-
+import com.wesabe.grendel.openpgp.PregeneratedDSAParameterSpec;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import com.wesabe.grendel.openpgp.PregeneratedDSAParameterSpec;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import static java.security.KeyPairGenerator.getInstance;
+import java.security.Signature;
+import static java.security.Signature.getInstance;
+import java.security.spec.DSAParameterSpec;
+
+import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(Enclosed.class)
 public class PregeneratedDSAParameterSpecTest {
@@ -32,23 +33,23 @@ public class PregeneratedDSAParameterSpecTest {
 		
 		@Test
 		public void itCanBeUsedToGenerateDSAKeyPairs() throws Exception {
-			final KeyPairGenerator generator = KeyPairGenerator.getInstance("DSA");
+			final KeyPairGenerator generator = getInstance("DSA");
 			generator.initialize(spec);
 			
 			final KeyPair kp = generator.generateKeyPair();
 			
-			final Signature signer = Signature.getInstance("DSA");
+			final Signature signer = getInstance("DSA");
 			signer.initSign(kp.getPrivate());
 			signer.update("oh hi, just testing my new keypair".getBytes());
 			final byte[] signature = signer.sign();
 			
-			final Signature verifier = Signature.getInstance("DSA");
+			final Signature verifier = getInstance("DSA");
 			verifier.initVerify(kp.getPublic());
 			verifier.update("oh hi, just testing my new keypair".getBytes());
 			
 			assertThat(verifier.verify(signature)).isTrue();
 			
-			final Signature falsifier = Signature.getInstance("DSA");
+			final Signature falsifier = getInstance("DSA");
 			falsifier.initVerify(kp.getPublic());
 			falsifier.update("oh hi, just MOO HOO HA HA testing my new keypair".getBytes());
 			

@@ -3,6 +3,7 @@ package com.wesabe.grendel.representations;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import static javax.ws.rs.core.Response.status;
 
 /**
  * An exception class which will return a 422 Unprocessable Entity response to
@@ -48,8 +49,7 @@ public class ValidationException extends WebApplicationException {
 	
 	@Override
 	public Response getResponse() {
-		return Response
-				.status(UNPROCESSABLE_ENTITY)
+		return status(UNPROCESSABLE_ENTITY)
 				.type(MediaType.TEXT_PLAIN)
 				.entity(msgBuilder.toString())
 				.build();

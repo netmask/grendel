@@ -1,10 +1,10 @@
 package com.wesabe.grendel.openpgp;
 
-import java.security.NoSuchProviderException;
-
 import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPPrivateKey;
 import org.bouncycastle.openpgp.PGPSecretKey;
+
+import java.security.NoSuchProviderException;
 
 /**
  * A PGP master key, used for signing and verifying data. <b>Must</b> be a

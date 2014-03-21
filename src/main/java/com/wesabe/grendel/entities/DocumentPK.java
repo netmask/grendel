@@ -1,16 +1,15 @@
 package com.wesabe.grendel.entities;
 
-import static com.google.common.base.Objects.equal;
-
-import java.io.Serializable;
+import com.wesabe.grendel.util.HashCode;
+import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.io.Serializable;
 
-import org.hibernate.annotations.ForeignKey;
-
-import com.wesabe.grendel.util.HashCode;
+import static com.google.common.base.Objects.equal;
+import static com.wesabe.grendel.util.HashCode.calculate;
 
 /**
  * A composite primary key for {@link Document}, consisting of an owner (a
@@ -35,7 +34,7 @@ public class DocumentPK implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return HashCode.calculate(getClass(), name, owner);
+		return calculate(getClass(), name, owner);
 	}
 
 	@Override

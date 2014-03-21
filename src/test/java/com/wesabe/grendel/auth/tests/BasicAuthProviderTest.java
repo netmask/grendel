@@ -1,21 +1,21 @@
 package com.wesabe.grendel.auth.tests;
 
-import static org.fest.assertions.Assertions.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.HttpHeaders;
-
+import com.sun.jersey.api.core.HttpContext;
+import com.sun.jersey.api.core.HttpRequestContext;
+import com.wesabe.grendel.auth.BasicAuthProvider;
+import com.wesabe.grendel.auth.Credentials;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import com.sun.jersey.api.core.HttpContext;
-import com.sun.jersey.api.core.HttpRequestContext;
-import com.wesabe.grendel.auth.BasicAuthProvider;
-import com.wesabe.grendel.auth.Credentials;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.HttpHeaders;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(Enclosed.class)
 public class BasicAuthProviderTest {

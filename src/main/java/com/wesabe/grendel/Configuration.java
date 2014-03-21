@@ -1,14 +1,13 @@
 package com.wesabe.grendel;
 
-import java.security.SecureRandom;
-
-import org.eclipse.jetty.server.NCSARequestLog;
-import org.eclipse.jetty.server.RequestLog;
-
 import com.codahale.shore.AbstractConfiguration;
 import com.google.inject.AbstractModule;
 import com.google.inject.Stage;
 import com.wesabe.grendel.modules.SecureRandomProvider;
+import org.eclipse.jetty.server.NCSARequestLog;
+import org.eclipse.jetty.server.RequestLog;
+
+import java.security.SecureRandom;
 
 /**
  * The Shore configuration class.

@@ -1,11 +1,11 @@
 package com.wesabe.grendel.openpgp;
 
-import java.security.NoSuchProviderException;
-import java.util.List;
-
 import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPPrivateKey;
 import org.bouncycastle.openpgp.PGPSecretKey;
+
+import java.security.NoSuchProviderException;
+import java.util.List;
 
 /**
  * A PGP subkey, used for encrypting and decrypting data. <b>Must</b> be

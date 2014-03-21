@@ -1,13 +1,12 @@
 package com.wesabe.grendel.entities.dao;
 
-import java.util.List;
-
-import org.hibernate.Session;
-
 import com.codahale.shore.dao.AbstractDAO;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.wesabe.grendel.entities.User;
+import org.hibernate.Session;
+
+import java.util.List;
 
 public class UserDAO extends AbstractDAO<User> {
 	

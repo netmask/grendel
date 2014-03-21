@@ -1,15 +1,14 @@
 package com.wesabe.grendel.representations;
 
-import java.net.URI;
-
-import javax.ws.rs.core.UriInfo;
-
+import com.wesabe.grendel.entities.User;
 import org.codehaus.jackson.annotate.JsonGetter;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
-import com.wesabe.grendel.entities.User;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
+import static org.joda.time.format.ISODateTimeFormat.basicDateTimeNoMillis;
 
 /**
  * A representation of a response containing information about a user.
@@ -27,7 +26,7 @@ import com.wesabe.grendel.entities.User;
  * @author coda
  */
 public class UserInfoRepresentation {
-	private static final DateTimeFormatter ISO_DATETIME = ISODateTimeFormat.basicDateTimeNoMillis();
+	private static final DateTimeFormatter ISO_DATETIME = basicDateTimeNoMillis();
 	
 	public static class DocumentLink {
 		private final String name;

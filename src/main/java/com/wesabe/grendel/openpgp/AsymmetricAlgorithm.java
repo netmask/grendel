@@ -1,11 +1,10 @@
 package com.wesabe.grendel.openpgp;
 
-import java.security.spec.AlgorithmParameterSpec;
-import java.security.spec.RSAKeyGenParameterSpec;
-
+import com.wesabe.grendel.util.IntegerEquivalent;
 import org.bouncycastle.bcpg.PublicKeyAlgorithmTags;
 
-import com.wesabe.grendel.util.IntegerEquivalent;
+import java.security.spec.AlgorithmParameterSpec;
+import java.security.spec.RSAKeyGenParameterSpec;
 
 /**
  * An asymmetric encryption or signing algorithm for OpenPGP messages.

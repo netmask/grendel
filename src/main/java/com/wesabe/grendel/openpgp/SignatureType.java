@@ -1,8 +1,7 @@
 package com.wesabe.grendel.openpgp;
 
-import org.bouncycastle.openpgp.PGPSignature;
-
 import com.wesabe.grendel.util.IntegerEquivalent;
+import org.bouncycastle.openpgp.PGPSignature;
 
 /**
  * A type of signature in an OpenPGP message.

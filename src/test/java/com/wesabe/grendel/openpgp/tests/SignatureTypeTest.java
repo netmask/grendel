@@ -1,13 +1,12 @@
 package com.wesabe.grendel.openpgp.tests;
 
-import static org.fest.assertions.Assertions.*;
-
+import com.wesabe.grendel.openpgp.SignatureType;
 import org.bouncycastle.openpgp.PGPSignature;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import com.wesabe.grendel.openpgp.SignatureType;
+import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(Enclosed.class)
 public class SignatureTypeTest {

@@ -1,8 +1,7 @@
 package com.wesabe.grendel.openpgp;
 
-import java.math.BigInteger;
-
 import javax.crypto.spec.DHParameterSpec;
+import java.math.BigInteger;
 
 /**
  * A pre-generated {@link DHParameterSpec} for 2048-bit

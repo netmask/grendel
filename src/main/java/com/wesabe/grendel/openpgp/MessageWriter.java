@@ -1,19 +1,15 @@
 package com.wesabe.grendel.openpgp;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.security.SecureRandom;
-import java.util.Collection;
-
-import org.bouncycastle.openpgp.PGPCompressedDataGenerator;
-import org.bouncycastle.openpgp.PGPEncryptedDataGenerator;
-import org.bouncycastle.openpgp.PGPLiteralData;
-import org.bouncycastle.openpgp.PGPLiteralDataGenerator;
-import org.bouncycastle.openpgp.PGPSignature;
-import org.bouncycastle.openpgp.PGPSignatureGenerator;
-import org.bouncycastle.openpgp.PGPSignatureSubpacketGenerator;
+import org.bouncycastle.openpgp.*;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import static java.lang.Math.ceil;
+import static java.lang.Math.round;
+import java.security.SecureRandom;
+import java.util.Collection;
 
 /**
  * A writer class capable of producing encrypted+signed OpenPGP messages.
@@ -131,31 +127,31 @@ public class MessageWriter {
 	 * should be rare.
 	 */
 	private int estimateEncryptedSize(int unencryptedSize) {
-		return (int) Math.round(Math.ceil(
+		return (int) round(ceil(
 			(unencryptedSize * ENVELOPE_OVERHEAD) +
 			(recipients.size() * RECIPIENT_OVERHEAD)
 		));
 	}
 
 	private void signAndCompressAndEncrypt(byte[] body, OutputStream output) throws Exception {
-		final OutputStream encryptedOutput = getEncryptionWrapper(output);
-		signAndCompress(body, encryptedOutput);
-		encryptedOutput.close();
+        try (OutputStream encryptedOutput = getEncryptionWrapper(output)) {
+            signAndCompress(body, encryptedOutput);
+        }
 	}
 
 	private void signAndCompress(byte[] body, OutputStream encryptedOutput) throws Exception {
-		final OutputStream compressedOutput = getCompressionWrapper(encryptedOutput);
-		sign(body, compressedOutput);
-		compressedOutput.close();
+        try (OutputStream compressedOutput = getCompressionWrapper(encryptedOutput)) {
+            sign(body, compressedOutput);
+        }
 	}
 
 	private void sign(byte[] body, OutputStream compressedOutput) throws Exception {
 		final PGPSignatureGenerator signatureGenerator = getSignatureGenerator(owner.getUnlockedMasterKey());
 		signatureGenerator.generateOnePassVersion(false).encode(compressedOutput);
-		final OutputStream literalOutput = getLiteralWrapper(compressedOutput);
-		literalOutput.write(body);
-		signatureGenerator.update(body);
-		literalOutput.close();
+        try (OutputStream literalOutput = getLiteralWrapper(compressedOutput)) {
+            literalOutput.write(body);
+            signatureGenerator.update(body);
+        }
 		signatureGenerator.generate().encode(compressedOutput);
 	}
 

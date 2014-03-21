@@ -1,16 +1,15 @@
 package com.wesabe.grendel.representations.tests;
 
-import static org.fest.assertions.Assertions.*;
-import static org.junit.Assert.*;
-
+import com.wesabe.grendel.representations.UpdateUserRepresentation;
+import com.wesabe.grendel.representations.ValidationException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import com.wesabe.grendel.representations.UpdateUserRepresentation;
-import com.wesabe.grendel.representations.ValidationException;
+import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 @RunWith(Enclosed.class)
 public class UpdateUserRepresentationTest {

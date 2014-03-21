@@ -1,26 +1,22 @@
 package com.wesabe.grendel.openpgp;
 
+import com.google.inject.Inject;
+import com.google.inject.internal.ImmutableList;
+import static com.google.inject.internal.ImmutableList.of;
+import static com.wesabe.grendel.openpgp.KeySet.load;
+import com.wesabe.grendel.util.IntegerEquivalents;
+import static com.wesabe.grendel.util.IntegerEquivalents.toBitmask;
+import static com.wesabe.grendel.util.IntegerEquivalents.toIntArray;
+import org.bouncycastle.openpgp.*;
+import org.joda.time.DateTime;
+
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import static java.security.KeyPairGenerator.getInstance;
 import java.security.SecureRandom;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
-import org.bouncycastle.openpgp.PGPException;
-import org.bouncycastle.openpgp.PGPKeyPair;
-import org.bouncycastle.openpgp.PGPKeyRingGenerator;
-import org.bouncycastle.openpgp.PGPSecretKeyRing;
-import org.bouncycastle.openpgp.PGPSignatureSubpacketGenerator;
-import org.bouncycastle.openpgp.PGPSignatureSubpacketVector;
-import org.joda.time.DateTime;
-
-import com.google.inject.Inject;
-import com.google.inject.internal.ImmutableList;
-import com.wesabe.grendel.util.IntegerEquivalents;
+import java.util.concurrent.*;
+import static java.util.concurrent.Executors.newCachedThreadPool;
 
 /**
  * A multithreaded generator for {@link KeySet}s.
@@ -48,7 +44,7 @@ public class KeySetGenerator {
 		
 		@Override
 		public KeyPair call() throws Exception {
-			final KeyPairGenerator generator = KeyPairGenerator.getInstance(algorithm.getName(), "BC");
+			final KeyPairGenerator generator = getInstance(algorithm.getName(), "BC");
 			generator.initialize(algorithm.getAlgorithmParameterSpec(), random);
 			return generator.generateKeyPair();
 		}
@@ -65,7 +61,7 @@ public class KeySetGenerator {
 	@Inject
 	public KeySetGenerator(SecureRandom random) {
 		this.random = random;
-		this.executor = Executors.newCachedThreadPool();
+		this.executor = newCachedThreadPool();
 	}
 	
 	/**
@@ -113,39 +109,33 @@ public class KeySetGenerator {
 			generator.addSubKey(subPGPKeyPair, generateSubKeySettings(), null);
 
 			final PGPSecretKeyRing keyRing = generator.generateSecretKeyRing();
-			return KeySet.load(keyRing);
+			return load(keyRing);
 			
-		} catch (GeneralSecurityException e) {
-			throw new CryptographicException(e);
-		} catch (PGPException e) {
-			throw new CryptographicException(e);
-		} catch (InterruptedException e) {
-			throw new CryptographicException(e);
-		} catch (ExecutionException e) {
+		} catch (GeneralSecurityException | PGPException | InterruptedException | ExecutionException e) {
 			throw new CryptographicException(e);
 		}
 	}
 
 	private PGPSignatureSubpacketVector generateSubKeySettings() {
 		final PGPSignatureSubpacketGenerator settings = new PGPSignatureSubpacketGenerator();
-		settings.setKeyFlags(false, IntegerEquivalents.toBitmask(KeyFlag.SUB_KEY_DEFAULTS));
+		settings.setKeyFlags(false, toBitmask(KeyFlag.SUB_KEY_DEFAULTS));
 		return settings.generate();
 	}
 
 	private PGPSignatureSubpacketVector generateMasterKeySettings() {
 		final PGPSignatureSubpacketGenerator settings = new PGPSignatureSubpacketGenerator();
 		settings.setKeyFlags(false,
-			IntegerEquivalents.toBitmask(KeyFlag.MASTER_KEY_DEFAULTS)
+			toBitmask(KeyFlag.MASTER_KEY_DEFAULTS)
 		);
 		settings.setPreferredSymmetricAlgorithms(false,
-			IntegerEquivalents.toIntArray(SymmetricAlgorithm.ACCEPTABLE_ALGORITHMS)
+			toIntArray(SymmetricAlgorithm.ACCEPTABLE_ALGORITHMS)
 		);
 		settings.setPreferredHashAlgorithms(false,
-			IntegerEquivalents.toIntArray(HashAlgorithm.ACCEPTABLE_ALGORITHMS)
+			toIntArray(HashAlgorithm.ACCEPTABLE_ALGORITHMS)
 		);
 		settings.setPreferredCompressionAlgorithms(false,
-				IntegerEquivalents.toIntArray(
-					ImmutableList.of(
+				toIntArray(
+					of(
 						CompressionAlgorithm.BZIP2,
 						CompressionAlgorithm.ZLIB,
 						CompressionAlgorithm.ZIP

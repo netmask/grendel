@@ -1,11 +1,10 @@
 package com.wesabe.grendel.openpgp;
 
-import java.util.List;
-
-import org.bouncycastle.bcpg.HashAlgorithmTags;
-
 import com.google.common.collect.ImmutableList;
 import com.wesabe.grendel.util.IntegerEquivalent;
+import org.bouncycastle.bcpg.HashAlgorithmTags;
+
+import java.util.List;
 
 /**
  * A hash algorithm for OpenPGP messages.

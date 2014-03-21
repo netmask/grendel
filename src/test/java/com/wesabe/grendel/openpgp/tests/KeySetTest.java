@@ -1,15 +1,16 @@
 package com.wesabe.grendel.openpgp.tests;
 
-import static org.fest.assertions.Assertions.*;
-
-import java.io.FileInputStream;
-
+import com.wesabe.grendel.openpgp.KeySet;
+import static com.wesabe.grendel.openpgp.KeySet.load;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import com.wesabe.grendel.openpgp.KeySet;
+import java.io.FileInputStream;
+import static org.bouncycastle.util.encoders.Base64.encode;
+
+import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(Enclosed.class)
 public class KeySetTest {
@@ -19,7 +20,7 @@ public class KeySetTest {
 		@Before
 		public void setup() throws Exception {
 			final FileInputStream keyRingFile = new FileInputStream("src/test/resources/secret-keyring.gpg");
-			this.keySet = KeySet.load(keyRingFile);
+			this.keySet = load(keyRingFile);
 		}
 
 		@Test
@@ -47,7 +48,7 @@ public class KeySetTest {
 		public void itSerializesItselfToAStream() throws Exception {
 			@SuppressWarnings("restriction")
 			final String encoded = new String(
-				org.bouncycastle.util.encoders.Base64.encode(keySet.getEncoded())
+				encode(keySet.getEncoded())
 			);
 			assertThat(encoded).isEqualTo(
 				"lQO+BEpWGSsBCACkn2kY7+LhS+db3A7xb/L5zpm1ddWDGGgTlalR/dpV+YOs" +

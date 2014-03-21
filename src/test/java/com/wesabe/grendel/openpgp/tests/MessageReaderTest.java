@@ -1,18 +1,19 @@
 package com.wesabe.grendel.openpgp.tests;
 
-import static org.fest.assertions.Assertions.*;
-
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-
+import com.wesabe.grendel.openpgp.KeySet;
+import static com.wesabe.grendel.openpgp.KeySet.load;
+import static com.wesabe.grendel.openpgp.KeySet.load;
+import com.wesabe.grendel.openpgp.MessageReader;
+import com.wesabe.grendel.openpgp.UnlockedKeySet;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import com.wesabe.grendel.openpgp.KeySet;
-import com.wesabe.grendel.openpgp.MessageReader;
-import com.wesabe.grendel.openpgp.UnlockedKeySet;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+
+import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(Enclosed.class)
 public class MessageReaderTest {
@@ -24,10 +25,10 @@ public class MessageReaderTest {
 		@Before
 		public void setup() throws Exception {
 			final FileInputStream keyRingFile = new FileInputStream("src/test/resources/secret-keyring.gpg");
-			this.owner = KeySet.load(keyRingFile);
+			this.owner = load(keyRingFile);
 			
 			final FileInputStream anotherKeyRingFile = new FileInputStream("src/test/resources/another-secret-keyring.gpg");
-			this.recipient = KeySet.load(anotherKeyRingFile).unlock("test2".toCharArray());
+			this.recipient = load(anotherKeyRingFile).unlock("test2".toCharArray());
 			
 			final FileInputStream input = new FileInputStream("src/test/resources/encrypted-and-signed.txt");
 			final ByteArrayOutputStream output = new ByteArrayOutputStream();

@@ -1,12 +1,9 @@
 package com.wesabe.grendel.entities;
 
-import static com.google.common.base.Objects.*;
-
-import java.io.Serializable;
-import java.util.Set;
-
-import javax.persistence.*;
-
+import com.google.common.collect.Sets;
+import com.wesabe.grendel.openpgp.CryptographicException;
+import com.wesabe.grendel.openpgp.KeySet;
+import com.wesabe.grendel.util.HashCode;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -14,10 +11,14 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import com.google.common.collect.Sets;
-import com.wesabe.grendel.openpgp.CryptographicException;
-import com.wesabe.grendel.openpgp.KeySet;
-import com.wesabe.grendel.util.HashCode;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Set;
+
+import static com.google.common.base.Objects.equal;
+import static com.google.common.collect.Sets.newHashSet;
+import static com.wesabe.grendel.openpgp.KeySet.load;
+import static com.wesabe.grendel.util.HashCode.calculate;
 
 /**
  * A Grendel user.
@@ -74,7 +75,7 @@ public class User implements Serializable {
 	// I found, and none of them changed this behavior.
 	@OneToMany(mappedBy="owner", fetch=FetchType.LAZY, cascade={CascadeType.ALL})
 	@OnDelete(action=OnDeleteAction.CASCADE)
-	private Set<Document> documents = Sets.newHashSet();
+	private Set<Document> documents = newHashSet();
 	
 	@ManyToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
 	@ForeignKey(
@@ -99,7 +100,7 @@ public class User implements Serializable {
 	// bug/deficiency with Hibernate's @OnDelete:
 	// http://opensource.atlassian.com/projects/hibernate/browse/HHH-4404
 	// @OnDelete(action=OnDeleteAction.CASCADE)
-	private Set<Document> linkedDocuments = Sets.newHashSet();
+	private Set<Document> linkedDocuments = newHashSet();
 	
 	@Version
 	@Column(name="version", nullable=false)
@@ -134,7 +135,7 @@ public class User implements Serializable {
 	public KeySet getKeySet() {
 		if (keySet == null) {
 			try {
-				this.keySet = KeySet.load(encodedKeySet);
+				this.keySet = load(encodedKeySet);
 			} catch (CryptographicException e) {
 				throw new RuntimeException(e);
 			}
@@ -201,7 +202,7 @@ public class User implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return HashCode.calculate(createdAt, encodedKeySet, id, modifiedAt);
+		return calculate(createdAt, encodedKeySet, id, modifiedAt);
 	}
 
 	@Override

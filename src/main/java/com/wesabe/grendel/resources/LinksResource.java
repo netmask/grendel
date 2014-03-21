@@ -1,15 +1,5 @@
 package com.wesabe.grendel.resources;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Response.Status;
-
 import com.google.inject.Inject;
 import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
@@ -18,6 +8,12 @@ import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.entities.dao.DocumentDAO;
 import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.representations.LinkListRepresentation;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * A class which exposes a list of {@link User}s linked to a particular
