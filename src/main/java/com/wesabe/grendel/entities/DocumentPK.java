@@ -1,6 +1,5 @@
 package com.wesabe.grendel.entities;
 
-import com.wesabe.grendel.util.HashCode;
 import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.FetchType;
@@ -26,11 +25,6 @@ public class DocumentPK implements Serializable {
 	@ForeignKey(name="FK_DOCUMENT_TO_OWNER")
 	@JoinColumn(name="owner_id", nullable=false)
 	private User owner;
-	
-	@Deprecated
-	public DocumentPK() {
-		// for Hibernate usage only
-	}
 
 	@Override
 	public int hashCode() {

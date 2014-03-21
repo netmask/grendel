@@ -8,7 +8,6 @@ import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.entities.dao.DocumentDAO;
 import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.openpgp.CryptographicException;
-import com.wideplay.warp.persist.Transactional;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.CacheControl;
@@ -16,6 +15,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
 import static javax.ws.rs.core.Response.noContent;
 import static javax.ws.rs.core.Response.ok;
 
@@ -29,7 +29,8 @@ import static javax.ws.rs.core.Response.ok;
 @Produces(MediaType.WILDCARD)
 public class LinkedDocumentResource {
 	private static final CacheControl CACHE_SETTINGS;
-	static {
+
+    static {
 		CACHE_SETTINGS = new CacheControl();
 		CACHE_SETTINGS.setNoCache(true);
 		CACHE_SETTINGS.setNoStore(true);
@@ -83,7 +84,6 @@ public class LinkedDocumentResource {
 	 * <strong>N.B.:</strong> Requires Basic authentication.
 	 */
 	@DELETE
-	@Transactional
 	public Response delete(@Context Credentials credentials,
 		@PathParam("user_id") String userId, @PathParam("owner_id") String ownerId,
 		@PathParam("name") String name) {

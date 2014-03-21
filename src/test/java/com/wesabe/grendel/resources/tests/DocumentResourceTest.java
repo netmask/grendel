@@ -10,7 +10,6 @@ import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
 import com.wesabe.grendel.resources.DocumentResource;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
 import org.junit.Before;
@@ -23,11 +22,11 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.Status;
 import java.security.SecureRandom;
-import java.text.DateFormat;
+
 import static java.text.DateFormat.getDateTimeInstance;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
+
 import static java.util.TimeZone.getTimeZone;
 import static javax.ws.rs.core.MediaType.valueOf;
 import static javax.ws.rs.core.Response.notModified;
@@ -84,7 +83,7 @@ public class DocumentResourceTest {
 			when(document.getContentType()).thenReturn(MediaType.TEXT_PLAIN_TYPE);
 			when(document.getModifiedAt()).thenReturn(modifiedAt);
 			when(document.decryptBody(keySet)).thenReturn("yay for everyone".getBytes());
-			when(document.getEtag()).thenReturn("doc-document1.txt-50");
+			when(document.getETag()).thenReturn("doc-document1.txt-50");
 			
 			this.documentDAO = mock(DocumentDAO.class);
 			when(documentDAO.findByOwnerAndName(user, "document1.txt")).thenReturn(document);

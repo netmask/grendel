@@ -1,6 +1,5 @@
 package com.wesabe.grendel.entities.tests;
 
-import com.google.common.collect.ImmutableList;
 import static com.google.common.collect.ImmutableList.of;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
@@ -12,7 +11,6 @@ import static com.wesabe.grendel.openpgp.KeySet.load;
 import com.wesabe.grendel.openpgp.MessageReader;
 import com.wesabe.grendel.openpgp.MessageWriter;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
 import org.junit.Before;
@@ -97,7 +95,7 @@ public class DocumentTest {
 		public void itHasAnETag() throws Exception {
 			final Document doc = new Document(owner, name, MediaType.APPLICATION_OCTET_STREAM_TYPE);
 			
-			assertThat(doc.getEtag()).isEqualTo("doc-document1.txt-0");
+			assertThat(doc.getETag()).isEqualTo("doc-document1.txt-0");
 		}
 	}
 	

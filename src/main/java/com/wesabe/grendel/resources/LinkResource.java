@@ -10,13 +10,13 @@ import com.wesabe.grendel.entities.dao.DocumentDAO;
 import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
-import com.wideplay.warp.persist.Transactional;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.security.SecureRandom;
+
 import static javax.ws.rs.core.Response.noContent;
 
 @Path("/users/{user_id}/documents/{name}/links/{reader_id}")
@@ -33,7 +33,6 @@ public class LinkResource {
 	}
 	
 	@PUT
-	@Transactional
 	public Response createLink(@Context Credentials credentials,
 		@PathParam("user_id") String userId, @PathParam("name") String name,
 		@PathParam("reader_id") String readerId) {
@@ -51,10 +50,11 @@ public class LinkResource {
 	}
 	
 	@DELETE
-	@Transactional
-	public Response deleteLink(@Context Credentials credentials,
-		@PathParam("user_id") String userId, @PathParam("name") String name,
-		@PathParam("reader_id") String readerId) {
+	public Response deleteLink(
+            @Context Credentials credentials,
+            @PathParam("user_id") String userId,
+            @PathParam("name") String name,
+            @PathParam("reader_id") String readerId) {
 		
 		final Session session = credentials.buildSession(userDAO, userId);
 		final User reader = findUser(readerId);

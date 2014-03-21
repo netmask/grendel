@@ -9,7 +9,6 @@ import com.wesabe.grendel.openpgp.KeySetGenerator;
 import com.wesabe.grendel.representations.CreateUserRepresentation;
 import com.wesabe.grendel.representations.UserListRepresentation;
 import com.wesabe.grendel.representations.ValidationException;
-import com.wideplay.warp.persist.Transactional;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -17,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
+
 import static javax.ws.rs.core.Response.created;
 
 /**
@@ -58,7 +58,6 @@ public class UsersResource {
 	 * @see UserResource
 	 */
 	@POST
-	@Transactional
 	public Response create(@Context UriInfo uriInfo, CreateUserRepresentation request) throws CryptographicException {
 		request.validate();
 		

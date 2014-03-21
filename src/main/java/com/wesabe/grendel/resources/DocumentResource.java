@@ -8,7 +8,6 @@ import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.dao.DocumentDAO;
 import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.openpgp.CryptographicException;
-import com.wideplay.warp.persist.Transactional;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -17,6 +16,7 @@ import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import java.security.SecureRandom;
+
 import static javax.ws.rs.core.Response.noContent;
 import static javax.ws.rs.core.Response.ok;
 
@@ -57,8 +57,11 @@ public class DocumentResource {
 	 * @throws CryptographicException
 	 */
 	@GET
-	public Response show(@Context Request request, @Context Credentials credentials,
-		@PathParam("user_id") String userId, @PathParam("name") String name) throws CryptographicException {
+	public Response show(
+            @Context Request request,
+            @Context Credentials credentials,
+            @PathParam("user_id") String userId,
+            @PathParam("name") String name) throws CryptographicException {
 		
 		final Session session = credentials.buildSession(userDAO, userId);
 		
@@ -76,7 +79,7 @@ public class DocumentResource {
 				.type(doc.getContentType())
 				.cacheControl(CACHE_SETTINGS)
 				.lastModified(doc.getModifiedAt().toDate())
-				.tag(doc.getEtag())
+				.tag(doc.getETag())
 				.build();
 	}
 	
@@ -86,7 +89,6 @@ public class DocumentResource {
 	 * <strong>N.B.:</strong> Requires Basic authentication.
 	 */
 	@DELETE
-	@Transactional
 	public Response delete(@Context Request request, @Context Credentials credentials,
 		@PathParam("user_id") String userId, @PathParam("name") String name) {
 		
@@ -110,13 +112,13 @@ public class DocumentResource {
 	 * @throws CryptographicException
 	 */
 	@PUT
-	@Transactional
 	public Response store(@Context Request request, @Context HttpHeaders headers,
 		@Context Credentials credentials, @PathParam("user_id") String userId,
 		@PathParam("name") String name, byte[] body) throws CryptographicException {
 		
 		final Session session = credentials.buildSession(userDAO, userId);
 		Document doc = documentDAO.findByOwnerAndName(session.getUser(), name);
+
 		if (doc == null) {
 			doc = documentDAO.newDocument(session.getUser(), name, headers.getMediaType());
 		} else {
@@ -133,24 +135,24 @@ public class DocumentResource {
 		documentDAO.saveOrUpdate(doc);
 			
 		return noContent()
-				.tag(doc.getEtag())
+				.tag(doc.getETag())
 				.build();
 	}
 	
 	/**
 	 * If the request has {@code If-Modified-Since} or {@code If-None-Match}
 	 * headers, and the resource has a matching {@link Document#getModifiedAt()}
-	 * or {@link Document#getEtag()}, returns a {@code 304 Unmodified},
+	 * or {@link Document#getETag()}, returns a {@code 304 Unmodified},
 	 * indicating the client has the most recent version of the resource.
 	 * 
 	 * If the request has a {@code If-Unmodified-Since} or {@code If-Match}
 	 * headers, and the resource has a more recent
-	 * {@link Document#getModifiedAt()} or {@link Document#getEtag()}, returns
+	 * {@link Document#getModifiedAt()} or {@link Document#getETag()}, returns
 	 * a {@code 412 Precondition Failed}, indicating the client should re-read
 	 * the resource before overwriting it.
 	 */
 	private void checkPreconditions(Request request, Document document) {
-		final EntityTag eTag = new EntityTag(document.getEtag());
+		final EntityTag eTag = new EntityTag(document.getETag());
 		final ResponseBuilder response = request.evaluatePreconditions(document.getModifiedAt().toDate(), eTag);
 		if (response != null) {
 			throw new WebApplicationException(response.build());

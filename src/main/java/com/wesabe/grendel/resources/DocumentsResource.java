@@ -31,11 +31,12 @@ public class DocumentsResource {
 	}
 	
 	@GET
-	public DocumentListRepresentation listDocuments(@Context UriInfo uriInfo,
-		@Context Credentials credentials, @PathParam("id") String id) {
+	public DocumentListRepresentation listDocuments(
+            @Context UriInfo uriInfo,
+            @Context Credentials credentials,
+            @PathParam("id") String id) {
 		
 		final Session session = credentials.buildSession(userDAO, id);
-		
 		return new DocumentListRepresentation(uriInfo, session.getUser().getDocuments());
 	}
 }

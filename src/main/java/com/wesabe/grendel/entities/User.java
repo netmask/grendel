@@ -1,9 +1,7 @@
 package com.wesabe.grendel.entities;
 
-import com.google.common.collect.Sets;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.KeySet;
-import com.wesabe.grendel.util.HashCode;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -26,16 +24,16 @@ import static com.wesabe.grendel.util.HashCode.calculate;
  * @author coda
  */
 @Entity
-@Table(name="users")
-@NamedQueries({
-	@NamedQuery(
-		name="com.wesabe.grendel.entities.User.Exists",
-		query="SELECT u.id FROM User AS u WHERE u.id = :id"
-	),
-	@NamedQuery(
-		name="com.wesabe.grendel.entities.User.All",
-		query="SELECT u FROM User AS u ORDER BY u.id"
-	)
+@Table(name="USERS")
+@NamedQueries(value = {
+        @NamedQuery(
+                name = "com.wesabe.grendel.entities.User.Exists",
+                query = "SELECT user.id FROM User AS user WHERE user.id = :id"
+        ),
+        @NamedQuery(
+                name = "com.wesabe.grendel.entities.User.All",
+                query = "SELECT user FROM User AS user ORDER BY user.id"
+        )
 })
 public class User implements Serializable {
 	private static final long serialVersionUID = -8270919660085011028L;
@@ -233,7 +231,7 @@ public class User implements Serializable {
 	 * Returns an opaque string indicating the {@link User}'s name and
 	 * version.
 	 */
-	public String getEtag() {
-		return new StringBuilder("user-").append(id).append('-').append(version).toString();
+	public String getETag() {
+		return "user-" + id + '-' + version;
 	}
 }

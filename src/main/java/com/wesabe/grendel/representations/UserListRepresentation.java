@@ -1,13 +1,12 @@
 package com.wesabe.grendel.representations;
 
-import com.google.common.collect.Lists;
-import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.resources.UserResource;
 import org.codehaus.jackson.annotate.JsonGetter;
 
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A representation of a response containing information about a list of users.
@@ -59,11 +58,9 @@ public class UserListRepresentation {
 	
 	@JsonGetter("users")
 	public List<UserListItem> getUsers() {
-		final List<UserListItem> items = newArrayListWithExpectedSize(users.size());
-		for (User user : users) {
-			items.add(new UserListItem(uriInfo, user));
-		}
-		return items;
+		return users.stream()
+                .map(user -> new UserListItem(uriInfo, user))
+                .collect(Collectors.toList());
 	}
 
 }

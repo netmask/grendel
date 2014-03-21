@@ -55,7 +55,7 @@ public class UserResource {
 		checkPreconditions(request, user);
 		
 		return ok(new UserInfoRepresentation(uriInfo, user))
-						.tag(user.getEtag())
+						.tag(user.getETag())
 						.lastModified(user.getModifiedAt().toDate())
 						.build();
 	}
@@ -113,17 +113,17 @@ public class UserResource {
 	/**
 	 * If the request has {@code If-Modified-Since} or {@code If-None-Match}
 	 * headers, and the resource has a matching {@link User#getModifiedAt()}
-	 * or {@link User#getEtag()}, returns a {@code 304 Unmodified},
+	 * or {@link User#getETag()}, returns a {@code 304 Unmodified},
 	 * indicating the client has the most recent version of the resource.
 	 * 
 	 * If the request has a {@code If-Unmodified-Since} or {@code If-Match}
 	 * headers, and the resource has a more recent
-	 * {@link User#getModifiedAt()} or {@link User#getEtag()}, returns
+	 * {@link User#getModifiedAt()} or {@link User#getETag()}, returns
 	 * a {@code 412 Precondition Failed}, indicating the client should re-read
 	 * the resource before overwriting it.
 	 */
 	private void checkPreconditions(Request request, User user) {
-		final EntityTag eTag = new EntityTag(user.getEtag());
+		final EntityTag eTag = new EntityTag(user.getETag());
 		final ResponseBuilder response = request.evaluatePreconditions(user.getModifiedAt().toDate(), eTag);
 		if (response != null) {
 			throw new WebApplicationException(response.build());

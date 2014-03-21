@@ -4,7 +4,6 @@ import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.openpgp.KeySet;
 import static com.wesabe.grendel.openpgp.KeySet.load;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
 import org.junit.Before;
@@ -81,7 +80,7 @@ public class UserTest {
 		public void itHasAnETag() throws Exception {
 			final User user = new User(keySet);
 			
-			assertThat(user.getEtag()).isEqualTo("user-user-0");
+			assertThat(user.getETag()).isEqualTo("user-user-0");
 		}
 	}
 	

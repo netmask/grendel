@@ -55,7 +55,7 @@ public class UserResourceTest {
 			this.user = mock(User.class);
 			this.modifiedAt = new DateTime(2010, 1, 3, 9, 51, 32, 0, DateTimeZone.UTC);
 			when(user.getModifiedAt()).thenReturn(modifiedAt);
-			when(user.getEtag()).thenReturn("user-bob-4");
+			when(user.getETag()).thenReturn("user-bob-4");
 			
 			this.session = new Session(user, keySet);
 			

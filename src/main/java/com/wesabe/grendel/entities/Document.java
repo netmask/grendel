@@ -1,8 +1,6 @@
 package com.wesabe.grendel.entities;
 
-import com.google.common.collect.Sets;
 import com.wesabe.grendel.openpgp.*;
-import com.wesabe.grendel.util.HashCode;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -26,12 +24,12 @@ import static javax.ws.rs.core.MediaType.valueOf;
  * @author coda
  */
 @Entity
-@Table(name="documents")
+@Table(name="DOCUMENTS")
 @IdClass(DocumentPK.class)
 @NamedQueries({
 	@NamedQuery(
 		name="com.wesabe.grendel.entities.Document.ByOwnerAndName",
-		query="SELECT d FROM Document AS d WHERE d.name = :name AND d.owner = :owner"
+		query="SELECT document FROM Document AS document WHERE document.name = :name AND document.owner = :owner"
 	)
 })
 public class Document implements Serializable {
@@ -255,7 +253,7 @@ public class Document implements Serializable {
 	 * Returns an opaque string indicating the {@link Document}'s name and
 	 * version.
 	 */
-	public String getEtag() {
-		return new StringBuilder("doc-").append(name).append('-').append(version).toString();
+	public String getETag() {
+		return "doc-" + name + '-' + version;
 	}
 }

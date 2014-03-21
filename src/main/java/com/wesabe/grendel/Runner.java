@@ -1,6 +1,5 @@
 package com.wesabe.grendel;
 
-import com.codahale.shore.Shore;
 import static com.codahale.shore.Shore.run;
 
 /**

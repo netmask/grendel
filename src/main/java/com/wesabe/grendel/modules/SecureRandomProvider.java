@@ -2,16 +2,15 @@ package com.wesabe.grendel.modules;
 
 import com.google.inject.Provider;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
-import static java.security.SecureRandom.getInstance;
-import static java.security.SecureRandom.getSeed;
-import java.util.concurrent.Executors;
-import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import static java.security.SecureRandom.getInstance;
+import static java.security.SecureRandom.getSeed;
+import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**

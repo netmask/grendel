@@ -9,6 +9,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -54,9 +55,9 @@ public class LinkedDocumentListRepresentation {
 	@JsonGetter("linked-documents")
 	public List<DocumentListItem> listDocuments() {
 		final List<DocumentListItem> items = newArrayList();
-		for (Document doc : user.getLinkedDocuments()) {
-			items.add(new DocumentListItem(uriInfo, user, doc));
-		}
+        items.addAll(user.getLinkedDocuments().stream()
+                .map(doc -> new DocumentListItem(uriInfo, user, doc))
+                .collect(Collectors.toList()));
 		return items;
 	}
 	
