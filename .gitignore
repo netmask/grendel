@@ -6,3 +6,6 @@ development.properties
 .idea
 build
 .gradle/*
+*.iml
+.idea
+
