@@ -1,7 +1,7 @@
 package com.wesabe.grendel.entities;
 
 import com.wesabe.grendel.openpgp.*;
-import org.hibernate.annotations.Type;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -49,11 +49,9 @@ public class Document implements Serializable {
     private byte[] body;
 
     @Column(name = "created_at", nullable = false)
-    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
     private DateTime createdAt;
 
     @Column(name = "modified_at", nullable = false)
-    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
     private DateTime modifiedAt;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "linkedDocuments", cascade = {CascadeType.ALL})

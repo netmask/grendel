@@ -1,15 +1,14 @@
 package com.wesabe.grendel.resources;
 
-import com.google.inject.Inject;
+import com.wesabe.grendel.decorators.UserCreatedDecorator;
 import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.KeySet;
 import com.wesabe.grendel.openpgp.KeySetGenerator;
-import com.wesabe.grendel.representations.CreateUserRepresentation;
-import com.wesabe.grendel.representations.UserListRepresentation;
-import com.wesabe.grendel.representations.ValidationException;
+import com.wesabe.grendel.decorators.UserListRepresentation;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -57,14 +56,7 @@ public class UsersResource {
      * @see UserResource
      */
     @POST
-    public Response create(@Context UriInfo uriInfo, CreateUserRepresentation request) throws CryptographicException {
-        request.validate();
-
-        if (userDAO.contains(request.getId())) {
-            final ValidationException e = new ValidationException();
-            e.addReason("username is already taken");
-            throw e;
-        }
+    public Response create(@Context UriInfo uriInfo, UserCreatedDecorator request) throws CryptographicException {
 
         final KeySet keySet = generator.generate(request.getId(), request.getPassword());
         final User user = userDAO.saveOrUpdate(new User(keySet));

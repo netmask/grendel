@@ -27,7 +27,7 @@ public enum KeyFlag implements IntegerEquivalent {
 
     /**
      * Indicates that the key can be used to encrypt communications and storage.
-     * <p/>
+     * <p>
      * <b>N.B.:</b> This includes both {@code 0x04}—"this key may be used to
      * encrypt communications"—and {@code 0x08}—"this key may be used to encrypt
      * storage."

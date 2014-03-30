@@ -1,8 +1,8 @@
-package com.wesabe.grendel.representations;
+package com.wesabe.grendel.decorators;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.resources.UserResource;
-import org.codehaus.jackson.annotate.JsonGetter;
 
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 /**
  * A representation of a response containing information about a list of users.
- * <p/>
+ * <p>
  * Example JSON:
  * <pre>
  * {
@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 public class UserListRepresentation {
     private final UriInfo uriInfo;
     private final List<User> users;
+
     public UserListRepresentation(UriInfo uriInfo, List<User> users) {
         this.uriInfo = uriInfo;
         this.users = users;

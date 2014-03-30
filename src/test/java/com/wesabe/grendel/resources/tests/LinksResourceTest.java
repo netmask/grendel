@@ -6,7 +6,7 @@ import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.entities.dao.DocumentDAO;
 import com.wesabe.grendel.entities.dao.UserDAO;
-import com.wesabe.grendel.representations.LinkListRepresentation;
+import com.wesabe.grendel.decorators.LinkListRepresentation;
 import com.wesabe.grendel.resources.LinksResource;
 import org.junit.Before;
 import org.junit.Test;

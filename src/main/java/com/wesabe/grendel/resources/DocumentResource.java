@@ -1,7 +1,5 @@
 package com.wesabe.grendel.resources;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
@@ -11,6 +9,8 @@ import com.wesabe.grendel.openpgp.CryptographicException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -53,7 +53,7 @@ public class DocumentResource {
     /**
      * Responds to a {@link GET} request by decrypting the {@link Document} body
      * and returning it.
-     * <p/>
+     * <p>
      * <strong>N.B.:</strong> Requires Basic authentication.
      *
      * @throws CryptographicException
@@ -87,7 +87,7 @@ public class DocumentResource {
 
     /**
      * Responds to a {@link DELETE} request by deleting the {@link Document}.
-     * <p/>
+     * <p>
      * <strong>N.B.:</strong> Requires Basic authentication.
      */
     @DELETE
@@ -109,7 +109,7 @@ public class DocumentResource {
     /**
      * Responds to a {@link PUT} request by replacing the specified
      * {@link Document} with the request entity.
-     * <p/>
+     * <p>
      * <strong>N.B.:</strong> Requires Basic authentication.
      *
      * @throws CryptographicException
@@ -147,7 +147,7 @@ public class DocumentResource {
      * headers, and the resource has a matching {@link Document#getModifiedAt()}
      * or {@link Document#getETag()}, returns a {@code 304 Unmodified},
      * indicating the client has the most recent version of the resource.
-     * <p/>
+     * <p>
      * If the request has a {@code If-Unmodified-Since} or {@code If-Match}
      * headers, and the resource has a more recent
      * {@link Document#getModifiedAt()} or {@link Document#getETag()}, returns

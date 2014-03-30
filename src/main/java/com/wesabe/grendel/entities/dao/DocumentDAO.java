@@ -1,20 +1,16 @@
 package com.wesabe.grendel.entities.dao;
 
-import com.codahale.shore.dao.AbstractDAO;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
-import org.hibernate.Session;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.core.MediaType;
 
-public class DocumentDAO extends AbstractDAO<Document> {
+public class DocumentDAO {
 
-    @Inject
-    public DocumentDAO(Provider<Session> provider) {
-        super(provider, Document.class);
-    }
+    @PersistenceContext(unitName = "grendelPU")
+    private EntityManager entityManager;
 
     /**
      * Returns a new {@link Document} with the provided owner, name, and
@@ -29,20 +25,19 @@ public class DocumentDAO extends AbstractDAO<Document> {
      * {@code null} if the {@link Document} does not exist.
      */
     public Document findByOwnerAndName(User owner, String name) {
-        return uniqueResult(
-                namedQuery("com.wesabe.grendel.entities.Document.ByOwnerAndName")
-                        .setParameter("owner", owner)
-                        .setString("name", name)
-        );
+        return entityManager.createNamedQuery("com.wesabe.grendel.entities.Document.ByOwnerAndName", Document.class)
+                .setParameter("owner", owner)
+                .setParameter("name", name)
+                .getSingleResult();
+
     }
 
     /**
      * Writes the {@link Document} to the database.
      *
-     * @see Session#saveOrUpdate(Object)
      */
     public Document saveOrUpdate(Document doc) {
-        currentSession().saveOrUpdate(doc);
+        entityManager.persist(doc);
         return doc;
     }
 
@@ -50,7 +45,7 @@ public class DocumentDAO extends AbstractDAO<Document> {
      * Deletes the {@link Document} from the database.
      */
     public void delete(Document doc) {
-        currentSession().delete(doc);
+        entityManager.remove(doc);
     }
 
 }

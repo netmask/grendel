@@ -1,27 +1,22 @@
 package com.wesabe.grendel.entities.dao;
 
-import com.codahale.shore.dao.AbstractDAO;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.wesabe.grendel.entities.User;
-import org.hibernate.Session;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
-public class UserDAO extends AbstractDAO<User> {
-
-    @Inject
-    public UserDAO(Provider<Session> provider) {
-        super(provider, User.class);
-    }
+public class UserDAO {
+    @PersistenceContext(unitName = "grendelPU")
+    private EntityManager entityManager;
 
     /**
      * Returns {@code true} if a user already exists with the given id.
      */
     public boolean contains(String id) {
-        return namedQuery("com.wesabe.grendel.entities.User.Exists")
-                .setString("id", id)
-                .uniqueResult() != null;
+        return entityManager.createNamedQuery("com.wesabe.grendel.entities.User.Exists", User.class)
+                .setParameter("id", id)
+                .getSingleResult() != null;
     }
 
     /**
@@ -29,23 +24,23 @@ public class UserDAO extends AbstractDAO<User> {
      * does not exist.
      */
     public User findById(String id) {
-        return get(id);
+        return entityManager.find(User.class, id);
     }
 
     /**
      * Returns a list of all {@link User}s.
      */
     public List<User> findAll() {
-        return list(namedQuery("com.wesabe.grendel.entities.User.All"));
+        return entityManager.createNamedQuery("com.wesabe.grendel.entities.User.All", User.class)
+                .getResultList();
     }
 
     /**
      * Writes the {@link User} to the database.
      *
-     * @see Session#saveOrUpdate(Object)
      */
     public User saveOrUpdate(User user) {
-        currentSession().saveOrUpdate(user);
+        entityManager.persist(user);
         return user;
     }
 
@@ -53,6 +48,6 @@ public class UserDAO extends AbstractDAO<User> {
      * Deletes the {@link User} from the database.
      */
     public void delete(User user) {
-        currentSession().delete(user);
+        entityManager.remove(user);
     }
 }

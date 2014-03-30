@@ -1,14 +1,14 @@
 package com.wesabe.grendel.resources;
 
-import com.google.inject.Inject;
 import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.entities.dao.DocumentDAO;
 import com.wesabe.grendel.entities.dao.UserDAO;
-import com.wesabe.grendel.representations.LinkListRepresentation;
+import com.wesabe.grendel.decorators.LinkListRepresentation;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;

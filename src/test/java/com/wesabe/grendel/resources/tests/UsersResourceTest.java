@@ -1,28 +1,25 @@
 package com.wesabe.grendel.resources.tests;
 
-import com.google.common.collect.ImmutableList;
 import static com.google.common.collect.ImmutableList.of;
 import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.openpgp.KeySet;
 import com.wesabe.grendel.openpgp.KeySetGenerator;
-import com.wesabe.grendel.representations.CreateUserRepresentation;
-import com.wesabe.grendel.representations.UserListRepresentation.UserListItem;
-import com.wesabe.grendel.representations.ValidationException;
+import com.wesabe.grendel.decorators.CreateUserRepresentation;
+import com.wesabe.grendel.decorators.UserListRepresentation.UserListItem;
 import com.wesabe.grendel.resources.UsersResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
+
 import static java.net.URI.create;
 import java.util.List;
 import static javax.ws.rs.core.UriBuilder.fromUri;

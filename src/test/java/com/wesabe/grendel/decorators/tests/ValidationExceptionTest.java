@@ -1,6 +1,5 @@
-package com.wesabe.grendel.representations.tests;
+package com.wesabe.grendel.decorators.tests;
 
-import com.wesabe.grendel.representations.ValidationException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;

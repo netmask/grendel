@@ -1,6 +1,5 @@
 package com.wesabe.grendel.resources.tests;
 
-import com.google.common.collect.ImmutableSet;
 import static com.google.common.collect.ImmutableSet.of;
 import static com.google.common.collect.ImmutableSet.of;
 import com.wesabe.grendel.auth.Credentials;
@@ -8,7 +7,7 @@ import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.entities.dao.UserDAO;
-import com.wesabe.grendel.representations.DocumentListRepresentation;
+import com.wesabe.grendel.decorators.DocumentListRepresentation;
 import com.wesabe.grendel.resources.DocumentsResource;
 import org.junit.Before;
 import org.junit.Test;

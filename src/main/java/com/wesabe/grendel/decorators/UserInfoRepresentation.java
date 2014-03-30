@@ -1,8 +1,8 @@
-package com.wesabe.grendel.representations;
+package com.wesabe.grendel.decorators;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wesabe.grendel.entities.User;
-import org.codehaus.jackson.annotate.JsonGetter;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.joda.time.format.DateTimeFormatter;
 
 import javax.ws.rs.core.UriInfo;
@@ -12,7 +12,7 @@ import static org.joda.time.format.ISODateTimeFormat.basicDateTimeNoMillis;
 
 /**
  * A representation of a response containing information about a user.
- * <p/>
+ * <p>
  * Example JSON:
  * <pre>
  * {
@@ -29,6 +29,7 @@ public class UserInfoRepresentation {
     private static final DateTimeFormatter ISO_DATETIME = basicDateTimeNoMillis();
     private final User user;
     private final UriInfo uriInfo;
+
     public UserInfoRepresentation(UriInfo uriInfo, User user) {
         this.user = user;
         this.uriInfo = uriInfo;

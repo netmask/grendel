@@ -1,9 +1,10 @@
-package com.wesabe.grendel.representations;
+package com.wesabe.grendel.decorators;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.resources.DocumentResource;
-import org.codehaus.jackson.annotate.JsonGetter;
-import org.codehaus.jackson.annotate.JsonIgnore;
+
 
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
@@ -14,6 +15,7 @@ import static com.google.common.collect.Lists.newArrayListWithCapacity;
 public class DocumentListRepresentation {
     private UriInfo uriInfo;
     private Set<Document> documents;
+
     public DocumentListRepresentation(UriInfo uriInfo, Set<Document> documents) {
         this.uriInfo = uriInfo;
         this.documents = documents;

@@ -2,10 +2,7 @@ package com.wesabe.grendel.entities;
 
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.KeySet;
-import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.Type;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -50,11 +47,9 @@ public class User implements Serializable {
     private KeySet keySet = null;
 
     @Column(name = "created_at", nullable = false)
-    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
     private DateTime createdAt;
 
     @Column(name = "modified_at", nullable = false)
-    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
     private DateTime modifiedAt;
 
     // FIXME coda@wesabe.com -- Dec 27, 2009: User#documents double-loads document primary keys.
@@ -72,14 +67,9 @@ public class User implements Serializable {
     // I've tried just about every approach to composite keys in Hibernate that
     // I found, and none of them changed this behavior.
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Document> documents = newHashSet();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    @ForeignKey(
-            name = "FK_LINK_TO_USER",
-            inverseName = "FK_LINK_TO_DOCUMENT"
-    )
     @JoinTable(
             name = "links",
             joinColumns = {

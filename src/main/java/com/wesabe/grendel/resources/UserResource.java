@@ -1,7 +1,5 @@
 package com.wesabe.grendel.resources;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
@@ -9,11 +7,12 @@ import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
-import com.wesabe.grendel.representations.UpdateUserRepresentation;
-import com.wesabe.grendel.representations.UserInfoRepresentation;
-import com.wideplay.warp.persist.Transactional;
+import com.wesabe.grendel.decorators.UpdateUserRepresentation;
+import com.wesabe.grendel.decorators.UserInfoRepresentation;
 import org.joda.time.DateTime;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -30,14 +29,12 @@ import static javax.ws.rs.core.Response.ok;
  */
 @Path("/users/{id}")
 public class UserResource {
-    private final UserDAO userDAO;
-    private final Provider<SecureRandom> randomProvider;
 
     @Inject
-    public UserResource(UserDAO userDAO, Provider<SecureRandom> randomProvider) {
-        this.userDAO = userDAO;
-        this.randomProvider = randomProvider;
-    }
+    private UserDAO userDAO;
+
+    @Inject
+    private Provider<SecureRandom> randomProvider;
 
     /**
      * Responds to a {@link GET} request with information about the specified
@@ -63,18 +60,17 @@ public class UserResource {
 
     /**
      * Responds to a {@link PUT} request by changing the user's password.
-     * <p/>
+     * <p>
      * <strong>N.B.:</strong> Requires Basic authentication.
      *
      * @throws CryptographicException
      */
     @PUT
-    @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     public Response update(@Context Request request, @Context Credentials credentials,
                            @PathParam("id") String id, UpdateUserRepresentation entity) throws CryptographicException {
 
-        entity.validate();
+//        entity.validate();
 
         final Session session = credentials.buildSession(userDAO, id);
 
@@ -102,7 +98,6 @@ public class UserResource {
      * all their {@link Document}s.</strong>
      */
     @DELETE
-    @Transactional
     public Response delete(@Context Request request, @Context UriInfo uriInfo, @PathParam("id") String id) {
         final User user = userDAO.findById(id);
 
@@ -117,7 +112,7 @@ public class UserResource {
      * headers, and the resource has a matching {@link User#getModifiedAt()}
      * or {@link User#getETag()}, returns a {@code 304 Unmodified},
      * indicating the client has the most recent version of the resource.
-     * <p/>
+     * <p>
      * If the request has a {@code If-Unmodified-Since} or {@code If-Match}
      * headers, and the resource has a more recent
      * {@link User#getModifiedAt()} or {@link User#getETag()}, returns

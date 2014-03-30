@@ -1,8 +1,9 @@
 package com.wesabe.grendel.modules;
 
-import com.google.inject.Provider;
-import org.slf4j.Logger;
 
+import org.apache.log4j.Logger;
+
+import javax.inject.Provider;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.util.concurrent.ScheduledExecutorService;
@@ -11,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import static java.security.SecureRandom.getInstance;
 import static java.security.SecureRandom.getSeed;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
-import static org.slf4j.LoggerFactory.getLogger;
+import static org.apache.log4j.Logger.getLogger;
 
 /**
  * A Guice {@link Provider} which manages a {@link SecureRandom} instance.
@@ -21,10 +22,13 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class SecureRandomProvider implements Provider<SecureRandom> {
     private static final int ENTROPY_UPDATE_SIZE = 64;
     private static final Logger LOGGER = getLogger(SecureRandomProvider.class);
+
     private static final String PRNG_ALGORITHM = "SHA1PRNG";
     private static final String PRNG_PROVIDER = "SUN";
+
     private final SecureRandom random;
     private final ScheduledExecutorService pool;
+
     public SecureRandomProvider() {
         this.pool = newSingleThreadScheduledExecutor();
 
@@ -34,6 +38,7 @@ public class SecureRandomProvider implements Provider<SecureRandom> {
         } catch (GeneralSecurityException e) {
             throw new IllegalStateException(e);
         }
+
         LOGGER.info("Seeding PRNG");
         random.nextInt(); // force seeding
 

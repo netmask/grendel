@@ -15,7 +15,7 @@ import static org.bouncycastle.openpgp.PGPUtil.getDecoderStream;
 /**
  * A reader class capable of decrypting OpenPGP messages created by
  * {@link MessageWriter}.
- * <p/>
+ * <p>
  * For security reasons, this class enforces the following constraints:
  * <ul>
  * <li>Uncompressed data is not accepted, due to adaptive-chosen plaintext
@@ -26,7 +26,7 @@ import static org.bouncycastle.openpgp.PGPUtil.getDecoderStream;
  * chosen-ciphertext oracle attacks.
  * <li>Weak algorithms are not accepted.
  * </ul>
- * <p/>
+ * <p>
  * Any deviation from the format described by {@link MessageWriter} is
  * considered an unrecoverable error.
  *

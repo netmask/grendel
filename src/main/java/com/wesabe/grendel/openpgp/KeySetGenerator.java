@@ -1,9 +1,9 @@
 package com.wesabe.grendel.openpgp;
 
-import com.google.inject.Inject;
 import org.bouncycastle.openpgp.*;
 import org.joda.time.DateTime;
 
+import javax.inject.Inject;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -13,16 +13,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-import static com.google.inject.internal.ImmutableList.of;
 import static com.wesabe.grendel.openpgp.KeySet.load;
 import static com.wesabe.grendel.util.IntegerEquivalents.toBitmask;
 import static com.wesabe.grendel.util.IntegerEquivalents.toIntArray;
 import static java.security.KeyPairGenerator.getInstance;
+import static java.util.EnumSet.of;
 import static java.util.concurrent.Executors.newCachedThreadPool;
 
 /**
  * A multithreaded generator for {@link KeySet}s.
- * <p/>
+ * <p>
  * Generates master keys using {@link AsymmetricAlgorithm#ENCRYPTION_DEFAULT},
  * and subkeys using {@link AsymmetricAlgorithm#SIGNING_DEFAULT}.
  *
@@ -32,6 +32,7 @@ public class KeySetGenerator {
 
     private final SecureRandom random;
     private final ExecutorService executor;
+
     /**
      * Creates a new {@link KeySetGenerator}.
      *

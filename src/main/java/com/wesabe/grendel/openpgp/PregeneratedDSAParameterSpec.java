@@ -6,7 +6,7 @@ import java.security.spec.DSAParameterSpec;
 /**
  * A pre-generated {@link DSAParameterSpec} for 1024-bit
  * {@link AsymmetricAlgorithm#DSA} keys.
- * <p/>
+ * <p>
  * <b>N.B.:</b> {@code P}, {@code Q}, and {@code G} are all public values and
  * can be shared across networks of users.
  *

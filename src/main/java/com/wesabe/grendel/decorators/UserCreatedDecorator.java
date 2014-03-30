@@ -1,7 +1,8 @@
-package com.wesabe.grendel.representations;
+package com.wesabe.grendel.decorators;
 
-import org.codehaus.jackson.annotate.JsonGetter;
-import org.codehaus.jackson.annotate.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import javax.validation.constraints.*;
 
 import static java.util.Arrays.copyOf;
 import static java.util.Arrays.fill;
@@ -22,8 +23,11 @@ import static java.util.Arrays.fill;
  *
  * @author coda
  */
-public class CreateUserRepresentation implements Validatable {
+public class UserCreatedDecorator{
+
+    @NotNull
     private String id;
+
     private char[] password;
 
     @JsonGetter("password")
@@ -49,22 +53,5 @@ public class CreateUserRepresentation implements Validatable {
 
     public void sanitize() {
         fill(password, '\0');
-    }
-
-    @Override
-    public void validate() throws ValidationException {
-        final ValidationException error = new ValidationException();
-
-        if ((id == null) || id.isEmpty()) {
-            error.missingRequiredProperty("id");
-        }
-
-        if ((password == null) || (password.length == 0)) {
-            error.missingRequiredProperty("password");
-        }
-
-        if (error.hasReasons()) {
-            throw error;
-        }
     }
 }

@@ -78,7 +78,7 @@ public enum HashAlgorithm implements IntegerEquivalent {
 
     /**
      * SHA-224
-     * <p/>
+     * <p>
      * Use only for DSS compatibility.
      */
     SHA_224("SHA-224", HashAlgorithmTags.SHA224),
@@ -90,7 +90,7 @@ public enum HashAlgorithm implements IntegerEquivalent {
 
     /**
      * SHA-384
-     * <p/>
+     * <p>
      * Use only for DSS compatibility.
      */
     SHA_384("SHA-384", HashAlgorithmTags.SHA384),

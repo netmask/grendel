@@ -1,12 +1,12 @@
 package com.wesabe.grendel.resources;
 
-import com.google.inject.Inject;
 import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.dao.UserDAO;
-import com.wesabe.grendel.representations.DocumentListRepresentation;
+import com.wesabe.grendel.decorators.DocumentListRepresentation;
 
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;

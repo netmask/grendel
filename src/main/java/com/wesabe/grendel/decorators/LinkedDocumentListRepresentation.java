@@ -1,11 +1,11 @@
-package com.wesabe.grendel.representations;
+package com.wesabe.grendel.decorators;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.representations.UserListRepresentation.UserListItem;
+import com.wesabe.grendel.decorators.UserListRepresentation.UserListItem;
 import com.wesabe.grendel.resources.LinkedDocumentResource;
-import org.codehaus.jackson.annotate.JsonGetter;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
@@ -16,6 +16,7 @@ import static com.google.common.collect.Lists.newArrayList;
 public class LinkedDocumentListRepresentation {
     private final UriInfo uriInfo;
     private final User user;
+
     public LinkedDocumentListRepresentation(UriInfo uriInfo, User user) {
         this.uriInfo = uriInfo;
         this.user = user;

@@ -68,7 +68,7 @@ public abstract class AbstractKey {
      *
      * @return
      */
-	/* default */ PGPSecretKey getSecretKey() {
+    /* default */ PGPSecretKey getSecretKey() {
         return secretKey;
     }
 
@@ -98,7 +98,7 @@ public abstract class AbstractKey {
 
     /**
      * Returns a human-readable version of {@link #getKeyID()}.
-     * <p/>
+     * <p>
      * <b>N.B.:</b> This returns a truncated version of the key ID.
      */
     public String getHumanKeyID() {

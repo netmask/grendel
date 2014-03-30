@@ -6,7 +6,7 @@ import java.math.BigInteger;
 /**
  * A pre-generated {@link DHParameterSpec} for 2048-bit
  * {@link AsymmetricAlgorithm#ELGAMAL} keys.
- * <p/>
+ * <p>
  * <b>N.B.:</b> {@code P} and {@code G} are both public values and can be shared
  * across networks of users.
  *

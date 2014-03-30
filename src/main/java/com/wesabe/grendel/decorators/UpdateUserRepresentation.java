@@ -1,26 +1,29 @@
-package com.wesabe.grendel.representations;
+package com.wesabe.grendel.decorators;
 
-import org.codehaus.jackson.annotate.JsonGetter;
-import org.codehaus.jackson.annotate.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import javax.validation.constraints.*;
 
 import static java.util.Arrays.copyOf;
 import static java.util.Arrays.fill;
 
 /**
  * A representation of a request to change a user's password.
- * <p/>
+ * <p>
  * Example JSON:
  * <pre>
  * {
  *   "password": "snoopersneekrit"
  * }
  * </pre>
- * <p/>
+ * <p>
  * The {@code password} property is required.
  *
  * @author coda
  */
-public class UpdateUserRepresentation implements Validatable {
+public class UpdateUserRepresentation{
+
+    @NotNull
     private char[] password;
 
     @JsonGetter("password")
@@ -32,19 +35,6 @@ public class UpdateUserRepresentation implements Validatable {
     public void setPassword(char[] password) {
         this.password = copyOf(password, password.length);
         fill(password, '\0');
-    }
-
-    @Override
-    public void validate() throws ValidationException {
-        final ValidationException error = new ValidationException();
-
-        if ((password == null) || (password.length == 0)) {
-            error.missingRequiredProperty("password");
-        }
-
-        if (error.hasReasons()) {
-            throw error;
-        }
     }
 
     public void sanitize() {

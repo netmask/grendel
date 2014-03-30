@@ -16,7 +16,6 @@ import static javax.ws.rs.core.Response.status;
  * A set of Basic authentication credentials.
  *
  * @author coda
- * @see BasicAuthProvider
  * @see Session
  */
 public class Credentials {

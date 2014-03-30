@@ -1,6 +1,5 @@
 package com.wesabe.grendel.entities;
 
-import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -22,7 +21,6 @@ public class DocumentPK implements Serializable {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @ForeignKey(name = "FK_DOCUMENT_TO_OWNER")
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 

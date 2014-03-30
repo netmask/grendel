@@ -12,7 +12,7 @@ import org.bouncycastle.openpgp.PGPSignature;
 public enum SignatureType implements IntegerEquivalent {
     /**
      * A signature of a binary document.
-     * <p/>
+     * <p>
      * This means the signer owns it, created it, or certifies that it has not
      * been modified.
      */
@@ -20,7 +20,7 @@ public enum SignatureType implements IntegerEquivalent {
 
     /**
      * A signature of a canonical text document.
-     * <p/>
+     * <p>
      * This means the signer owns it, created it, or certifies that it has not
      * been modified.  The signature is calculated over the text data with its
      * line endings converted to {@code 0x0D 0x0A} ({@code CR+LF}).
@@ -71,7 +71,7 @@ public enum SignatureType implements IntegerEquivalent {
 
     /**
      * A signature calculated directly on a key.
-     * <p/>
+     * <p>
      * It binds the information in the Signature subpackets to the key, and is
      * appropriate to be used for subpackets that provide information about the
      * key, such as the Revocation Key subpacket.  It is also appropriate for
@@ -82,7 +82,7 @@ public enum SignatureType implements IntegerEquivalent {
 
     /**
      * A signature calculated directly on the key being revoked.
-     * <p/>
+     * <p>
      * A revoked key is not to be used.  Only revocation signatures by the key
      * being revoked, or by an authorized revocation key, should be considered
      * valid revocation signatures.
@@ -91,7 +91,7 @@ public enum SignatureType implements IntegerEquivalent {
 
     /**
      * A signature calculated directly on the subkey being revoked.
-     * <p/>
+     * <p>
      * A revoked subkey is not to be used.  Only revocation signatures by the
      * top-level signature key that is bound to this subkey, or by an authorized
      * revocation key, should be considered valid revocation signatures.
@@ -107,14 +107,14 @@ public enum SignatureType implements IntegerEquivalent {
 
     /**
      * A timestamp signature.
-     * <p/>
+     * <p>
      * This signature is only meaningful for the timestamp contained in it.
      */
     TIMESTAMP("timestamp", PGPSignature.TIMESTAMP),
 
     /**
      * A signature over some other OpenPGP Signature packet(s).
-     * <p/>
+     * <p>
      * It is analogous to a notary seal on the signed data.
      */
     // this value isn't included as a constant in PGPSignature

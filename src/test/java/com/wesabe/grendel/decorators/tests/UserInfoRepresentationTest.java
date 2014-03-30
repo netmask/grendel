@@ -1,8 +1,8 @@
-package com.wesabe.grendel.representations.tests;
+package com.wesabe.grendel.decorators.tests;
 
 import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.openpgp.KeySet;
-import com.wesabe.grendel.representations.UserInfoRepresentation;
+import com.wesabe.grendel.decorators.UserInfoRepresentation;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 import org.joda.time.DateTime;

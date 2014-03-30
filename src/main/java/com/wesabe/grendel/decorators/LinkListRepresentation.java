@@ -1,20 +1,21 @@
-package com.wesabe.grendel.representations;
+package com.wesabe.grendel.decorators;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.representations.UserListRepresentation.UserListItem;
+import com.wesabe.grendel.decorators.UserListRepresentation.UserListItem;
 import com.wesabe.grendel.resources.LinkResource;
-import org.codehaus.jackson.annotate.JsonGetter;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * A list of a {@link Document}'s links.
- * <p/>
+ * <p>
  * Example JSON:
  * <pre>
  * {
@@ -35,6 +36,7 @@ import static com.google.common.collect.Lists.newArrayList;
 public class LinkListRepresentation {
     private final UriInfo uriInfo;
     private final Document document;
+
     public LinkListRepresentation(UriInfo uriInfo, Document document) {
         this.uriInfo = uriInfo;
         this.document = document;
@@ -53,9 +55,11 @@ public class LinkListRepresentation {
     @JsonGetter("links")
     public List<LinkListItem> getLinks() {
         final List<LinkListItem> links = newArrayList();
-        for (User user : document.getLinkedUsers()) {
-            links.add(new LinkListItem(uriInfo, document, user));
-        }
+        links.addAll(document.getLinkedUsers()
+                .stream()
+                .map(user -> new LinkListItem(uriInfo, document, user))
+                .collect(Collectors.toList()));
+
         return links;
     }
 

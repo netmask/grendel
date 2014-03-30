@@ -1,10 +1,9 @@
-package com.wesabe.grendel.representations.tests;
+package com.wesabe.grendel.decorators.tests;
 
-import com.google.common.collect.ImmutableList;
 import static com.google.common.collect.ImmutableList.copyOf;
 import static com.google.common.collect.ImmutableList.of;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.representations.UserListRepresentation;
+import com.wesabe.grendel.decorators.UserListRepresentation;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;

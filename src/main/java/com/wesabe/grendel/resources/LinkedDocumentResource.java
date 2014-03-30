@@ -1,6 +1,5 @@
 package com.wesabe.grendel.resources;
 
-import com.google.inject.Inject;
 import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
@@ -9,6 +8,7 @@ import com.wesabe.grendel.entities.dao.DocumentDAO;
 import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.openpgp.CryptographicException;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
@@ -49,7 +49,7 @@ public class LinkedDocumentResource {
     /**
      * Responds to a {@link GET} request by decrypting the {@link Document} body
      * and returning it.
-     * <p/>
+     * <p>
      * <strong>N.B.:</strong> Requires Basic authentication.
      */
     @GET
@@ -80,7 +80,7 @@ public class LinkedDocumentResource {
      * Responds to a {@link DELETE} request by deleting the {@link User}'s
      * access to this {@link Document}. This does <strong>not</strong> delete
      * the document itself, nor does it re-encrypt the document.
-     * <p/>
+     * <p>
      * <strong>N.B.:</strong> Requires Basic authentication.
      */
     @DELETE

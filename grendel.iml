@@ -1,67 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
-    <output url="file://$MODULE_DIR$/target/classes" />
-    <output-test url="file://$MODULE_DIR$/target/test-classes" />
+<module external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$" external.system.id="GRADLE" external.system.module.group="com.wesabe" external.system.module.version="0.4.1-netmask-SNAPSHOT" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
-      <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.8.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-all:1.8.4" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.easytesting:fest-assert:1.2" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.easytesting:fest-util:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.codahale:shore:0.3" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-servlet:7.1.4.v20100610" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-security:7.1.4.v20100610" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-server:7.1.4.v20100610" level="project" />
-    <orderEntry type="library" name="Maven: javax.servlet:servlet-api:2.5" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-continuation:7.1.4.v20100610" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-http:7.1.4.v20100610" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-io:7.1.4.v20100610" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-util:7.1.4.v20100610" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-servlets:7.1.4.v20100610" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-client:7.1.4.v20100610" level="project" />
-    <orderEntry type="library" name="Maven: com.sun.jersey:jersey-server:1.1.5.1" level="project" />
-    <orderEntry type="library" name="Maven: com.sun.jersey:jersey-core:1.1.5.1" level="project" />
-    <orderEntry type="library" name="Maven: javax.ws.rs:jsr311-api:1.1.1" level="project" />
-    <orderEntry type="library" name="Maven: asm:asm:3.1" level="project" />
-    <orderEntry type="library" name="Maven: com.sun.jersey.contribs:jersey-guice:1.1.5.1" level="project" />
-    <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
-    <orderEntry type="library" name="Maven: com.wideplay.warp:warp-persist:2.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: org.guiceyfruit:guice-all:2.0" level="project" />
-    <orderEntry type="library" name="Maven: org.guiceyfruit:guice-servlet:2.0" level="project" />
-    <orderEntry type="library" name="Maven: javassist:javassist:3.8.0.GA" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-jdk14:1.5.8" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.5.8" level="project" />
-    <orderEntry type="library" name="Maven: org.hibernate:hibernate-core:3.3.2.GA" level="project" />
-    <orderEntry type="library" name="Maven: antlr:antlr:2.7.6" level="project" />
-    <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.1" level="project" />
-    <orderEntry type="library" name="Maven: dom4j:dom4j:1.6.1" level="project" />
-    <orderEntry type="library" name="Maven: xml-apis:xml-apis:1.0.b2" level="project" />
-    <orderEntry type="library" name="Maven: javax.transaction:jta:1.1" level="project" />
-    <orderEntry type="library" name="Maven: org.hibernate:hibernate-c3p0:3.3.2.GA" level="project" />
-    <orderEntry type="library" name="Maven: c3p0:c3p0:0.9.1.2" level="project" />
-    <orderEntry type="library" name="Maven: org.hibernate:hibernate-annotations:3.4.0.GA" level="project" />
-    <orderEntry type="library" name="Maven: org.hibernate:ejb3-persistence:1.0.2.GA" level="project" />
-    <orderEntry type="library" name="Maven: org.hibernate:hibernate-commons-annotations:3.1.0.GA" level="project" />
-    <orderEntry type="library" name="Maven: com.google.collections:google-collections:1.0" level="project" />
-    <orderEntry type="library" name="Maven: commons-cli:commons-cli:1.2" level="project" />
-    <orderEntry type="library" name="Maven: net.jcip:jcip-annotations:1.0" level="project" />
-    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.10" level="project" />
-    <orderEntry type="library" name="Maven: joda-time:joda-time:1.6" level="project" />
-    <orderEntry type="library" name="Maven: joda-time:joda-time-hibernate:1.1" level="project" />
-    <orderEntry type="library" name="Maven: org.bouncycastle:bcpg-jdk15on:1.50" level="project" />
-    <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk15on:1.50" level="project" />
-    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-jaxrs:1.4.1" level="project" />
-    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-core-asl:1.4.1" level="project" />
-    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.4.1" level="project" />
-    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-xc:1.4.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: joda-time-1.6" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: bcpg-jdk15on-1.50" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: eclipselink-2.5.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: resteasy-jaxrs-3.0.6.Final" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: java-uuid-generator-3.1.3" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: cdi-api-1.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: weld-core-2.1.2.Final" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: jackson-annotations-2.3.2" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: bcprov-jdk15on-1.50" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: javax.persistence-2.1.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: commonj.sdo-2.1.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: jaxrs-api-3.0.6.Final" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: javassist-3.12.1.GA" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: scannotation-1.0.3" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: jboss-annotations-api_1.1_spec-1.0.1.Final" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: activation-1.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: httpcore-4.2.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: commons-logging-1.1.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: commons-codec-1.6" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: httpclient-4.2.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: commons-io-2.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: jcip-annotations-1.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: log4j-1.2.13" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: el-api-2.2" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: jboss-interceptors-api_1.1_spec-1.0.0.Beta1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: jsr250-api-1.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: javax.inject-1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: weld-api-2.1.Final" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: weld-spi-2.1.Final" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: jboss-classfilewriter-1.0.4.Final" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: jboss-annotations-api_1.2_spec-1.0.0.Alpha1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: guava-13.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: jboss-el-api_3.0_spec-1.0.0.Alpha1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: jboss-interceptors-api_1.2_spec-1.0.0.Alpha3" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: jboss-logging-3.1.3.GA" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: weld-core-impl-2.1.2.Final" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: weld-core-jsf-2.1.2.Final" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: junit-4.8.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: mockito-all-1.8.4" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: fest-assert-1.2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: fest-util-1.1" level="project" />
   </component>
 </module>
 

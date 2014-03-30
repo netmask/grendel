@@ -1,12 +1,10 @@
-package com.wesabe.grendel.representations.tests;
+package com.wesabe.grendel.decorators.tests;
 
-import com.google.common.collect.ImmutableList;
 import static com.google.common.collect.ImmutableList.copyOf;
-import com.google.common.collect.ImmutableSet;
 import static com.google.common.collect.ImmutableSet.of;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.representations.LinkListRepresentation;
+import com.wesabe.grendel.decorators.LinkedDocumentListRepresentation;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
@@ -27,12 +25,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(Enclosed.class)
-public class LinkListRepresentationTest {
-	public static class Serializing_A_Link_List {
+public class LinkedDocumentListRepresentationTest {
+	public static class Serializing_A_Document_List {
 		private UriInfo uriInfo;
-		private LinkListRepresentation rep;
+		private LinkedDocumentListRepresentation rep;
 		private Document doc;
-		private User owner, reader;
+		private User user, owner;
 		
 		@Before
 		public void setup() throws Exception {
@@ -48,17 +46,17 @@ public class LinkListRepresentationTest {
 			when(owner.getId()).thenReturn("mrpeepers");
 			when(owner.toString()).thenReturn("mrpeepers");
 			
-			this.reader = mock(User.class);
-			when(reader.getId()).thenReturn("flaflaf");
-			when(reader.toString()).thenReturn("flaflaf");
-			
 			this.doc = mock(Document.class);
 			when(doc.getName()).thenReturn("document1.txt");
 			when(doc.toString()).thenReturn("document1.txt");
 			when(doc.getOwner()).thenReturn(owner);
-			when(doc.getLinkedUsers()).thenReturn(of(reader));
 			
-			this.rep = new LinkListRepresentation(uriInfo, doc);
+			this.user = mock(User.class);
+			when(user.getId()).thenReturn("capnfrank");
+			when(user.toString()).thenReturn("capnfrank");
+			when(user.getLinkedDocuments()).thenReturn(of(doc));
+			
+			this.rep = new LinkedDocumentListRepresentation(uriInfo, user);
 		}
 		
 		@Test
@@ -67,16 +65,17 @@ public class LinkListRepresentationTest {
 			final String json = mapper.writeValueAsString(rep);
 			
 			final ObjectNode entity = mapper.readValue(json, ObjectNode.class);
-			final List<JsonNode> links = copyOf(entity.get("links").getElements());
-
-			assertThat(links).hasSize(1);
+			final List<JsonNode> documents = copyOf(entity.get("linked-documents").getElements());
 			
-			final JsonNode link = links.get(0);
-			assertThat(link.get("uri").getTextValue()).isEqualTo("http://example.com/users/mrpeepers/documents/document1.txt/links/flaflaf");
+			assertThat(documents).hasSize(1);
 			
-			final JsonNode user = link.get("user");
-			assertThat(user.get("id").getTextValue()).isEqualTo("flaflaf");
-			assertThat(user.get("uri").getTextValue()).isEqualTo("http://example.com/users/flaflaf");
+			final JsonNode document = documents.get(0);
+			assertThat(document.get("name").getTextValue()).isEqualTo("document1.txt");
+			assertThat(document.get("uri").getTextValue()).isEqualTo("http://example.com/users/capnfrank/linked-documents/mrpeepers/document1.txt");
+			
+			final JsonNode owner = document.get("owner");
+			assertThat(owner.get("id").getTextValue()).isEqualTo("mrpeepers");
+			assertThat(owner.get("uri").getTextValue()).isEqualTo("http://example.com/users/mrpeepers");
 		}
 	}
 }

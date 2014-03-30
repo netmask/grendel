@@ -8,9 +8,6 @@ import static java.util.Arrays.deepHashCode;
  * @author coda
  */
 public class HashCode {
-    private HashCode() {
-    }
-
     public static int calculate(Object... objects) {
         return deepHashCode(objects);
     }

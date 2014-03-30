@@ -1,7 +1,6 @@
-package com.wesabe.grendel.representations.tests;
+package com.wesabe.grendel.decorators.tests;
 
-import com.wesabe.grendel.representations.CreateUserRepresentation;
-import com.wesabe.grendel.representations.ValidationException;
+import com.wesabe.grendel.decorators.UpdateUserRepresentation;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,15 +11,14 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
 @RunWith(Enclosed.class)
-public class CreateUserRepresentationTest {
+public class UpdateUserRepresentationTest {
 	public static class A_Valid_New_User_Request {
-		private CreateUserRepresentation req;
+		private UpdateUserRepresentation req;
 		
 		@Before
 		public void setup() throws Exception {
-			this.req = new CreateUserRepresentation();
+			this.req = new UpdateUserRepresentation();
 			
-			req.setId("dingo");
 			req.setPassword("happenstance".toCharArray());
 		}
 		
@@ -32,11 +30,6 @@ public class CreateUserRepresentationTest {
 			} catch (ValidationException e) {
 				fail("didn't expect a ValidationException but one was thrown");
 			}
-		}
-		
-		@Test
-		public void itHasAUsername() throws Exception {
-			assertThat(req.getId()).isEqualTo("dingo");
 		}
 		
 		@Test
@@ -53,11 +46,11 @@ public class CreateUserRepresentationTest {
 	}
 	
 	public static class An_Invalid_New_User_Request {
-		private CreateUserRepresentation req;
+		private UpdateUserRepresentation req;
 		
 		@Before
 		public void setup() throws Exception {
-			this.req = new CreateUserRepresentation();
+			this.req = new UpdateUserRepresentation();
 		}
 		
 		@Test
@@ -72,7 +65,6 @@ public class CreateUserRepresentationTest {
 					"Grendel was unable to process your request for the following reason(s):" +
 					"\n" +
 					"\n" +
-					"* missing required property: id\n" +
 					"* missing required property: password\n"
 				);
 			}
@@ -82,12 +74,11 @@ public class CreateUserRepresentationTest {
 	public static class Deserializing_From_Json {
 		@Test
 		public void itDeserializesJSON() throws Exception {
-			final String json = "{\"id\":\"mrpeepers\",\"password\":\"hoohah\"}";
+			final String json = "{\"password\":\"hoohah\"}";
 			
 			final ObjectMapper mapper = new ObjectMapper();
-			final CreateUserRepresentation rep = mapper.readValue(json, CreateUserRepresentation.class);
+			final UpdateUserRepresentation rep = mapper.readValue(json, UpdateUserRepresentation.class);
 			
-			assertThat(rep.getId()).isEqualTo("mrpeepers");
 			assertThat(rep.getPassword()).isEqualTo("hoohah".toCharArray());
 		}
 	}

@@ -1,5 +1,8 @@
 package com.wesabe.grendel.util;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -18,7 +21,7 @@ public final class Iterators {
      */
     @SuppressWarnings("unchecked")
     public static <T> List<T> toList(Iterator<?> iterator) {
-        return copyOf((Iterator<T>) iterator);
+        return ImmutableList.copyOf((Iterator<T>) iterator);
     }
 
     /**
@@ -26,6 +29,6 @@ public final class Iterators {
      */
     @SuppressWarnings("unchecked")
     public static <T> Set<T> toSet(Iterator<?> iterator) {
-        return copyOf((Iterator<T>) iterator);
+        return ImmutableSet.copyOf((Iterator<? extends T>) iterator);
     }
 }

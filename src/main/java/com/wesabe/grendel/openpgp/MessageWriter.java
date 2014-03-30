@@ -14,10 +14,10 @@ import static java.lang.Math.round;
 
 /**
  * A writer class capable of producing encrypted+signed OpenPGP messages.
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * This class only produces messages of the following form:
- * <p/>
+ * <p>
  * <pre>
  * +---------------------------------------------------------------------------+
  * | Public-Key Encrypted Session Key Packet                                   |
@@ -54,13 +54,13 @@ import static java.lang.Math.round;
  * |                                                                           |
  * +---------------------------------------------------------------------------+
  * </pre>
- * <p/>
+ * <p>
  * First, a signature of the message body is generated using the owner's private
  * key. The body and signature are then compressed and encrypted using a random
  * symmetric session key and stored in a integrity-protected data packet with a
  * matching modification detection code packet. The session key is then
  * encrypted with the owner and receipients' public keys.
- * <p/>
+ * <p>
  * To prevent adaptive chosen-plaintext attacks, this class enforces two
  * constraints:
  * <ul>
