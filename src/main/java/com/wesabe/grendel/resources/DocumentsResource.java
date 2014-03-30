@@ -17,26 +17,26 @@ import javax.ws.rs.core.UriInfo;
 
 /**
  * A class which exposes a list of {@link Document}s as a resource.
- * 
+ *
  * @author coda
  */
 @Path("/users/{id}/documents")
 @Produces(MediaType.APPLICATION_JSON)
 public class DocumentsResource {
-	final UserDAO userDAO;
-	
-	@Inject
-	public DocumentsResource(UserDAO userDAO) {
-		this.userDAO = userDAO;
-	}
-	
-	@GET
-	public DocumentListRepresentation listDocuments(
+    final UserDAO userDAO;
+
+    @Inject
+    public DocumentsResource(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
+    @GET
+    public DocumentListRepresentation listDocuments(
             @Context UriInfo uriInfo,
             @Context Credentials credentials,
             @PathParam("id") String id) {
-		
-		final Session session = credentials.buildSession(userDAO, id);
-		return new DocumentListRepresentation(uriInfo, session.getUser().getDocuments());
-	}
+
+        final Session session = credentials.buildSession(userDAO, id);
+        return new DocumentListRepresentation(uriInfo, session.getUser().getDocuments());
+    }
 }

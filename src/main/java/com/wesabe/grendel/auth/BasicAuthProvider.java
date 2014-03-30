@@ -13,11 +13,11 @@ import static org.eclipse.jetty.http.security.B64Code.decode;
 
 /**
  * A Jersey injection provider for {@link Credentials} instances.
- * <p>
+ * <p/>
  * Decodes Basic authentication credentials. If none are present, or the
  * credentials are malformed, throws a {@link WebApplicationException} with an
  * appropriate authentication challenge.
- * <p>
+ * <p/>
  * To add a Basic authentication requirement to a method, simply annotate a
  * {@link Credentials} parameter with {@link Context}:
  * <pre>
@@ -25,42 +25,42 @@ import static org.eclipse.jetty.http.security.B64Code.decode;
  *   ...
  * }
  * </pre>
- * 
+ *
  * @author coda
  */
 @Provider
 public class BasicAuthProvider extends AbstractInjectionProvider<Credentials> {
-	private static final String HEADER_PREFIX = "Basic ";
-	private static final char CREDENTIAL_DELIMITER = ':';
+    private static final String HEADER_PREFIX = "Basic ";
+    private static final char CREDENTIAL_DELIMITER = ':';
 
-	public BasicAuthProvider() {
-		super(Credentials.class);
-	}
+    public BasicAuthProvider() {
+        super(Credentials.class);
+    }
 
-	@Override
-	public Credentials getValue(HttpContext context) {
-		String header = context.getRequest().getHeaderValue(HttpHeaders.AUTHORIZATION);
-		try {
-			try {
-				if ((header != null) && header.startsWith(HEADER_PREFIX)) {
-					final String encoded = header.substring(header.indexOf(' ') + 1);
-					final String credentials = decode(encoded, StringUtil.__ISO_8859_1);
-					final int i = credentials.indexOf(CREDENTIAL_DELIMITER);
-					
-					final String username = credentials.substring(0, i);
-					final String password = credentials.substring(i + 1);
+    @Override
+    public Credentials getValue(HttpContext context) {
+        String header = context.getRequest().getHeaderValue(HttpHeaders.AUTHORIZATION);
+        try {
+            try {
+                if ((header != null) && header.startsWith(HEADER_PREFIX)) {
+                    final String encoded = header.substring(header.indexOf(' ') + 1);
+                    final String credentials = decode(encoded, StringUtil.__ISO_8859_1);
+                    final int i = credentials.indexOf(CREDENTIAL_DELIMITER);
+
+                    final String username = credentials.substring(0, i);
+                    final String password = credentials.substring(i + 1);
 
                     return new Credentials(username, password);
                 }
-			} catch (IllegalArgumentException | StringIndexOutOfBoundsException e) {
-				// fall through to sending an auth challenge
-			}
+            } catch (IllegalArgumentException | StringIndexOutOfBoundsException e) {
+                // fall through to sending an auth challenge
+            }
 
-			throw new WebApplicationException(Credentials.CHALLENGE);
-		} catch (WebApplicationException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+            throw new WebApplicationException(Credentials.CHALLENGE);
+        } catch (WebApplicationException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

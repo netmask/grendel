@@ -21,79 +21,79 @@ import static javax.ws.rs.core.Response.noContent;
 
 @Path("/users/{user_id}/documents/{name}/links/{reader_id}")
 public class LinkResource {
-	private final UserDAO userDAO;
-	private final DocumentDAO documentDAO;
-	private final Provider<SecureRandom> randomProvider;
-	
-	@Inject
-	public LinkResource(UserDAO userDAO, DocumentDAO documentDAO, Provider<SecureRandom> randomProvider) {
-		this.userDAO = userDAO;
-		this.documentDAO = documentDAO;
-		this.randomProvider = randomProvider;
-	}
-	
-	@PUT
-	public Response createLink(@Context Credentials credentials,
-		@PathParam("user_id") String userId, @PathParam("name") String name,
-		@PathParam("reader_id") String readerId) {
-		
-		final Session session = credentials.buildSession(userDAO, userId);
-		final User reader = findUser(readerId);
-		final Document doc = findDocument(session.getUser(), name);
-		
-		doc.linkUser(reader);
-		reEncrypt(doc, session.getKeySet());
-		
-		documentDAO.saveOrUpdate(doc);
-		
-		return noContent().build();
-	}
-	
-	@DELETE
-	public Response deleteLink(
+    private final UserDAO userDAO;
+    private final DocumentDAO documentDAO;
+    private final Provider<SecureRandom> randomProvider;
+
+    @Inject
+    public LinkResource(UserDAO userDAO, DocumentDAO documentDAO, Provider<SecureRandom> randomProvider) {
+        this.userDAO = userDAO;
+        this.documentDAO = documentDAO;
+        this.randomProvider = randomProvider;
+    }
+
+    @PUT
+    public Response createLink(@Context Credentials credentials,
+                               @PathParam("user_id") String userId, @PathParam("name") String name,
+                               @PathParam("reader_id") String readerId) {
+
+        final Session session = credentials.buildSession(userDAO, userId);
+        final User reader = findUser(readerId);
+        final Document doc = findDocument(session.getUser(), name);
+
+        doc.linkUser(reader);
+        reEncrypt(doc, session.getKeySet());
+
+        documentDAO.saveOrUpdate(doc);
+
+        return noContent().build();
+    }
+
+    @DELETE
+    public Response deleteLink(
             @Context Credentials credentials,
             @PathParam("user_id") String userId,
             @PathParam("name") String name,
             @PathParam("reader_id") String readerId) {
-		
-		final Session session = credentials.buildSession(userDAO, userId);
-		final User reader = findUser(readerId);
-		final Document doc = findDocument(session.getUser(), name);
-		
-		doc.unlinkUser(reader);
-		reEncrypt(doc, session.getKeySet());
-		
-		documentDAO.saveOrUpdate(doc);
-		
-		return noContent().build();
-	}
 
-	private void reEncrypt(Document doc, UnlockedKeySet ownerKeySet) {
-		try {
-			final byte[] body = doc.decryptBody(ownerKeySet);
-			doc.encryptAndSetBody(
-				ownerKeySet,
-				randomProvider.get(),
-				body
-			);
-		} catch (CryptographicException e) {
-			throw new RuntimeException(e);
-		}
-	}
+        final Session session = credentials.buildSession(userDAO, userId);
+        final User reader = findUser(readerId);
+        final Document doc = findDocument(session.getUser(), name);
 
-	private Document findDocument(User owner, String name) {
-		final Document doc = documentDAO.findByOwnerAndName(owner, name);
-		if (doc == null) {
-			throw new WebApplicationException(Status.NOT_FOUND);
-		}
-		return doc;
-	}
+        doc.unlinkUser(reader);
+        reEncrypt(doc, session.getKeySet());
 
-	private User findUser(String id) {
-		final User reader = userDAO.findById(id);
-		if (reader == null) {
-			throw new WebApplicationException(Status.NOT_FOUND);
-		}
-		return reader;
-	}
+        documentDAO.saveOrUpdate(doc);
+
+        return noContent().build();
+    }
+
+    private void reEncrypt(Document doc, UnlockedKeySet ownerKeySet) {
+        try {
+            final byte[] body = doc.decryptBody(ownerKeySet);
+            doc.encryptAndSetBody(
+                    ownerKeySet,
+                    randomProvider.get(),
+                    body
+            );
+        } catch (CryptographicException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Document findDocument(User owner, String name) {
+        final Document doc = documentDAO.findByOwnerAndName(owner, name);
+        if (doc == null) {
+            throw new WebApplicationException(Status.NOT_FOUND);
+        }
+        return doc;
+    }
+
+    private User findUser(String id) {
+        final User reader = userDAO.findById(id);
+        if (reader == null) {
+            throw new WebApplicationException(Status.NOT_FOUND);
+        }
+        return reader;
+    }
 }

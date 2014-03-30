@@ -17,25 +17,25 @@ import javax.ws.rs.core.UriInfo;
 
 /**
  * A class which exposes a list of linked {@link Document}s as a resource.
- * 
+ *
  * @author coda
  */
 @Path("/users/{id}/linked-documents")
 @Produces(MediaType.APPLICATION_JSON)
 public class LinkedDocumentsResource {
-	private final UserDAO userDAO;
+    private final UserDAO userDAO;
 
-	@Inject
-	public LinkedDocumentsResource(UserDAO userDAO) {
-		this.userDAO = userDAO;
-	}
+    @Inject
+    public LinkedDocumentsResource(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
 
-	@GET
-	public LinkedDocumentListRepresentation listDocuments(@Context UriInfo uriInfo,
-		@Context Credentials credentials, @PathParam("id") String id) {
-		
-		final Session session = credentials.buildSession(userDAO, id);
+    @GET
+    public LinkedDocumentListRepresentation listDocuments(@Context UriInfo uriInfo,
+                                                          @Context Credentials credentials, @PathParam("id") String id) {
 
-		return new LinkedDocumentListRepresentation(uriInfo, session.getUser());
-	}
+        final Session session = credentials.buildSession(userDAO, id);
+
+        return new LinkedDocumentListRepresentation(uriInfo, session.getUser());
+    }
 }

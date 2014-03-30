@@ -9,7 +9,7 @@ import static java.util.Arrays.fill;
 
 /**
  * A representation of a request to create a new user.
- * <p>
+ * <p/>
  * Example JSON:
  * <pre>
  * {
@@ -17,54 +17,54 @@ import static java.util.Arrays.fill;
  *   "password": "snoopersneekrit"
  * }
  * </pre>
- * 
+ * <p/>
  * Both {@code id} and {@code password} properties are required.
- * 
+ *
  * @author coda
  */
 public class CreateUserRepresentation implements Validatable {
-	private String id;
-	private char[] password;
-	
-	@JsonGetter("password")
-	public char[] getPassword() {
-		return password;
-	}
-	
-	@JsonGetter("id")
-	public String getId() {
-		return id;
-	}
-	
-	@JsonSetter("password")
-	public void setPassword(char[] password) {
-		this.password = copyOf(password, password.length);
-		fill(password, '\0');
-	}
-	
-	@JsonSetter("id")
-	public void setId(String username) {
-		this.id = username;
-	}
-	
-	public void sanitize() {
-		fill(password, '\0');
-	}
+    private String id;
+    private char[] password;
 
-	@Override
-	public void validate() throws ValidationException {
-		final ValidationException error = new ValidationException();
-		
-		if ((id == null) || id.isEmpty()) {
-			error.missingRequiredProperty("id");
-		}
-		
-		if ((password == null) || (password.length == 0)) {
-			error.missingRequiredProperty("password");
-		}
-		
-		if (error.hasReasons()) {
-			throw error;
-		}
-	}
+    @JsonGetter("password")
+    public char[] getPassword() {
+        return password;
+    }
+
+    @JsonSetter("password")
+    public void setPassword(char[] password) {
+        this.password = copyOf(password, password.length);
+        fill(password, '\0');
+    }
+
+    @JsonGetter("id")
+    public String getId() {
+        return id;
+    }
+
+    @JsonSetter("id")
+    public void setId(String username) {
+        this.id = username;
+    }
+
+    public void sanitize() {
+        fill(password, '\0');
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+        final ValidationException error = new ValidationException();
+
+        if ((id == null) || id.isEmpty()) {
+            error.missingRequiredProperty("id");
+        }
+
+        if ((password == null) || (password.length == 0)) {
+            error.missingRequiredProperty("password");
+        }
+
+        if (error.hasReasons()) {
+            throw error;
+        }
+    }
 }
