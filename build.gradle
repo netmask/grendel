@@ -40,6 +40,20 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.3.2'
     compile 'org.fusesource.jansi:jansi:1.11'
     compile 'javax.validation:validation-api:1.1.0.Final'
+    compile 'org.hibernate:hibernate-validator:5.1.0.Final'
+
+    compile 'org.postgresql:postgresql:9.3-1101-jdbc41'
+
+    compile("org.springframework.boot:spring-boot-starter-jetty")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    compile 'org.glassfish.jersey.ext:jersey-spring3:2.7'
+    compile 'org.glassfish.jersey:jersey-bom:2.7'
+    compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.2.3"
+    
+    compile("org.springframework.boot:spring-boot-starter-web"){
+        exclude module: "spring-boot-starter-tomcat"
+    }
 
     testCompile group: 'junit', name: 'junit', version: '4.8.1'
     testCompile group: 'org.mockito', name: 'mockito-all', version: '1.8.4'

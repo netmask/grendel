@@ -8,6 +8,9 @@ import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -25,7 +28,7 @@ import static javax.ws.rs.core.Response.ok;
  *
  * @author coda
  */
-@Path("/users/{user_id}/documents/{name}")
+@RequestMapping("/users/{user_id}/documents/{name}")
 @Consumes(MediaType.WILDCARD)
 @Produces(MediaType.WILDCARD)
 public class DocumentResource {
@@ -58,12 +61,12 @@ public class DocumentResource {
      *
      * @throws CryptographicException
      */
-    @GET
+    @RequestMapping(method = RequestMethod.GET)
     public Response show(
             @Context Request request,
             @Context Credentials credentials,
-            @PathParam("user_id") String userId,
-            @PathParam("name") String name) throws CryptographicException {
+            @PathVariable("user_id") String userId,
+            @PathVariable("name") String name) throws CryptographicException {
 
         final Session session = credentials.buildSession(userDAO, userId);
 

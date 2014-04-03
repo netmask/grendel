@@ -9,6 +9,7 @@ import com.wesabe.grendel.resources.DocumentResource;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
 
@@ -24,9 +25,9 @@ public class DocumentListRepresentation {
     @JsonGetter("documents")
     public List<DocumentListItem> listDocuments() {
         final List<DocumentListItem> items = newArrayListWithCapacity(documents.size());
-        for (Document doc : documents) {
-            items.add(new DocumentListItem(uriInfo, doc));
-        }
+        items.addAll(documents.stream()
+                .map(doc -> new DocumentListItem(uriInfo, doc))
+                .collect(Collectors.toList()));
         return items;
     }
 

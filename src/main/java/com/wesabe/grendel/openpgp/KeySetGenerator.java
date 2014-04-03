@@ -2,6 +2,7 @@ package com.wesabe.grendel.openpgp;
 
 import org.bouncycastle.openpgp.*;
 import org.joda.time.DateTime;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.security.GeneralSecurityException;
@@ -28,6 +29,7 @@ import static java.util.concurrent.Executors.newCachedThreadPool;
  *
  * @author coda
  */
+@Service
 public class KeySetGenerator {
 
     private final SecureRandom random;

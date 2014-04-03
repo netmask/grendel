@@ -2,6 +2,8 @@ package com.wesabe.grendel.modules;
 
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Provider;
 import java.security.GeneralSecurityException;
@@ -19,7 +21,8 @@ import static org.apache.log4j.Logger.getLogger;
  *
  * @author coda
  */
-public class SecureRandomProvider implements Provider<SecureRandom> {
+@Service
+public class SecureRandomProvider implements FactoryBean<SecureRandom> {
     private static final int ENTROPY_UPDATE_SIZE = 64;
     private static final Logger LOGGER = getLogger(SecureRandomProvider.class);
 
@@ -47,8 +50,18 @@ public class SecureRandomProvider implements Provider<SecureRandom> {
     }
 
     @Override
-    public SecureRandom get() {
+    public SecureRandom getObject() throws Exception {
         return random;
+    }
+
+    @Override
+    public Class<?> getObjectType() {
+        return SecureRandom.class;
+    }
+
+    @Override
+    public boolean isSingleton() {
+        return false;
     }
 
     /**

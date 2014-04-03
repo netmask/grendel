@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType;
 
 public class DocumentDAO {
 
-    @PersistenceContext(unitName = "grendelPU")
+    @PersistenceContext
     private EntityManager entityManager;
 
     /**

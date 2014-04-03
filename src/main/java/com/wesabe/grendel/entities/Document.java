@@ -55,7 +55,6 @@ public class Document implements Serializable {
     private DateTime modifiedAt;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "linkedDocuments", cascade = {CascadeType.ALL})
-    @JoinTable(name = "links")
     private Set<User> linkedUsers = newHashSet();
 
     @Version

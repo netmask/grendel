@@ -1,15 +1,18 @@
 package com.wesabe.grendel.resources;
 
 import com.wesabe.grendel.decorators.UserCreatedDecorator;
+import com.wesabe.grendel.decorators.UserListRepresentation;
 import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.entities.dao.UserDAO;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.KeySet;
 import com.wesabe.grendel.openpgp.KeySetGenerator;
-import com.wesabe.grendel.decorators.UserListRepresentation;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -24,7 +27,6 @@ import static javax.ws.rs.core.Response.created;
  * @author coda
  */
 @Path("/users/")
-@Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class UsersResource {
     private final KeySetGenerator generator;
