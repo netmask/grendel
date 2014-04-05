@@ -1,10 +1,9 @@
 package com.wesabe.grendel.entities.dao.tests;
 
-import com.google.common.collect.ImmutableList;
 import static com.google.common.collect.ImmutableList.of;
 import com.google.inject.Provider;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.entities.dao.UserRepository;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.junit.Before;
@@ -12,7 +11,6 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
-import org.mockito.Mockito;
 
 import java.io.Serializable;
 
@@ -20,14 +18,14 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(Enclosed.class)
-public class UserDAOTest {
+public class UserRepositoryTest {
 	private static abstract class Context {
 		protected Session session;
-		protected UserDAO dao;
+		protected UserRepository dao;
 		
 		public void setup() throws Exception {
 			this.session = mock(Session.class);
-			this.dao = new UserDAO(new Provider<Session>() {
+			this.dao = new UserRepository(new Provider<Session>() {
 				@Override
 				public Session get() {
 					return session;

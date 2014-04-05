@@ -4,8 +4,8 @@ import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.DocumentDAO;
-import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.entities.dao.DocumentRepository;
+import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.decorators.LinkListRepresentation;
 
 import javax.inject.Inject;
@@ -24,13 +24,13 @@ import javax.ws.rs.core.UriInfo;
 @Path("/users/{user_id}/documents/{name}/links/")
 @Produces(MediaType.APPLICATION_JSON)
 public class LinksResource {
-    private final UserDAO userDAO;
-    private final DocumentDAO documentDAO;
+    private final UserRepository userRepository;
+    private final DocumentRepository documentRepository;
 
     @Inject
-    public LinksResource(UserDAO userDAO, DocumentDAO documentDAO) {
-        this.userDAO = userDAO;
-        this.documentDAO = documentDAO;
+    public LinksResource(UserRepository userRepository, DocumentRepository documentRepository) {
+        this.userRepository = userRepository;
+        this.documentRepository = documentRepository;
     }
 
     @GET
@@ -38,9 +38,9 @@ public class LinksResource {
                                             @Context Credentials credentials, @PathParam("user_id") String userId,
                                             @PathParam("name") String documentName) {
 
-        final Session session = credentials.buildSession(userDAO, userId);
+        final Session session = credentials.buildSession(userRepository, userId);
 
-        final Document doc = documentDAO.findByOwnerAndName(session.getUser(), documentName);
+        final Document doc = documentRepository.findByOwnerAndName(session.getUser(), documentName);
         if (doc == null) {
             throw new WebApplicationException(Status.NOT_FOUND);
         }

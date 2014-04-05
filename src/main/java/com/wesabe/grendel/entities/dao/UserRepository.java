@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 @Repository
-public class UserDAO {
+public class UserRepository {
 
     @Inject
     JpaTransactionManager transactionManager;

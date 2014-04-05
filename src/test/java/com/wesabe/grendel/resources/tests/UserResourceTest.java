@@ -4,7 +4,7 @@ import com.google.inject.Provider;
 import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.KeySet;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
 import com.wesabe.grendel.decorators.UpdateUserRepresentation;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.*;
 public class UserResourceTest {
 	private static abstract class Context {
 		protected UserResource resource;
-		protected UserDAO dao;
+		protected UserRepository dao;
 		protected SecureRandom random;
 		protected Credentials credentials;
 		protected UnlockedKeySet keySet;
@@ -70,7 +70,7 @@ public class UserResourceTest {
 			this.request = mock(Request.class);
 			
 			this.random = mock(SecureRandom.class);
-			this.dao = mock(UserDAO.class);
+			this.dao = mock(UserRepository.class);
 			when(dao.findById("bob")).thenReturn(user);
 			
 			this.credentials = mock(Credentials.class);

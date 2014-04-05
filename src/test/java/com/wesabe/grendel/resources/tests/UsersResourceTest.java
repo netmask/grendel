@@ -2,7 +2,7 @@ package com.wesabe.grendel.resources.tests;
 
 import static com.google.common.collect.ImmutableList.of;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.KeySet;
 import com.wesabe.grendel.openpgp.KeySetGenerator;
 import com.wesabe.grendel.decorators.CreateUserRepresentation;
@@ -32,14 +32,14 @@ import static org.mockito.Mockito.*;
 public class UsersResourceTest {
 	private static abstract class Context {
 		protected KeySetGenerator generator;
-		protected UserDAO userDAO;
+		protected UserRepository userRepository;
 		protected UsersResource resource;
 		
 		public void setup() throws Exception {
 			this.generator = mock(KeySetGenerator.class);
-			this.userDAO = mock(UserDAO.class);
+			this.userRepository = mock(UserRepository.class);
 			
-			this.resource = new UsersResource(generator, userDAO);
+			this.resource = new UsersResource(generator, userRepository);
 		}
 	}
 	
@@ -64,14 +64,14 @@ public class UsersResourceTest {
 			when(user.getId()).thenReturn("mrpeeper");
 			when(user.toString()).thenReturn("mrpeeper");
 			
-			when(userDAO.findAll()).thenReturn(of(user));
+			when(userRepository.findAll()).thenReturn(of(user));
 		}
 		
 		@Test
 		public void itFindsAllUsers() throws Exception {
 			resource.list(uriInfo);
 			
-			verify(userDAO).findAll();
+			verify(userRepository).findAll();
 		}
 		
 		@Test
@@ -111,8 +111,8 @@ public class UsersResourceTest {
 			
 			when(generator.generate(anyString(), any(char[].class))).thenReturn(keySet);
 			
-			when(userDAO.contains(anyString())).thenReturn(false);
-			when(userDAO.saveOrUpdate(any(User.class))).thenReturn(user);
+			when(userRepository.contains(anyString())).thenReturn(false);
+			when(userRepository.saveOrUpdate(any(User.class))).thenReturn(user);
 			
 			this.uriBuilder = mock(UriBuilder.class);
 			when(uriBuilder.path(any(Class.class))).thenReturn(uriBuilder);
@@ -138,7 +138,7 @@ public class UsersResourceTest {
 		public void itChecksToSeeIfTheUsernameIsTaken() throws Exception {
 			resource.create(uriInfo, request);
 			
-			verify(userDAO).contains("username");
+			verify(userRepository).contains("username");
 		}
 		
 		@Test
@@ -155,7 +155,7 @@ public class UsersResourceTest {
 			resource.create(uriInfo, request);
 			
 			final ArgumentCaptor<User> userCaptor = forClass(User.class);
-			verify(userDAO).saveOrUpdate(userCaptor.capture());
+			verify(userRepository).saveOrUpdate(userCaptor.capture());
 			
 			assertThat(userCaptor.getValue().getKeySet()).isSameAs(keySet);
 		}
@@ -184,7 +184,7 @@ public class UsersResourceTest {
 			when(request.getId()).thenReturn("username");
 			when(request.getPassword()).thenReturn("password".toCharArray());
 			
-			when(userDAO.contains(anyString())).thenReturn(true);
+			when(userRepository.contains(anyString())).thenReturn(true);
 		}
 		
 		@Test

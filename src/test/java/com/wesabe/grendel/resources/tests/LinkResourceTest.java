@@ -5,8 +5,8 @@ import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.DocumentDAO;
-import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.entities.dao.DocumentRepository;
+import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
 import com.wesabe.grendel.resources.LinkResource;
 import org.junit.Before;
@@ -26,8 +26,8 @@ import static org.mockito.Mockito.*;
 @RunWith(Enclosed.class)
 public class LinkResourceTest {
 	private static abstract class Context {
-		protected UserDAO userDAO;
-		protected DocumentDAO documentDAO;
+		protected UserRepository userRepository;
+		protected DocumentRepository documentRepository;
 		protected SecureRandom random;
 		protected Credentials credentials;
 		protected Session session;
@@ -53,19 +53,19 @@ public class LinkResourceTest {
 			when(session.getUser()).thenReturn(user);
 			when(session.getKeySet()).thenReturn(keySet);
 			
-			this.userDAO = mock(UserDAO.class);
-			when(userDAO.findById("frank")).thenReturn(reader);
+			this.userRepository = mock(UserRepository.class);
+			when(userRepository.findById("frank")).thenReturn(reader);
 			
-			this.documentDAO = mock(DocumentDAO.class);
-			when(documentDAO.findByOwnerAndName(user, "document1.txt")).thenReturn(document);
+			this.documentRepository = mock(DocumentRepository.class);
+			when(documentRepository.findByOwnerAndName(user, "document1.txt")).thenReturn(document);
 			
 			this.random = mock(SecureRandom.class);
 			
 			this.credentials = mock(Credentials.class);
-			when(credentials.buildSession(userDAO, "bob")).thenReturn(session);
+			when(credentials.buildSession(userRepository, "bob")).thenReturn(session);
 			
 			
-			this.resource = new LinkResource(userDAO, documentDAO, new Provider<SecureRandom>() {
+			this.resource = new LinkResource(userRepository, documentRepository, new Provider<SecureRandom>() {
 				@Override
 				public SecureRandom get() {
 					return random;
@@ -83,7 +83,7 @@ public class LinkResourceTest {
 		
 		@Test
 		public void itThrowsA404IfTheReaderDoesNotExist() throws Exception {
-			when(userDAO.findById("frank")).thenReturn(null);
+			when(userRepository.findById("frank")).thenReturn(null);
 			
 			try {
 				resource.createLink(credentials, "bob", "document1.txt", "frank");
@@ -94,7 +94,7 @@ public class LinkResourceTest {
 		
 		@Test
 		public void itThrowsA404IfTheDocumentDoesNotExist() throws Exception {
-			when(documentDAO.findByOwnerAndName(user, "document1.txt")).thenReturn(null);
+			when(documentRepository.findByOwnerAndName(user, "document1.txt")).thenReturn(null);
 			
 			try {
 				resource.createLink(credentials, "bob", "document1.txt", "frank");
@@ -107,10 +107,10 @@ public class LinkResourceTest {
 		public void itLinksTheUserReEncryptsTheDocumentAndSavesIt() throws Exception {
 			resource.createLink(credentials, "bob", "document1.txt", "frank");
 			
-			final InOrder inOrder = inOrder(document, documentDAO);
+			final InOrder inOrder = inOrder(document, documentRepository);
 			inOrder.verify(document).linkUser(reader);
 			inOrder.verify(document).encryptAndSetBody(keySet, random, body);
-			inOrder.verify(documentDAO).saveOrUpdate(document);
+			inOrder.verify(documentRepository).saveOrUpdate(document);
 		}
 		
 		@Test
@@ -130,7 +130,7 @@ public class LinkResourceTest {
 		
 		@Test
 		public void itThrowsA404IfTheReaderDoesNotExist() throws Exception {
-			when(userDAO.findById("frank")).thenReturn(null);
+			when(userRepository.findById("frank")).thenReturn(null);
 			
 			try {
 				resource.deleteLink(credentials, "bob", "document1.txt", "frank");
@@ -141,7 +141,7 @@ public class LinkResourceTest {
 		
 		@Test
 		public void itThrowsA404IfTheDocumentDoesNotExist() throws Exception {
-			when(documentDAO.findByOwnerAndName(user, "document1.txt")).thenReturn(null);
+			when(documentRepository.findByOwnerAndName(user, "document1.txt")).thenReturn(null);
 			
 			try {
 				resource.deleteLink(credentials, "bob", "document1.txt", "frank");
@@ -154,10 +154,10 @@ public class LinkResourceTest {
 		public void itUnlinksTheUserReEncryptsTheDocumentAndSavesIt() throws Exception {
 			resource.deleteLink(credentials, "bob", "document1.txt", "frank");
 			
-			final InOrder inOrder = inOrder(document, documentDAO);
+			final InOrder inOrder = inOrder(document, documentRepository);
 			inOrder.verify(document).unlinkUser(reader);
 			inOrder.verify(document).encryptAndSetBody(keySet, random, body);
-			inOrder.verify(documentDAO).saveOrUpdate(document);
+			inOrder.verify(documentRepository).saveOrUpdate(document);
 		}
 		
 		@Test

@@ -4,8 +4,8 @@ import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.DocumentDAO;
-import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.entities.dao.DocumentRepository;
+import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.CryptographicException;
 
 import javax.inject.Inject;
@@ -37,13 +37,13 @@ public class LinkedDocumentResource {
         CACHE_SETTINGS.setPrivate(true);
     }
 
-    private final UserDAO userDAO;
-    private final DocumentDAO documentDAO;
+    private final UserRepository userRepository;
+    private final DocumentRepository documentRepository;
 
     @Inject
-    public LinkedDocumentResource(UserDAO userDAO, DocumentDAO documentDAO) {
-        this.userDAO = userDAO;
-        this.documentDAO = documentDAO;
+    public LinkedDocumentResource(UserRepository userRepository, DocumentRepository documentRepository) {
+        this.userRepository = userRepository;
+        this.documentRepository = documentRepository;
     }
 
     /**
@@ -57,7 +57,7 @@ public class LinkedDocumentResource {
                          @PathParam("user_id") String userId, @PathParam("owner_id") String ownerId,
                          @PathParam("name") String name) {
 
-        final Session session = credentials.buildSession(userDAO, userId);
+        final Session session = credentials.buildSession(userRepository, userId);
         final User owner = findUser(ownerId);
         final Document doc = findDocument(owner, name);
 
@@ -88,20 +88,20 @@ public class LinkedDocumentResource {
                            @PathParam("user_id") String userId, @PathParam("owner_id") String ownerId,
                            @PathParam("name") String name) {
 
-        final Session session = credentials.buildSession(userDAO, userId);
+        final Session session = credentials.buildSession(userRepository, userId);
         final User owner = findUser(ownerId);
         final Document doc = findDocument(owner, name);
 
         checkLinkage(doc, session.getUser());
 
         doc.unlinkUser(session.getUser());
-        documentDAO.saveOrUpdate(doc);
+        documentRepository.saveOrUpdate(doc);
 
         return noContent().build();
     }
 
     private Document findDocument(User owner, String name) {
-        final Document doc = documentDAO.findByOwnerAndName(owner, name);
+        final Document doc = documentRepository.findByOwnerAndName(owner, name);
         if (doc == null) {
             throw new WebApplicationException(Status.NOT_FOUND);
         }
@@ -115,7 +115,7 @@ public class LinkedDocumentResource {
     }
 
     private User findUser(String id) {
-        final User user = userDAO.findById(id);
+        final User user = userRepository.findById(id);
         if (user == null) {
             throw new WebApplicationException(Status.NOT_FOUND);
         }

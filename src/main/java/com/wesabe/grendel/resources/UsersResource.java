@@ -3,7 +3,7 @@ package com.wesabe.grendel.resources;
 import com.wesabe.grendel.decorators.UserCreatedDecorator;
 import com.wesabe.grendel.decorators.UserListRepresentation;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.KeySet;
 import com.wesabe.grendel.openpgp.KeySetGenerator;
@@ -30,12 +30,12 @@ import static javax.ws.rs.core.Response.created;
 @Produces(MediaType.APPLICATION_JSON)
 public class UsersResource {
     private final KeySetGenerator generator;
-    private final UserDAO userDAO;
+    private final UserRepository userRepository;
 
     @Inject
-    public UsersResource(KeySetGenerator generator, UserDAO userDAO) {
+    public UsersResource(KeySetGenerator generator, UserRepository userRepository) {
         this.generator = generator;
-        this.userDAO = userDAO;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -46,7 +46,7 @@ public class UsersResource {
      */
     @GET
     public UserListRepresentation list(@Context UriInfo uriInfo) {
-        final List<User> users = userDAO.findAll();
+        final List<User> users = userRepository.findAll();
         return new UserListRepresentation(uriInfo, users);
     }
 
@@ -61,7 +61,7 @@ public class UsersResource {
     public Response create(@Context UriInfo uriInfo, UserCreatedDecorator request) throws CryptographicException {
 
         final KeySet keySet = generator.generate(request.getId(), request.getPassword());
-        final User user = userDAO.saveOrUpdate(new User(keySet));
+        final User user = userRepository.saveOrUpdate(new User(keySet));
 
         request.sanitize();
 

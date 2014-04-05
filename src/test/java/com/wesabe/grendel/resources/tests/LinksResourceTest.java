@@ -4,8 +4,8 @@ import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.DocumentDAO;
-import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.entities.dao.DocumentRepository;
+import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.decorators.LinkListRepresentation;
 import com.wesabe.grendel.resources.LinksResource;
 import org.junit.Before;
@@ -28,8 +28,8 @@ public class LinksResourceTest {
 		protected Credentials credentials;
 		protected User user;
 		protected Session session;
-		protected UserDAO userDAO;
-		protected DocumentDAO documentDAO;
+		protected UserRepository userRepository;
+		protected DocumentRepository documentRepository;
 		protected UriInfo uriInfo;
 		protected LinksResource resource;
 		
@@ -42,22 +42,22 @@ public class LinksResourceTest {
 			this.session = mock(Session.class);
 			when(session.getUser()).thenReturn(user);
 			
-			this.userDAO = mock(UserDAO.class);
+			this.userRepository = mock(UserRepository.class);
 			
-			this.documentDAO = mock(DocumentDAO.class);
-			when(documentDAO.findByOwnerAndName(user, "document1.txt")).thenReturn(document);
+			this.documentRepository = mock(DocumentRepository.class);
+			when(documentRepository.findByOwnerAndName(user, "document1.txt")).thenReturn(document);
 			
-			this.resource = new LinksResource(userDAO, documentDAO);
+			this.resource = new LinksResource(userRepository, documentRepository);
 			
 			this.credentials = mock(Credentials.class);
-			when(credentials.buildSession(userDAO, "bob")).thenReturn(session);
+			when(credentials.buildSession(userRepository, "bob")).thenReturn(session);
 			
 			this.uriInfo = mock(UriInfo.class);
 		}
 		
 		@Test
 		public void itThrowsA404IfTheDocumentDoesNotExist() throws Exception {
-			when(documentDAO.findByOwnerAndName(user, "document1.txt")).thenReturn(null);
+			when(documentRepository.findByOwnerAndName(user, "document1.txt")).thenReturn(null);
 			
 			try {
 				resource.listLinks(uriInfo, credentials, "bob", "document1.txt");

@@ -3,8 +3,8 @@ package com.wesabe.grendel.resources;
 import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
-import com.wesabe.grendel.entities.dao.DocumentDAO;
-import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.entities.dao.DocumentRepository;
+import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -42,15 +42,15 @@ public class DocumentResource {
     }
 
     private final Provider<SecureRandom> randomProvider;
-    private final UserDAO userDAO;
-    private final DocumentDAO documentDAO;
+    private final UserRepository userRepository;
+    private final DocumentRepository documentRepository;
 
     @Inject
-    public DocumentResource(Provider<SecureRandom> randomProvider, UserDAO userDAO,
-                            DocumentDAO documentDAO) {
+    public DocumentResource(Provider<SecureRandom> randomProvider, UserRepository userRepository,
+                            DocumentRepository documentRepository) {
         this.randomProvider = randomProvider;
-        this.userDAO = userDAO;
-        this.documentDAO = documentDAO;
+        this.userRepository = userRepository;
+        this.documentRepository = documentRepository;
     }
 
     /**
@@ -68,9 +68,9 @@ public class DocumentResource {
             @PathVariable("user_id") String userId,
             @PathVariable("name") String name) throws CryptographicException {
 
-        final Session session = credentials.buildSession(userDAO, userId);
+        final Session session = credentials.buildSession(userRepository, userId);
 
-        final Document doc = documentDAO.findByOwnerAndName(session.getUser(), name);
+        final Document doc = documentRepository.findByOwnerAndName(session.getUser(), name);
 
         if (doc == null) {
             throw new WebApplicationException(Status.NOT_FOUND);
@@ -97,15 +97,15 @@ public class DocumentResource {
     public Response delete(@Context Request request, @Context Credentials credentials,
                            @PathParam("user_id") String userId, @PathParam("name") String name) {
 
-        final Session session = credentials.buildSession(userDAO, userId);
-        final Document doc = documentDAO.findByOwnerAndName(session.getUser(), name);
+        final Session session = credentials.buildSession(userRepository, userId);
+        final Document doc = documentRepository.findByOwnerAndName(session.getUser(), name);
         if (doc == null) {
             throw new WebApplicationException(Status.NOT_FOUND);
         }
 
         checkPreconditions(request, doc);
 
-        documentDAO.delete(doc);
+        documentRepository.delete(doc);
         return noContent().build();
     }
 
@@ -122,11 +122,11 @@ public class DocumentResource {
                           @Context Credentials credentials, @PathParam("user_id") String userId,
                           @PathParam("name") String name, byte[] body) throws CryptographicException {
 
-        final Session session = credentials.buildSession(userDAO, userId);
-        Document doc = documentDAO.findByOwnerAndName(session.getUser(), name);
+        final Session session = credentials.buildSession(userRepository, userId);
+        Document doc = documentRepository.findByOwnerAndName(session.getUser(), name);
 
         if (doc == null) {
-            doc = documentDAO.newDocument(session.getUser(), name, headers.getMediaType());
+            doc = documentRepository.newDocument(session.getUser(), name, headers.getMediaType());
         } else {
             checkPreconditions(request, doc);
         }
@@ -138,7 +138,7 @@ public class DocumentResource {
                 body
         );
 
-        documentDAO.saveOrUpdate(doc);
+        documentRepository.saveOrUpdate(doc);
 
         return noContent()
                 .tag(doc.getETag())

@@ -5,8 +5,8 @@ import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.DocumentDAO;
-import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.entities.dao.DocumentRepository;
+import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
 import com.wesabe.grendel.resources.DocumentResource;
 import org.joda.time.DateTime;
@@ -44,8 +44,8 @@ public class DocumentResourceTest {
 	private static abstract class Context {
 		protected SecureRandom random;
 		protected Provider<SecureRandom> randomProvider;
-		protected UserDAO userDAO;
-		protected DocumentDAO documentDAO;
+		protected UserRepository userRepository;
+		protected DocumentRepository documentRepository;
 		protected DocumentResource resource;
 		protected Credentials credentials;
 		protected Session session;
@@ -76,7 +76,7 @@ public class DocumentResourceTest {
 			when(session.getUser()).thenReturn(user);
 			when(session.getKeySet()).thenReturn(keySet);
 			
-			this.userDAO = mock(UserDAO.class);
+			this.userRepository = mock(UserRepository.class);
 			
 			this.document = mock(Document.class);
 			when(document.getName()).thenReturn("document1.txt");
@@ -85,15 +85,15 @@ public class DocumentResourceTest {
 			when(document.decryptBody(keySet)).thenReturn("yay for everyone".getBytes());
 			when(document.getETag()).thenReturn("doc-document1.txt-50");
 			
-			this.documentDAO = mock(DocumentDAO.class);
-			when(documentDAO.findByOwnerAndName(user, "document1.txt")).thenReturn(document);
+			this.documentRepository = mock(DocumentRepository.class);
+			when(documentRepository.findByOwnerAndName(user, "document1.txt")).thenReturn(document);
 			
 			this.credentials = mock(Credentials.class);
-			when(credentials.buildSession(userDAO, "bob")).thenReturn(session);
+			when(credentials.buildSession(userRepository, "bob")).thenReturn(session);
 			
 			this.request = mock(Request.class);
 			
-			this.resource = new DocumentResource(randomProvider, userDAO, documentDAO);
+			this.resource = new DocumentResource(randomProvider, userRepository, documentRepository);
 		}
 	}
 	
@@ -106,7 +106,7 @@ public class DocumentResourceTest {
 		
 		@Test
 		public void itThrowsA404IfTheDocumentIsNotFound() throws Exception {
-			when(documentDAO.findByOwnerAndName(user, "document1.txt")).thenReturn(null);
+			when(documentRepository.findByOwnerAndName(user, "document1.txt")).thenReturn(null);
 			
 			try {
 				resource.show(request, credentials, "bob", "document1.txt");
@@ -159,7 +159,7 @@ public class DocumentResourceTest {
 
 		@Test
 		public void itThrowsA404IfTheDocumentIsNotFound() throws Exception {
-			when(documentDAO.findByOwnerAndName(user, "document1.txt")).thenReturn(null);
+			when(documentRepository.findByOwnerAndName(user, "document1.txt")).thenReturn(null);
 			
 			try {
 				resource.delete(request, credentials, "bob", "document1.txt");
@@ -192,7 +192,7 @@ public class DocumentResourceTest {
 
 			assertThat(response.getStatus()).isEqualTo(Status.NO_CONTENT.getStatusCode());
 			
-			verify(documentDAO).delete(document);
+			verify(documentRepository).delete(document);
 		}
 
 	}
@@ -213,7 +213,7 @@ public class DocumentResourceTest {
 			this.headers = mock(HttpHeaders.class);
 			when(headers.getMediaType()).thenReturn(MediaType.TEXT_PLAIN_TYPE);
 
-			when(documentDAO.newDocument(user, "document1.txt", MediaType.TEXT_PLAIN_TYPE)).thenReturn(document);
+			when(documentRepository.newDocument(user, "document1.txt", MediaType.TEXT_PLAIN_TYPE)).thenReturn(document);
 		}
 		
 		@After
@@ -240,7 +240,7 @@ public class DocumentResourceTest {
 		
 		@Test
 		public void itDoesNotCheckPreconditionsOnANewDocument() throws Exception {
-			when(documentDAO.findByOwnerAndName(user, "document1.txt")).thenReturn(null);
+			when(documentRepository.findByOwnerAndName(user, "document1.txt")).thenReturn(null);
 			
 			resource.store(request, headers, credentials, "bob", "document1.txt", body);
 			verify(request, never()).evaluatePreconditions(any(Date.class), any(EntityTag.class));
@@ -248,30 +248,30 @@ public class DocumentResourceTest {
 
 		@Test
 		public void itCreatesANewDocumentIfTheDocumentDoesntExist() throws Exception {
-			when(documentDAO.findByOwnerAndName(user, "document1.txt")).thenReturn(null);
+			when(documentRepository.findByOwnerAndName(user, "document1.txt")).thenReturn(null);
 			
 			final Response response = resource.store(request, headers, credentials, "bob", "document1.txt", body);
 			assertThat(response.getStatus()).isEqualTo(Status.NO_CONTENT.getStatusCode());
 			
-			final InOrder inOrder = inOrder(document, documentDAO);
+			final InOrder inOrder = inOrder(document, documentRepository);
 			inOrder.verify(document).setModifiedAt(now);
 			inOrder.verify(document).encryptAndSetBody(keySet, random, body);
-			inOrder.verify(documentDAO).saveOrUpdate(document);
+			inOrder.verify(documentRepository).saveOrUpdate(document);
 		}
 		
 		@Test
 		public void itUpdatesTheDocumentIfTheDocumentDoesExist() throws Exception {
-			when(documentDAO.findByOwnerAndName(user, "document1.txt")).thenReturn(document);
+			when(documentRepository.findByOwnerAndName(user, "document1.txt")).thenReturn(document);
 			
 			final Response response = resource.store(request, headers, credentials, "bob", "document1.txt", body);
 			assertThat(response.getStatus()).isEqualTo(Status.NO_CONTENT.getStatusCode());
 			
-			final InOrder inOrder = inOrder(document, documentDAO);
+			final InOrder inOrder = inOrder(document, documentRepository);
 			inOrder.verify(document).setModifiedAt(now);
 			inOrder.verify(document).encryptAndSetBody(keySet, random, body);
-			inOrder.verify(documentDAO).saveOrUpdate(document);
+			inOrder.verify(documentRepository).saveOrUpdate(document);
 			
-			verify(documentDAO, never()).newDocument(any(User.class), anyString(), any(MediaType.class));
+			verify(documentRepository, never()).newDocument(any(User.class), anyString(), any(MediaType.class));
 		}
 	}
 }

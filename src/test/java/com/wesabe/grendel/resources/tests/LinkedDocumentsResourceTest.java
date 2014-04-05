@@ -5,7 +5,7 @@ import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.decorators.LinkedDocumentListRepresentation;
 import com.wesabe.grendel.resources.LinkedDocumentsResource;
 import org.junit.Before;
@@ -26,7 +26,7 @@ public class LinkedDocumentsResourceTest {
 		protected Credentials credentials;
 		protected User user;
 		protected Session session;
-		protected UserDAO userDAO;
+		protected UserRepository userRepository;
 		protected UriInfo uriInfo;
 		protected LinkedDocumentsResource resource;
 		
@@ -40,12 +40,12 @@ public class LinkedDocumentsResourceTest {
 			this.session = mock(Session.class);
 			when(session.getUser()).thenReturn(user);
 			
-			this.userDAO = mock(UserDAO.class);
+			this.userRepository = mock(UserRepository.class);
 			
-			this.resource = new LinkedDocumentsResource(userDAO);
+			this.resource = new LinkedDocumentsResource(userRepository);
 			
 			this.credentials = mock(Credentials.class);
-			when(credentials.buildSession(userDAO, "bob")).thenReturn(session);
+			when(credentials.buildSession(userRepository, "bob")).thenReturn(session);
 			
 			this.uriInfo = mock(UriInfo.class);
 		}

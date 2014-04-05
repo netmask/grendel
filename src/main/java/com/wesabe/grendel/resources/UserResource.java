@@ -4,7 +4,7 @@ import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
 import com.wesabe.grendel.decorators.UpdateUserRepresentation;
@@ -31,7 +31,7 @@ import static javax.ws.rs.core.Response.ok;
 public class UserResource {
 
     @Inject
-    private UserDAO userDAO;
+    private UserRepository userRepository;
 
     @Inject
     private Provider<SecureRandom> randomProvider;
@@ -45,7 +45,7 @@ public class UserResource {
     public Response show(@Context Request request, @Context UriInfo uriInfo,
                          @PathParam("id") String id) {
 
-        final User user = userDAO.findById(id);
+        final User user = userRepository.findById(id);
         if (user == null) {
             throw new WebApplicationException(Status.NOT_FOUND);
         }
@@ -72,7 +72,7 @@ public class UserResource {
 
 //        entity.validate();
 
-        final Session session = credentials.buildSession(userDAO, id);
+        final Session session = credentials.buildSession(userRepository, id);
 
         checkPreconditions(request, session.getUser());
 
@@ -88,7 +88,7 @@ public class UserResource {
         );
 
         user.setModifiedAt(new DateTime());
-        userDAO.saveOrUpdate(user);
+        userRepository.saveOrUpdate(user);
 
         return noContent().build();
     }
@@ -99,11 +99,11 @@ public class UserResource {
      */
     @DELETE
     public Response delete(@Context Request request, @Context UriInfo uriInfo, @PathParam("id") String id) {
-        final User user = userDAO.findById(id);
+        final User user = userRepository.findById(id);
 
         checkPreconditions(request, user);
 
-        userDAO.delete(user);
+        userRepository.delete(user);
         return noContent().build();
     }
 

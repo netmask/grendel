@@ -4,8 +4,8 @@ import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.DocumentDAO;
-import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.entities.dao.DocumentRepository;
+import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
 
@@ -21,14 +21,14 @@ import static javax.ws.rs.core.Response.noContent;
 
 @Path("/users/{user_id}/documents/{name}/links/{reader_id}")
 public class LinkResource {
-    private final UserDAO userDAO;
-    private final DocumentDAO documentDAO;
+    private final UserRepository userRepository;
+    private final DocumentRepository documentRepository;
     private final Provider<SecureRandom> randomProvider;
 
     @Inject
-    public LinkResource(UserDAO userDAO, DocumentDAO documentDAO, Provider<SecureRandom> randomProvider) {
-        this.userDAO = userDAO;
-        this.documentDAO = documentDAO;
+    public LinkResource(UserRepository userRepository, DocumentRepository documentRepository, Provider<SecureRandom> randomProvider) {
+        this.userRepository = userRepository;
+        this.documentRepository = documentRepository;
         this.randomProvider = randomProvider;
     }
 
@@ -37,14 +37,14 @@ public class LinkResource {
                                @PathParam("user_id") String userId, @PathParam("name") String name,
                                @PathParam("reader_id") String readerId) {
 
-        final Session session = credentials.buildSession(userDAO, userId);
+        final Session session = credentials.buildSession(userRepository, userId);
         final User reader = findUser(readerId);
         final Document doc = findDocument(session.getUser(), name);
 
         doc.linkUser(reader);
         reEncrypt(doc, session.getKeySet());
 
-        documentDAO.saveOrUpdate(doc);
+        documentRepository.saveOrUpdate(doc);
 
         return noContent().build();
     }
@@ -56,14 +56,14 @@ public class LinkResource {
             @PathParam("name") String name,
             @PathParam("reader_id") String readerId) {
 
-        final Session session = credentials.buildSession(userDAO, userId);
+        final Session session = credentials.buildSession(userRepository, userId);
         final User reader = findUser(readerId);
         final Document doc = findDocument(session.getUser(), name);
 
         doc.unlinkUser(reader);
         reEncrypt(doc, session.getKeySet());
 
-        documentDAO.saveOrUpdate(doc);
+        documentRepository.saveOrUpdate(doc);
 
         return noContent().build();
     }
@@ -82,7 +82,7 @@ public class LinkResource {
     }
 
     private Document findDocument(User owner, String name) {
-        final Document doc = documentDAO.findByOwnerAndName(owner, name);
+        final Document doc = documentRepository.findByOwnerAndName(owner, name);
         if (doc == null) {
             throw new WebApplicationException(Status.NOT_FOUND);
         }
@@ -90,7 +90,7 @@ public class LinkResource {
     }
 
     private User findUser(String id) {
-        final User reader = userDAO.findById(id);
+        final User reader = userRepository.findById(id);
         if (reader == null) {
             throw new WebApplicationException(Status.NOT_FOUND);
         }

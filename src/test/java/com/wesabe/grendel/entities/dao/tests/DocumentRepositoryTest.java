@@ -3,7 +3,7 @@ package com.wesabe.grendel.entities.dao.tests;
 import com.google.inject.Provider;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.DocumentDAO;
+import com.wesabe.grendel.entities.dao.DocumentRepository;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.junit.Before;
@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
-import org.mockito.Mockito;
 
 import javax.ws.rs.core.MediaType;
 
@@ -20,14 +19,14 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(Enclosed.class)
-public class DocumentDAOTest {
+public class DocumentRepositoryTest {
 	private static abstract class Context {
 		protected Session session;
-		protected DocumentDAO dao;
+		protected DocumentRepository dao;
 		
 		public void setup() throws Exception {
 			this.session = mock(Session.class);
-			this.dao = new DocumentDAO(new Provider<Session>() {
+			this.dao = new DocumentRepository(new Provider<Session>() {
 				@Override
 				public Session get() {
 					return session;

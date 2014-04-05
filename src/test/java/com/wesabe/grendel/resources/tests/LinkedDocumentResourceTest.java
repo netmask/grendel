@@ -4,8 +4,8 @@ import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.DocumentDAO;
-import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.entities.dao.DocumentRepository;
+import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
 import com.wesabe.grendel.resources.LinkedDocumentResource;
 import org.joda.time.DateTime;
@@ -20,10 +20,10 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import java.text.DateFormat;
+
 import static java.text.DateFormat.getDateTimeInstance;
 import java.text.SimpleDateFormat;
-import java.util.TimeZone;
+
 import static java.util.TimeZone.getTimeZone;
 import static javax.ws.rs.core.MediaType.valueOf;
 
@@ -34,8 +34,8 @@ import static org.mockito.Mockito.*;
 @RunWith(Enclosed.class)
 public class LinkedDocumentResourceTest {
 	private static abstract class Context {
-		protected UserDAO userDAO;
-		protected DocumentDAO documentDAO;
+		protected UserRepository userRepository;
+		protected DocumentRepository documentRepository;
 		protected Credentials credentials;
 		protected User owner, user;
 		protected UnlockedKeySet keySet;
@@ -47,8 +47,8 @@ public class LinkedDocumentResourceTest {
 			this.owner = mock(User.class);
 			this.user = mock(User.class);
 			
-			this.userDAO = mock(UserDAO.class);
-			when(userDAO.findById("frank")).thenReturn(owner);
+			this.userRepository = mock(UserRepository.class);
+			when(userRepository.findById("frank")).thenReturn(owner);
 			
 			this.keySet = mock(UnlockedKeySet.class);
 			
@@ -59,15 +59,15 @@ public class LinkedDocumentResourceTest {
 			when(document.decryptBody(keySet)).thenReturn("yay for everyone".getBytes());
 			when(document.isLinked(user)).thenReturn(true);
 			
-			this.documentDAO = mock(DocumentDAO.class);
-			when(documentDAO.findByOwnerAndName(owner, "document1.txt")).thenReturn(document);
+			this.documentRepository = mock(DocumentRepository.class);
+			when(documentRepository.findByOwnerAndName(owner, "document1.txt")).thenReturn(document);
 			
 			this.session = new Session(user, keySet);
 			
 			this.credentials = mock(Credentials.class);
-			when(credentials.buildSession(userDAO, "bob")).thenReturn(session);
+			when(credentials.buildSession(userRepository, "bob")).thenReturn(session);
 			
-			this.resource = new LinkedDocumentResource(userDAO, documentDAO);
+			this.resource = new LinkedDocumentResource(userRepository, documentRepository);
 		}
 	}
 	
@@ -80,7 +80,7 @@ public class LinkedDocumentResourceTest {
 		
 		@Test
 		public void itThrowsA404IfTheOwnerDoesNotExist() throws Exception {
-			when(userDAO.findById("frank")).thenReturn(null);
+			when(userRepository.findById("frank")).thenReturn(null);
 			
 			try {
 				resource.show(credentials, "bob", "frank", "document1.txt");
@@ -92,7 +92,7 @@ public class LinkedDocumentResourceTest {
 		
 		@Test
 		public void itThrowsA404IfTheDocumentDoesNotExist() throws Exception {
-			when(documentDAO.findByOwnerAndName(owner, "document1.txt")).thenReturn(null);
+			when(documentRepository.findByOwnerAndName(owner, "document1.txt")).thenReturn(null);
 			
 			try {
 				resource.show(credentials, "bob", "frank", "document1.txt");
@@ -139,7 +139,7 @@ public class LinkedDocumentResourceTest {
 		
 		@Test
 		public void itThrowsA404IfTheOwnerDoesNotExist() throws Exception {
-			when(userDAO.findById("frank")).thenReturn(null);
+			when(userRepository.findById("frank")).thenReturn(null);
 			
 			try {
 				resource.delete(credentials, "bob", "frank", "document1.txt");
@@ -151,7 +151,7 @@ public class LinkedDocumentResourceTest {
 		
 		@Test
 		public void itThrowsA404IfTheDocumentDoesNotExist() throws Exception {
-			when(documentDAO.findByOwnerAndName(owner, "document1.txt")).thenReturn(null);
+			when(documentRepository.findByOwnerAndName(owner, "document1.txt")).thenReturn(null);
 			
 			try {
 				resource.delete(credentials, "bob", "frank", "document1.txt");
@@ -177,9 +177,9 @@ public class LinkedDocumentResourceTest {
 		public void itUnlinksTheUserFromTheDocument() throws Exception {
 			resource.delete(credentials, "bob", "frank", "document1.txt");
 			
-			final InOrder inOrder = inOrder(document, documentDAO);
+			final InOrder inOrder = inOrder(document, documentRepository);
 			inOrder.verify(document).unlinkUser(user);
-			inOrder.verify(documentDAO).saveOrUpdate(document);
+			inOrder.verify(documentRepository).saveOrUpdate(document);
 		}
 		
 		@Test

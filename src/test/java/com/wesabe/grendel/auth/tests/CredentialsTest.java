@@ -3,7 +3,7 @@ package com.wesabe.grendel.auth.tests;
 import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.KeySet;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
@@ -43,7 +43,7 @@ public class CredentialsTest {
 	
 	private static abstract class Session_Context {
 		protected Credentials creds;
-		protected UserDAO userDAO;
+		protected UserRepository userRepository;
 		protected KeySet keySet;
 		protected UnlockedKeySet unlockedKeySet;
 		protected User user;
@@ -58,8 +58,8 @@ public class CredentialsTest {
 			when(user.getId()).thenReturn("woo");
 			when(user.getKeySet()).thenReturn(keySet);
 			
-			this.userDAO = mock(UserDAO.class);
-			when(userDAO.findById("woo")).thenReturn(user);
+			this.userRepository = mock(UserRepository.class);
+			when(userRepository.findById("woo")).thenReturn(user);
 			
 			this.creds = new Credentials("woo", "hah");
 		}
@@ -72,13 +72,13 @@ public class CredentialsTest {
 		public void setup() throws Exception {
 			super.setup();
 			
-			when(userDAO.findById("woo")).thenReturn(null);
+			when(userRepository.findById("woo")).thenReturn(null);
 		}
 		
 		@Test
 		public void itThrowsAnAuthChallenge() throws Exception {
 			try {
-				creds.buildSession(userDAO);
+				creds.buildSession(userRepository);
 				fail("should have thrown an auth challenge, but didn't");
 			} catch (WebApplicationException e) {
 				assertThat(e.getResponse()).isEqualTo(Credentials.CHALLENGE);
@@ -98,7 +98,7 @@ public class CredentialsTest {
 		@Test
 		public void itAttemptsToUnlockTheKeySet() throws Exception {
 			try {
-				creds.buildSession(userDAO);
+				creds.buildSession(userRepository);
 			} catch (WebApplicationException e) {}
 			
 			verify(keySet).unlock("hah".toCharArray());
@@ -107,7 +107,7 @@ public class CredentialsTest {
 		@Test
 		public void itThrowsAnAuthChallenge() throws Exception {
 			try {
-				creds.buildSession(userDAO);
+				creds.buildSession(userRepository);
 				fail("should have thrown an auth challenge, but didn't");
 			} catch (WebApplicationException e) {
 				assertThat(e.getResponse()).isEqualTo(Credentials.CHALLENGE);
@@ -125,7 +125,7 @@ public class CredentialsTest {
 		@Test
 		public void itAttemptsToUnlockTheKeySet() throws Exception {
 			try {
-				creds.buildSession(userDAO);
+				creds.buildSession(userRepository);
 			} catch (WebApplicationException e) {}
 			
 			verify(keySet).unlock("hah".toCharArray());
@@ -133,7 +133,7 @@ public class CredentialsTest {
 		
 		@Test
 		public void itReturnsASessionWithTheUserAndKeySet() throws Exception {
-			final Session session = creds.buildSession(userDAO);
+			final Session session = creds.buildSession(userRepository);
 			
 			assertThat(session.getUser()).isEqualTo(user);
 			assertThat(session.getKeySet()).isEqualTo(unlockedKeySet);
@@ -149,7 +149,7 @@ public class CredentialsTest {
 		
 		@Test
 		public void itReturnsASessionWithTheUserAndKeySet() throws Exception {
-			final Session session = creds.buildSession(userDAO, "woo");
+			final Session session = creds.buildSession(userRepository, "woo");
 			
 			assertThat(session.getUser()).isEqualTo(user);
 			assertThat(session.getKeySet()).isEqualTo(unlockedKeySet);
@@ -166,7 +166,7 @@ public class CredentialsTest {
 		@Test
 		public void itThrowsAn401() throws Exception {
 			try {
-				creds.buildSession(userDAO, "whee");
+				creds.buildSession(userRepository, "whee");
 				fail("should have thrown an auth challenge, but didn't");
 			} catch (WebApplicationException e) {
 				assertThat(e.getResponse().getStatus()).isEqualTo(Status.FORBIDDEN.getStatusCode());

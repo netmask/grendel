@@ -3,7 +3,7 @@ package com.wesabe.grendel.resources;
 import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
-import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.decorators.LinkedDocumentListRepresentation;
 
 import javax.inject.Inject;
@@ -23,18 +23,18 @@ import javax.ws.rs.core.UriInfo;
 @Path("/users/{id}/linked-documents")
 @Produces(MediaType.APPLICATION_JSON)
 public class LinkedDocumentsResource {
-    private final UserDAO userDAO;
+    private final UserRepository userRepository;
 
     @Inject
-    public LinkedDocumentsResource(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public LinkedDocumentsResource(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @GET
     public LinkedDocumentListRepresentation listDocuments(@Context UriInfo uriInfo,
                                                           @Context Credentials credentials, @PathParam("id") String id) {
 
-        final Session session = credentials.buildSession(userDAO, id);
+        final Session session = credentials.buildSession(userRepository, id);
 
         return new LinkedDocumentListRepresentation(uriInfo, session.getUser());
     }

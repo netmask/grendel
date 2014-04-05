@@ -1,7 +1,7 @@
 package com.wesabe.grendel.auth;
 
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.entities.dao.UserDAO;
+import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
 
@@ -57,15 +57,15 @@ public class Credentials {
     }
 
     /**
-     * Given a {@link UserDAO}, finds the associated {@link User} and returns a
+     * Given a {@link UserRepository}, finds the associated {@link User} and returns a
      * {@link Session}.
      *
-     * @param userDAO a {@link UserDAO}
+     * @param userRepository a {@link UserRepository}
      * @throws WebApplicationException if the user can't be found, or if the user's password is
      *                                 incorrect
      */
-    public Session buildSession(UserDAO userDAO) throws WebApplicationException {
-        final User user = userDAO.findById(username);
+    public Session buildSession(UserRepository userRepository) throws WebApplicationException {
+        final User user = userRepository.findById(username);
         if (user != null) {
             try {
                 final UnlockedKeySet keySet = user.getKeySet().unlock(password.toCharArray());
@@ -79,17 +79,17 @@ public class Credentials {
     }
 
     /**
-     * Given a {@link UserDAO} and an allowed {@link User} id, finds the
+     * Given a {@link UserRepository} and an allowed {@link User} id, finds the
      * associated {@link User} and returns a {@link Session}.
      *
-     * @param userDAO   a {@link UserDAO}
+     * @param userRepository   a {@link UserRepository}
      * @param allowedId the id of the only {@link User} which should be allowed access
      *                  to session context
      * @throws WebApplicationException if the user can't be found, or if the user's password is
      *                                 incorrect
      */
-    public Session buildSession(UserDAO userDAO, String allowedId) {
-        final Session session = buildSession(userDAO);
+    public Session buildSession(UserRepository userRepository, String allowedId) {
+        final Session session = buildSession(userRepository);
         if (session.getUser().getId().equals(allowedId)) {
             return session;
         }

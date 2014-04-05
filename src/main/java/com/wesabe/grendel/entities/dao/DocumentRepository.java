@@ -7,7 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.core.MediaType;
 
-public class DocumentDAO {
+public class DocumentRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
