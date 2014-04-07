@@ -2,12 +2,19 @@ package com.wesabe.grendel.entities.dao;
 
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
+import com.wesabe.grendel.util.WithSession;
+import org.springframework.orm.jpa.JpaTransactionManager;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.print.Doc;
 import javax.ws.rs.core.MediaType;
 
 public class DocumentRepository {
+
+    @Inject
+    JpaTransactionManager transactionManager;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -25,10 +32,11 @@ public class DocumentRepository {
      * {@code null} if the {@link Document} does not exist.
      */
     public Document findByOwnerAndName(User owner, String name) {
-        return entityManager.createNamedQuery("com.wesabe.grendel.entities.Document.ByOwnerAndName", Document.class)
+        return new WithSession<Document>(transactionManager).transaction(entityManager1 ->
+                entityManager1.createNamedQuery("com.wesabe.grendel.entities.Document.ByOwnerAndName", Document.class)
                 .setParameter("owner", owner)
                 .setParameter("name", name)
-                .getSingleResult();
+                .getSingleResult());
 
     }
 
@@ -37,15 +45,21 @@ public class DocumentRepository {
      *
      */
     public Document saveOrUpdate(Document doc) {
-        entityManager.persist(doc);
-        return doc;
+        return new WithSession<Document>(transactionManager).transaction(entityManager -> {
+            entityManager.persist(doc);
+            return doc;
+        });
     }
 
     /**
      * Deletes the {@link Document} from the database.
      */
     public void delete(Document doc) {
-        entityManager.remove(doc);
+         new WithSession<Boolean>(transactionManager).transaction(entityManager1 -> {
+             entityManager1.remove(doc);
+             return true;
+         });
+
     }
 
 }
