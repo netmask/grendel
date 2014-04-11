@@ -48,7 +48,6 @@ public class Application  {
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         return transactionManager;
     }
-
 }
 
 

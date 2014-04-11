@@ -1,15 +1,16 @@
 package com.wesabe.grendel.resources;
 
-import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
+import com.wesabe.grendel.decorators.UpdateUserRepresentation;
+import com.wesabe.grendel.decorators.UserInfoRepresentation;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
-import com.wesabe.grendel.decorators.UpdateUserRepresentation;
-import com.wesabe.grendel.decorators.UserInfoRepresentation;
 import org.joda.time.DateTime;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -67,21 +68,25 @@ public class UserResource {
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(@Context Request request, @Context Credentials credentials,
-                           @PathParam("id") String id, UpdateUserRepresentation entity) throws CryptographicException {
+    public Response update(@Context Request request,
+                           @PathParam("id") String id,
+                           UpdateUserRepresentation entity) throws CryptographicException {
 
-//        entity.validate();
+        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder
+                .getContext()
+                .getAuthentication();
 
-        final Session session = credentials.buildSession(userRepository, id);
+        Session session = (Session)authenticationToken.getPrincipal();
 
         checkPreconditions(request, session.getUser());
+
 
         final User user = session.getUser();
         final UnlockedKeySet keySet = session.getKeySet();
 
         user.setKeySet(
                 keySet.relock(
-                        credentials.getPassword().toCharArray(),
+                        (char[]) authenticationToken.getCredentials(),
                         entity.getPassword(),
                         randomProvider.get()
                 )
@@ -98,7 +103,9 @@ public class UserResource {
      * all their {@link Document}s.</strong>
      */
     @DELETE
-    public Response delete(@Context Request request, @Context UriInfo uriInfo, @PathParam("id") String id) {
+    public Response delete(@Context Request request,
+                           @Context UriInfo uriInfo,
+                           @PathParam("id") String id) {
         final User user = userRepository.findById(id);
 
         checkPreconditions(request, user);

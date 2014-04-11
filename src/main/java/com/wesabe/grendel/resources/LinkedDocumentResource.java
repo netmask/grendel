@@ -1,17 +1,17 @@
 package com.wesabe.grendel.resources;
 
-import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.entities.dao.DocumentRepository;
 import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.CryptographicException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -53,11 +53,15 @@ public class LinkedDocumentResource {
      * <strong>N.B.:</strong> Requires Basic authentication.
      */
     @GET
-    public Response show(@Context Credentials credentials,
-                         @PathParam("user_id") String userId, @PathParam("owner_id") String ownerId,
+    public Response show(@PathParam("user_id") String userId, @PathParam("owner_id") String ownerId,
                          @PathParam("name") String name) {
 
-        final Session session = credentials.buildSession(userRepository, userId);
+        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+
+        Session session = (Session)authenticationToken.getPrincipal();
+
         final User owner = findUser(ownerId);
         final Document doc = findDocument(owner, name);
 
@@ -84,11 +88,15 @@ public class LinkedDocumentResource {
      * <strong>N.B.:</strong> Requires Basic authentication.
      */
     @DELETE
-    public Response delete(@Context Credentials credentials,
-                           @PathParam("user_id") String userId, @PathParam("owner_id") String ownerId,
+    public Response delete(@PathParam("user_id") String userId, @PathParam("owner_id") String ownerId,
                            @PathParam("name") String name) {
 
-        final Session session = credentials.buildSession(userRepository, userId);
+        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+
+        Session session = (Session)authenticationToken.getPrincipal();
+
         final User owner = findUser(ownerId);
         final Document doc = findDocument(owner, name);
 

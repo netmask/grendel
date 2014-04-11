@@ -1,7 +1,7 @@
 package com.wesabe.grendel.resources.tests;
 
 import static com.google.common.collect.ImmutableSet.of;
-import com.wesabe.grendel.auth.Credentials;
+
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;

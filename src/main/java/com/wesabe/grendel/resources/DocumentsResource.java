@@ -1,10 +1,11 @@
 package com.wesabe.grendel.resources;
 
-import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.decorators.DocumentListRepresentation;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -33,10 +34,14 @@ public class DocumentsResource {
     @GET
     public DocumentListRepresentation listDocuments(
             @Context UriInfo uriInfo,
-            @Context Credentials credentials,
             @PathParam("id") String id) {
 
-        final Session session = credentials.buildSession(userRepository, id);
+        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+
+        Session session = (Session)authenticationToken.getPrincipal();
+
         return new DocumentListRepresentation(uriInfo, session.getUser().getDocuments());
     }
 }

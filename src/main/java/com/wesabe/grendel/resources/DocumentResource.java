@@ -1,6 +1,5 @@
 package com.wesabe.grendel.resources;
 
-import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.dao.DocumentRepository;
@@ -8,6 +7,8 @@ import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -64,12 +65,14 @@ public class DocumentResource {
     @RequestMapping(method = RequestMethod.GET)
     public Response show(
             @Context Request request,
-            @Context Credentials credentials,
             @PathVariable("user_id") String userId,
             @PathVariable("name") String name) throws CryptographicException {
 
-        final Session session = credentials.buildSession(userRepository, userId);
+        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder
+                .getContext()
+                .getAuthentication();
 
+        Session session = (Session)authenticationToken.getPrincipal();
         final Document doc = documentRepository.findByOwnerAndName(session.getUser(), name);
 
         if (doc == null) {
@@ -94,10 +97,15 @@ public class DocumentResource {
      * <strong>N.B.:</strong> Requires Basic authentication.
      */
     @DELETE
-    public Response delete(@Context Request request, @Context Credentials credentials,
+    public Response delete(@Context Request request,
                            @PathParam("user_id") String userId, @PathParam("name") String name) {
 
-        final Session session = credentials.buildSession(userRepository, userId);
+        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+
+        Session session = (Session)authenticationToken.getPrincipal();
+
         final Document doc = documentRepository.findByOwnerAndName(session.getUser(), name);
         if (doc == null) {
             throw new WebApplicationException(Status.NOT_FOUND);
@@ -119,10 +127,15 @@ public class DocumentResource {
      */
     @PUT
     public Response store(@Context Request request, @Context HttpHeaders headers,
-                          @Context Credentials credentials, @PathParam("user_id") String userId,
+                          @PathParam("user_id") String userId,
                           @PathParam("name") String name, byte[] body) throws CryptographicException {
 
-        final Session session = credentials.buildSession(userRepository, userId);
+        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+
+        Session session = (Session)authenticationToken.getPrincipal();
+
         Document doc = documentRepository.findByOwnerAndName(session.getUser(), name);
 
         if (doc == null) {

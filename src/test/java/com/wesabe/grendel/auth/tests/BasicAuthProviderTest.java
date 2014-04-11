@@ -1,8 +1,9 @@
 package com.wesabe.grendel.auth.tests;
 
 import com.sun.jersey.api.core.HttpContext;
+import  org.glassfish.jersey.server.H;
+
 import com.sun.jersey.api.core.HttpRequestContext;
-import com.wesabe.grendel.auth.Credentials;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;

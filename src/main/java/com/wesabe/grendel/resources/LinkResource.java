@@ -1,6 +1,5 @@
 package com.wesabe.grendel.resources;
 
-import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
@@ -8,11 +7,12 @@ import com.wesabe.grendel.entities.dao.DocumentRepository;
 import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.security.SecureRandom;
@@ -33,11 +33,14 @@ public class LinkResource {
     }
 
     @PUT
-    public Response createLink(@Context Credentials credentials,
-                               @PathParam("user_id") String userId, @PathParam("name") String name,
+    public Response createLink(@PathParam("user_id") String userId, @PathParam("name") String name,
                                @PathParam("reader_id") String readerId) {
 
-        final Session session = credentials.buildSession(userRepository, userId);
+        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+
+        Session session = (Session)authenticationToken.getPrincipal();
         final User reader = findUser(readerId);
         final Document doc = findDocument(session.getUser(), name);
 
@@ -50,13 +53,16 @@ public class LinkResource {
     }
 
     @DELETE
-    public Response deleteLink(
-            @Context Credentials credentials,
-            @PathParam("user_id") String userId,
+    public Response deleteLink(@PathParam("user_id") String userId,
             @PathParam("name") String name,
             @PathParam("reader_id") String readerId) {
 
-        final Session session = credentials.buildSession(userRepository, userId);
+        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+
+        Session session = (Session)authenticationToken.getPrincipal();
+
         final User reader = findUser(readerId);
         final Document doc = findDocument(session.getUser(), name);
 

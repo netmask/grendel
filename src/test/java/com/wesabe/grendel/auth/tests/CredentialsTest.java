@@ -1,6 +1,5 @@
 package com.wesabe.grendel.auth.tests;
 
-import com.wesabe.grendel.auth.Credentials;
 import com.wesabe.grendel.auth.Session;
 import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.entities.dao.UserRepository;
