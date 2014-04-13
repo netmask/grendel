@@ -2,11 +2,10 @@ package com.wesabe.grendel.openpgp.tests;
 
 import com.google.common.collect.ImmutableList;
 import com.wesabe.grendel.openpgp.KeySet;
-import static com.wesabe.grendel.openpgp.KeySet.load;
-import static com.wesabe.grendel.openpgp.KeySet.load;
 import com.wesabe.grendel.openpgp.MessageReader;
 import com.wesabe.grendel.openpgp.MessageWriter;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -14,8 +13,10 @@ import org.junit.runner.RunWith;
 
 import java.io.FileInputStream;
 import java.security.SecureRandom;
+import java.security.Security;
 import java.util.Random;
 
+import static com.wesabe.grendel.openpgp.KeySet.load;
 import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(Enclosed.class)
@@ -27,6 +28,8 @@ public class MessageWriterTest {
 		
 		@Before
 		public void setup() throws Exception {
+            Security.addProvider(new BouncyCastleProvider());
+            
 			final FileInputStream keyRingFile = new FileInputStream("src/test/resources/secret-keyring.gpg");
 			this.owner = load(keyRingFile).unlock("test".toCharArray());
 			
