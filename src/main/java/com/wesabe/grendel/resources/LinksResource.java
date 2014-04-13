@@ -1,11 +1,11 @@
 package com.wesabe.grendel.resources;
 
 import com.wesabe.grendel.auth.Session;
+import com.wesabe.grendel.decorators.LinkListRepresentation;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.entities.dao.DocumentRepository;
 import com.wesabe.grendel.entities.dao.UserRepository;
-import com.wesabe.grendel.decorators.LinkListRepresentation;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -43,7 +43,7 @@ public class LinksResource {
                 .getContext()
                 .getAuthentication();
 
-        Session session = (Session)authenticationToken.getPrincipal();
+        Session session = (Session) authenticationToken.getPrincipal();
         final Document doc = documentRepository.findByOwnerAndName(session.getUser(), documentName);
         if (doc == null) {
             throw new WebApplicationException(Status.NOT_FOUND);

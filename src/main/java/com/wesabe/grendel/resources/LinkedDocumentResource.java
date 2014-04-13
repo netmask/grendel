@@ -60,7 +60,7 @@ public class LinkedDocumentResource {
                 .getContext()
                 .getAuthentication();
 
-        Session session = (Session)authenticationToken.getPrincipal();
+        Session session = (Session) authenticationToken.getPrincipal();
 
         final User owner = findUser(ownerId);
         final Document doc = findDocument(owner, name);
@@ -95,7 +95,7 @@ public class LinkedDocumentResource {
                 .getContext()
                 .getAuthentication();
 
-        Session session = (Session)authenticationToken.getPrincipal();
+        Session session = (Session) authenticationToken.getPrincipal();
 
         final User owner = findUser(ownerId);
         final Document doc = findDocument(owner, name);

@@ -32,9 +32,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/users/{user}",
                         "/users/{user}/documents/{document_id}")
                 .authenticated()
-                    .and()
+                .and()
                 .headers()
-                    .and()
+                .and()
                 .httpBasic();
     }
 }

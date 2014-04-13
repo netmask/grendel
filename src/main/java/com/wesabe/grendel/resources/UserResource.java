@@ -76,7 +76,7 @@ public class UserResource {
                 .getContext()
                 .getAuthentication();
 
-        Session session = (Session)authenticationToken.getPrincipal();
+        Session session = (Session) authenticationToken.getPrincipal();
 
         checkPreconditions(request, session.getUser());
 

@@ -1,9 +1,9 @@
 package com.wesabe.grendel.resources;
 
 import com.wesabe.grendel.auth.Session;
+import com.wesabe.grendel.decorators.LinkedDocumentListRepresentation;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.dao.UserRepository;
-import com.wesabe.grendel.decorators.LinkedDocumentListRepresentation;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -39,7 +39,7 @@ public class LinkedDocumentsResource {
                 .getContext()
                 .getAuthentication();
 
-        Session session = (Session)authenticationToken.getPrincipal();
+        Session session = (Session) authenticationToken.getPrincipal();
 
 
         return new LinkedDocumentListRepresentation(uriInfo, session.getUser());

@@ -2,7 +2,8 @@ package com.wesabe.grendel.decorators;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import javax.validation.constraints.*;
+
+import javax.validation.constraints.NotNull;
 
 import static java.util.Arrays.copyOf;
 import static java.util.Arrays.fill;
@@ -21,7 +22,7 @@ import static java.util.Arrays.fill;
  *
  * @author coda
  */
-public class UpdateUserRepresentation{
+public class UpdateUserRepresentation {
 
     @NotNull
     private char[] password;

@@ -2,9 +2,9 @@ package com.wesabe.grendel.decorators;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wesabe.grendel.decorators.UserListRepresentation.UserListItem;
 import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
-import com.wesabe.grendel.decorators.UserListRepresentation.UserListItem;
 import com.wesabe.grendel.resources.LinkedDocumentResource;
 
 import javax.ws.rs.core.UriInfo;

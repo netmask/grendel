@@ -34,15 +34,14 @@ public class DocumentRepository {
     public Document findByOwnerAndName(User owner, String name) {
         return new WithSession<Document>(transactionManager).transaction(entityManager1 ->
                 entityManager1.createNamedQuery("com.wesabe.grendel.entities.Document.ByOwnerAndName", Document.class)
-                .setParameter("owner", owner)
-                .setParameter("name", name)
-                .getSingleResult());
+                        .setParameter("owner", owner)
+                        .setParameter("name", name)
+                        .getSingleResult());
 
     }
 
     /**
      * Writes the {@link Document} to the database.
-     *
      */
     public Document saveOrUpdate(Document doc) {
         return new WithSession<Document>(transactionManager).transaction(entityManager -> {
@@ -55,17 +54,17 @@ public class DocumentRepository {
      * Deletes the {@link Document} from the database.
      */
     public void delete(Document doc) {
-         new WithSession<Boolean>(transactionManager).transaction(entityManager1 -> {
-             entityManager1.remove(entityManager1.merge(doc));
-             return true;
-         });
+        new WithSession<Boolean>(transactionManager).transaction(entityManager1 -> {
+            entityManager1.remove(entityManager1.merge(doc));
+            return true;
+        });
 
     }
 
-    public List<Document> getUserDocuments(User user){
+    public List<Document> getUserDocuments(User user) {
         return new WithSession<List<Document>>(transactionManager).transaction(entityManager1 ->
-                 entityManager1.createNamedQuery("com.wesabe.grendel.entities.Document.ByOwner", Document.class)
-                 .setParameter("owner", user)
-                 .getResultList());
+                entityManager1.createNamedQuery("com.wesabe.grendel.entities.Document.ByOwner", Document.class)
+                        .setParameter("owner", user)
+                        .getResultList());
     }
 }

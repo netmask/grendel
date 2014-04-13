@@ -46,7 +46,7 @@ public class GrendelAuthenticationProvider implements AuthenticationProvider {
             } catch (CryptographicException e) {
                 throw new AuthenticationCredentialsNotFoundException("Username or credentials invalid");
             }
-        }else {
+        } else {
             throw new UsernameNotFoundException("Username or credentials invalid");
         }
     }
@@ -59,7 +59,7 @@ public class GrendelAuthenticationProvider implements AuthenticationProvider {
     }
 
 
-    private List<GrantedAuthority> grantedAuthorities(){
+    private List<GrantedAuthority> grantedAuthorities() {
         List<GrantedAuthority> authorities = Lists.newArrayList();
         authorities.add(new SimpleGrantedAuthority("USER"));
         return authorities;

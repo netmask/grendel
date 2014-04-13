@@ -65,7 +65,7 @@ public class DocumentListRepresentation {
                     .getContext()
                     .getAuthentication();
 
-            Session session = (Session)authenticationToken.getPrincipal();
+            Session session = (Session) authenticationToken.getPrincipal();
 
             return uriInfo.getBaseUriBuilder()
                     .path(DocumentResource.class)

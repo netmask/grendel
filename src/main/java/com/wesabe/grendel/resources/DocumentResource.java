@@ -34,20 +34,17 @@ import static javax.ws.rs.core.Response.ok;
 @Transactional
 public class DocumentResource {
     private static final CacheControl CACHE_SETTINGS;
-
+    private final Provider<SecureRandom> randomProvider;
+    private final UserRepository userRepository;
+    private final DocumentRepository documentRepository;
     @Inject
     JpaTransactionManager transactionManager;
-
     static {
         CACHE_SETTINGS = new CacheControl();
         CACHE_SETTINGS.setNoCache(true);
         CACHE_SETTINGS.setNoStore(true);
         CACHE_SETTINGS.setPrivate(true);
     }
-
-    private final Provider<SecureRandom> randomProvider;
-    private final UserRepository userRepository;
-    private final DocumentRepository documentRepository;
 
     @Inject
     public DocumentResource(Provider<SecureRandom> randomProvider,
@@ -79,8 +76,7 @@ public class DocumentResource {
                 .getContext()
                 .getAuthentication();
 
-        Session session = (Session)authenticationToken.getPrincipal();
-
+        Session session = (Session) authenticationToken.getPrincipal();
 
 
         final Document doc = documentRepository.findByOwnerAndName(session.getUser(), name);
@@ -118,7 +114,7 @@ public class DocumentResource {
                 .getContext()
                 .getAuthentication();
 
-        Session session = (Session)authenticationToken.getPrincipal();
+        Session session = (Session) authenticationToken.getPrincipal();
 
         final Document doc = documentRepository.findByOwnerAndName(session.getUser(), name);
         if (doc == null) {
@@ -149,14 +145,14 @@ public class DocumentResource {
                 .getContext()
                 .getAuthentication();
 
-        Session session = (Session)authenticationToken.getPrincipal();
+        Session session = (Session) authenticationToken.getPrincipal();
 
         Document doc;
 
         try {
-            doc= documentRepository.findByOwnerAndName(session.getUser(), name);
+            doc = documentRepository.findByOwnerAndName(session.getUser(), name);
             checkPreconditions(request, doc);
-        }catch (NoResultException noResultException){
+        } catch (NoResultException noResultException) {
             doc = documentRepository.newDocument(session.getUser(), name, headers.getMediaType());
         }
 

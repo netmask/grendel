@@ -20,8 +20,8 @@ public class UserRepository {
     public boolean contains(String id) {
         return new WithSession<Boolean>(transactionManager).transaction(entityManager ->
                 entityManager.createNamedQuery("com.wesabe.grendel.entities.User.Exists", User.class)
-                .setParameter("id", id)
-                .getSingleResult() != null);
+                        .setParameter("id", id)
+                        .getSingleResult() != null);
 
     }
 
@@ -40,12 +40,11 @@ public class UserRepository {
     public List<User> findAll() {
         return new WithSession<List<User>>(transactionManager).transaction(entityManager ->
                 entityManager.createNamedQuery("com.wesabe.grendel.entities.User.All", User.class)
-                .getResultList());
+                        .getResultList());
     }
 
     /**
      * Writes the {@link User} to the database.
-     *
      */
     public User saveOrUpdate(User user) {
         return new WithSession<User>(transactionManager).transaction(entityManager -> {
@@ -57,8 +56,7 @@ public class UserRepository {
     /**
      * Deletes the {@link User} from the database.
      */
-    public void delete(User user)
-    {
+    public void delete(User user) {
         new WithSession<User>(transactionManager).transaction(entityManager -> {
             entityManager.remove(user);
             return user;

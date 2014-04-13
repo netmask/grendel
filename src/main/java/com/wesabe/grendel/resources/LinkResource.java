@@ -40,7 +40,7 @@ public class LinkResource {
                 .getContext()
                 .getAuthentication();
 
-        Session session = (Session)authenticationToken.getPrincipal();
+        Session session = (Session) authenticationToken.getPrincipal();
         final User reader = findUser(readerId);
         final Document doc = findDocument(session.getUser(), name);
 
@@ -54,14 +54,14 @@ public class LinkResource {
 
     @DELETE
     public Response deleteLink(@PathParam("user_id") String userId,
-            @PathParam("name") String name,
-            @PathParam("reader_id") String readerId) {
+                               @PathParam("name") String name,
+                               @PathParam("reader_id") String readerId) {
 
         UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder
                 .getContext()
                 .getAuthentication();
 
-        Session session = (Session)authenticationToken.getPrincipal();
+        Session session = (Session) authenticationToken.getPrincipal();
 
         final User reader = findUser(readerId);
         final Document doc = findDocument(session.getUser(), name);

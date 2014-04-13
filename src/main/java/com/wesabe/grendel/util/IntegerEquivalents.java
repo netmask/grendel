@@ -59,7 +59,7 @@ public final class IntegerEquivalents {
      * @throws IllegalArgumentException if {@code value} has no equivalent
      */
     public static <T extends IntegerEquivalent> List<T> fromIntArray(Class<T> enumType, int[] values) throws IllegalArgumentException {
-        final ImmutableList.Builder<T> builder =  ImmutableList.builder();
+        final ImmutableList.Builder<T> builder = ImmutableList.builder();
         for (int value : values) {
             builder.add(fromInt(enumType, value));
         }

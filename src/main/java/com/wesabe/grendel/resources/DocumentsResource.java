@@ -39,7 +39,7 @@ public class DocumentsResource {
                 .getContext()
                 .getAuthentication();
 
-        Session session = (Session)authenticationToken.getPrincipal();
+        Session session = (Session) authenticationToken.getPrincipal();
 
         return new DocumentListRepresentation(uriInfo,
                 documentRepository.getUserDocuments(session.getUser()));

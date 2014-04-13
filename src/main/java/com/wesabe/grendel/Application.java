@@ -1,5 +1,6 @@
 package com.wesabe.grendel;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.ServletProperties;
 import org.springframework.boot.SpringApplication;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
+import java.security.Security;
 
 import static com.wesabe.grendel.util.Banner.writeBanner;
 
@@ -27,15 +29,16 @@ import static com.wesabe.grendel.util.Banner.writeBanner;
 @EnableTransactionManagement
 public class Application  {
 
+    @PersistenceUnit
+    private EntityManagerFactory entityManagerFactory;
+
     public static void main(String[] args) {
+        Security.addProvider(new BouncyCastleProvider());
         writeBanner(System.out);
         SpringApplication application = new SpringApplication(Application.class);
         application.setShowBanner(false);
         application.run(args);
     }
-
-    @PersistenceUnit
-    private EntityManagerFactory entityManagerFactory;
 
     @Bean
     public ServletRegistrationBean jerseyServlet() {

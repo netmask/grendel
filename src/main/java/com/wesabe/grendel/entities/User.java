@@ -2,7 +2,6 @@ package com.wesabe.grendel.entities;
 
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.KeySet;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -39,7 +38,7 @@ public class User implements Serializable {
     @Column(name = "id")
     private String id;
 
-    @Column(name = "keyset", nullable = false )
+    @Column(name = "keyset", nullable = false)
     @Lob
     private byte[] encodedKeySet;
 

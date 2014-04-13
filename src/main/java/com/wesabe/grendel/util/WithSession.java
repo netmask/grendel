@@ -9,17 +9,13 @@ import javax.persistence.EntityManager;
  * 4/5/14 Created by Jonathan Garay
  */
 public class WithSession<T> {
-    public interface Seasonable<T> {
-        public T doStatement(EntityManager entityManager);
-    }
-
     private final JpaTransactionManager transactionManager;
 
     public WithSession(JpaTransactionManager manager) {
         this.transactionManager = manager;
     }
 
-    public T transaction(Seasonable<T> statement){
+    public T transaction(Seasonable<T> statement) {
         EntityManager entityManager = transactionManager
                 .getEntityManagerFactory()
                 .createEntityManager();
@@ -28,6 +24,10 @@ public class WithSession<T> {
         session.beginTransaction();
         T result = statement.doStatement(entityManager);
         session.getTransaction().commit();
-        return  result;
+        return result;
+    }
+
+    public interface Seasonable<T> {
+        public T doStatement(EntityManager entityManager);
     }
 }

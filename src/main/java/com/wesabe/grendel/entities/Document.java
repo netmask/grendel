@@ -1,10 +1,8 @@
 package com.wesabe.grendel.entities;
 
 import com.wesabe.grendel.openpgp.*;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import javax.ws.rs.core.MediaType;

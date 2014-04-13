@@ -2,7 +2,8 @@ package com.wesabe.grendel.decorators;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import javax.validation.constraints.*;
+
+import javax.validation.constraints.NotNull;
 
 import static java.util.Arrays.copyOf;
 import static java.util.Arrays.fill;
@@ -10,7 +11,7 @@ import static java.util.Arrays.fill;
 
 /**
  * A representation of a request to create a new user.
- * <p/>
+ * <p>
  * Example JSON:
  * <pre>
  * {
@@ -18,12 +19,12 @@ import static java.util.Arrays.fill;
  *   "password": "snoopersneekrit"
  * }
  * </pre>
- * <p/>
+ * <p>
  * Both {@code id} and {@code password} properties are required.
  *
  * @author coda
  */
-public class UserCreatedDecorator{
+public class UserCreatedDecorator {
 
     @NotNull
     private String id;
