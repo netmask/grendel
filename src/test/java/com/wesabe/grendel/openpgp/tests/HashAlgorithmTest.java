@@ -1,13 +1,13 @@
 package com.wesabe.grendel.openpgp.tests;
 
-import com.google.inject.internal.ImmutableList;
-import static com.google.inject.internal.ImmutableList.of;
+
 import com.wesabe.grendel.openpgp.HashAlgorithm;
 import org.bouncycastle.bcpg.HashAlgorithmTags;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import static com.google.common.collect.ImmutableList.of;
 import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(Enclosed.class)

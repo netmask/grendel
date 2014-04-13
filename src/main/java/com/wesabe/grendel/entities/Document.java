@@ -4,12 +4,14 @@ import com.wesabe.grendel.openpgp.*;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import javax.ws.rs.core.MediaType;
 import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Objects.equal;
 import static com.google.common.collect.Sets.newHashSet;
@@ -29,7 +31,15 @@ import static javax.ws.rs.core.MediaType.valueOf;
 @NamedQueries({
         @NamedQuery(
                 name = "com.wesabe.grendel.entities.Document.ByOwnerAndName",
-                query = "SELECT document FROM Document AS document WHERE document.name = :name AND document.owner = :owner"
+                query = "SELECT document " +
+                        "FROM Document AS document " +
+                        "LEFT JOIN FETCH document.owner " +
+                        "WHERE document.name = :name " +
+                        "AND document.owner = :owner"
+        ),
+        @NamedQuery(
+                name = "com.wesabe.grendel.entities.Document.ByOwner",
+                query = "SELECT document FROM Document AS document WHERE document.owner = :owner"
         )
 })
 public class Document implements Serializable {
@@ -39,6 +49,7 @@ public class Document implements Serializable {
     private String name;
 
     @Id
+    @ManyToOne(fetch = FetchType.EAGER)
     private User owner;
 
     @Column(name = "content_type", nullable = false, length = 40)
@@ -60,6 +71,7 @@ public class Document implements Serializable {
     @Version
     @Column(name = "version", nullable = false)
     private long version = 0;
+
 
     @Deprecated
     public Document() {
@@ -180,9 +192,9 @@ public class Document implements Serializable {
                                   byte[] body) throws CryptographicException {
 
         final Set<KeySet> recipients = newHashSetWithExpectedSize(linkedUsers.size());
-        for (User linkedUser : linkedUsers) {
-            recipients.add(linkedUser.getKeySet());
-        }
+
+        recipients.addAll(linkedUsers.stream().map(User::getKeySet)
+                .collect(Collectors.toList()));
 
         final MessageWriter writer = new MessageWriter(keySet, recipients, random);
         this.body = writer.write(body);

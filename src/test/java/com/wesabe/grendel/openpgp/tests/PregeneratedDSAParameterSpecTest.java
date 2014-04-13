@@ -7,9 +7,7 @@ import org.junit.runner.RunWith;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import static java.security.KeyPairGenerator.getInstance;
 import java.security.Signature;
-import static java.security.Signature.getInstance;
 import java.security.spec.DSAParameterSpec;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -33,23 +31,23 @@ public class PregeneratedDSAParameterSpecTest {
 		
 		@Test
 		public void itCanBeUsedToGenerateDSAKeyPairs() throws Exception {
-			final KeyPairGenerator generator = getInstance("DSA");
+			final KeyPairGenerator generator = KeyPairGenerator.getInstance("DSA");
 			generator.initialize(spec);
 			
 			final KeyPair kp = generator.generateKeyPair();
 			
-			final Signature signer = getInstance("DSA");
+			final Signature signer = Signature.getInstance("DSA");
 			signer.initSign(kp.getPrivate());
 			signer.update("oh hi, just testing my new keypair".getBytes());
 			final byte[] signature = signer.sign();
 			
-			final Signature verifier = getInstance("DSA");
+			final Signature verifier = Signature.getInstance("DSA");
 			verifier.initVerify(kp.getPublic());
 			verifier.update("oh hi, just testing my new keypair".getBytes());
 			
 			assertThat(verifier.verify(signature)).isTrue();
 			
-			final Signature falsifier = getInstance("DSA");
+			final Signature falsifier = Signature.getInstance("DSA");
 			falsifier.initVerify(kp.getPublic());
 			falsifier.update("oh hi, just MOO HOO HA HA testing my new keypair".getBytes());
 			

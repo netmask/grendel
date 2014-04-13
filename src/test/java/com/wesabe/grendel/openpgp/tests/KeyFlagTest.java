@@ -1,13 +1,11 @@
 package com.wesabe.grendel.openpgp.tests;
 
-import com.google.common.collect.ImmutableSet;
-import static com.google.common.collect.ImmutableSet.of;
-import static com.google.common.collect.ImmutableSet.of;
 import com.wesabe.grendel.openpgp.KeyFlag;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import static com.google.common.collect.ImmutableSet.of;
 import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(Enclosed.class)

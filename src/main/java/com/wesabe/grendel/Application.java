@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
@@ -23,6 +24,7 @@ import static com.wesabe.grendel.util.Banner.writeBanner;
 @ComponentScan
 @PropertySource("classpath:application.properties")
 @EnableAutoConfiguration
+@EnableTransactionManagement
 public class Application  {
 
     public static void main(String[] args) {
@@ -45,7 +47,7 @@ public class Application  {
     @Bean
     public JpaTransactionManager transactionManager(){
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory);
+        transactionManager.setEntityManagerFactory(entityManagerFactory);;
         return transactionManager;
     }
 }

@@ -40,7 +40,6 @@ public class User implements Serializable {
     private String id;
 
     @Column(name = "keyset", nullable = false )
-    @Basic(fetch=FetchType.LAZY)
     @Lob
     private byte[] encodedKeySet;
 

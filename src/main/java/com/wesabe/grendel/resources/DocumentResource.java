@@ -7,14 +7,14 @@ import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.persistence.NoResultException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -29,11 +29,14 @@ import static javax.ws.rs.core.Response.ok;
  *
  * @author coda
  */
-@RequestMapping("/users/{user_id}/documents/{name}")
-@Consumes(MediaType.WILDCARD)
-@Produces(MediaType.WILDCARD)
+@Path("/users/{user_id}/documents/{name}")
+@Produces(MediaType.APPLICATION_JSON)
+@Transactional
 public class DocumentResource {
     private static final CacheControl CACHE_SETTINGS;
+
+    @Inject
+    JpaTransactionManager transactionManager;
 
     static {
         CACHE_SETTINGS = new CacheControl();
@@ -47,8 +50,10 @@ public class DocumentResource {
     private final DocumentRepository documentRepository;
 
     @Inject
-    public DocumentResource(Provider<SecureRandom> randomProvider, UserRepository userRepository,
+    public DocumentResource(Provider<SecureRandom> randomProvider,
+                            UserRepository userRepository,
                             DocumentRepository documentRepository) {
+
         this.randomProvider = randomProvider;
         this.userRepository = userRepository;
         this.documentRepository = documentRepository;
@@ -62,18 +67,24 @@ public class DocumentResource {
      *
      * @throws CryptographicException
      */
-    @RequestMapping(method = RequestMethod.GET)
+    @GET
+    @Transactional
     public Response show(
             @Context Request request,
-            @PathVariable("user_id") String userId,
-            @PathVariable("name") String name) throws CryptographicException {
+            @PathParam("user_id") String userId,
+            @PathParam("name") String name) throws CryptographicException {
+
 
         UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder
                 .getContext()
                 .getAuthentication();
 
         Session session = (Session)authenticationToken.getPrincipal();
+
+
+
         final Document doc = documentRepository.findByOwnerAndName(session.getUser(), name);
+
 
         if (doc == null) {
             throw new WebApplicationException(Status.NOT_FOUND);
@@ -82,6 +93,8 @@ public class DocumentResource {
         checkPreconditions(request, doc);
 
         final byte[] body = doc.decryptBody(session.getKeySet());
+
+
         return ok()
                 .entity(body)
                 .type(doc.getContentType())
@@ -97,6 +110,7 @@ public class DocumentResource {
      * <strong>N.B.:</strong> Requires Basic authentication.
      */
     @DELETE
+    @Transactional
     public Response delete(@Context Request request,
                            @PathParam("user_id") String userId, @PathParam("name") String name) {
 
@@ -126,6 +140,7 @@ public class DocumentResource {
      * @throws CryptographicException
      */
     @PUT
+    @Transactional
     public Response store(@Context Request request, @Context HttpHeaders headers,
                           @PathParam("user_id") String userId,
                           @PathParam("name") String name, byte[] body) throws CryptographicException {
@@ -136,15 +151,17 @@ public class DocumentResource {
 
         Session session = (Session)authenticationToken.getPrincipal();
 
-        Document doc = documentRepository.findByOwnerAndName(session.getUser(), name);
+        Document doc;
 
-        if (doc == null) {
-            doc = documentRepository.newDocument(session.getUser(), name, headers.getMediaType());
-        } else {
+        try {
+            doc= documentRepository.findByOwnerAndName(session.getUser(), name);
             checkPreconditions(request, doc);
+        }catch (NoResultException noResultException){
+            doc = documentRepository.newDocument(session.getUser(), name, headers.getMediaType());
         }
 
         doc.setModifiedAt(new DateTime(DateTimeZone.UTC));
+
         doc.encryptAndSetBody(
                 session.getKeySet(),
                 randomProvider.get(),

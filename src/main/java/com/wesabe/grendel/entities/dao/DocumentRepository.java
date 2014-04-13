@@ -4,20 +4,20 @@ import com.wesabe.grendel.entities.Document;
 import com.wesabe.grendel.entities.User;
 import com.wesabe.grendel.util.WithSession;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.print.Doc;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
+@Repository
+@Transactional(propagation = Propagation.REQUIRED)
 public class DocumentRepository {
 
     @Inject
     JpaTransactionManager transactionManager;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     /**
      * Returns a new {@link Document} with the provided owner, name, and
@@ -56,10 +56,16 @@ public class DocumentRepository {
      */
     public void delete(Document doc) {
          new WithSession<Boolean>(transactionManager).transaction(entityManager1 -> {
-             entityManager1.remove(doc);
+             entityManager1.remove(entityManager1.merge(doc));
              return true;
          });
 
     }
 
+    public List<Document> getUserDocuments(User user){
+        return new WithSession<List<Document>>(transactionManager).transaction(entityManager1 ->
+                 entityManager1.createNamedQuery("com.wesabe.grendel.entities.Document.ByOwner", Document.class)
+                 .setParameter("owner", user)
+                 .getResultList());
+    }
 }

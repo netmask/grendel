@@ -8,9 +8,8 @@ import org.junit.runner.RunWith;
 
 import java.security.SecureRandom;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 
+import static java.util.logging.Logger.getLogger;
 import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(Enclosed.class)
@@ -26,12 +25,12 @@ public class SecureRandomProviderTest {
 		
 		@Test
 		public void itProvidesASecureRandomInstance() throws Exception {
-			assertThat(provider.get()).isInstanceOfAny(SecureRandom.class);
+			assertThat(provider.getObject()).isInstanceOfAny(SecureRandom.class);
 		}
 		
 		@Test
 		public void itProvidesTheSameInstance() throws Exception {
-			assertThat(provider.get()).isSameAs(provider.get());
+			assertThat(provider.getObject()).isSameAs(provider.getObject());
 		}
 	}
 }

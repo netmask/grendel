@@ -1,12 +1,7 @@
 package com.wesabe.grendel.openpgp.tests;
 
 import com.wesabe.grendel.openpgp.MasterKey;
-import static com.wesabe.grendel.openpgp.MasterKey.load;
-import com.wesabe.grendel.openpgp.SubKey;
-import static com.wesabe.grendel.openpgp.SubKey.load;
 import com.wesabe.grendel.openpgp.UnlockedSubKey;
-import com.wesabe.grendel.util.Iterators;
-import static com.wesabe.grendel.util.Iterators.toList;
 import org.bouncycastle.openpgp.PGPSecretKey;
 import org.bouncycastle.openpgp.PGPSecretKeyRing;
 import org.junit.Before;
@@ -17,6 +12,9 @@ import org.junit.runner.RunWith;
 import java.io.FileInputStream;
 import java.util.List;
 
+import static com.wesabe.grendel.openpgp.MasterKey.load;
+import static com.wesabe.grendel.openpgp.SubKey.load;
+import static com.wesabe.grendel.util.Iterators.toList;
 import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(Enclosed.class)

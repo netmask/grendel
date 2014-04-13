@@ -1,13 +1,6 @@
 package com.wesabe.grendel.openpgp.tests;
 
-import com.google.common.collect.ImmutableList;
-import static com.google.common.collect.ImmutableList.of;
-import static com.google.common.collect.ImmutableList.of;
-import static com.google.common.collect.ImmutableList.of;
-import static com.google.common.collect.ImmutableList.of;
 import com.wesabe.grendel.openpgp.*;
-import static com.wesabe.grendel.openpgp.MasterKey.load;
-import static com.wesabe.grendel.openpgp.SubKey.load;
 import org.bouncycastle.openpgp.PGPSecretKeyRing;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -18,6 +11,9 @@ import org.junit.runner.RunWith;
 
 import java.io.FileInputStream;
 
+import static com.google.common.collect.ImmutableList.of;
+import static com.wesabe.grendel.openpgp.MasterKey.load;
+import static com.wesabe.grendel.openpgp.SubKey.load;
 import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(Enclosed.class)
