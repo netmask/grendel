@@ -1,12 +1,14 @@
 package com.wesabe.grendel.modules.tests;
 
 import com.wesabe.grendel.modules.SecureRandomProvider;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 import java.security.SecureRandom;
+import java.security.Security;
 import java.util.logging.Level;
 
 import static java.util.logging.Logger.getLogger;
@@ -19,7 +21,9 @@ public class SecureRandomProviderTest {
 		
 		@Before
 		public void setup() throws Exception {
-			getLogger(SecureRandomProvider.class.getCanonicalName()).setLevel(Level.OFF);
+            Security.addProvider(new BouncyCastleProvider());
+
+            getLogger(SecureRandomProvider.class.getCanonicalName()).setLevel(Level.OFF);
 			this.provider = new SecureRandomProvider();
 		}
 		
