@@ -43,6 +43,9 @@ dependencies {
     compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.2.3"
 
     compile 'org.bouncycastle:bcpg-jdk15on:1.50'
+    compile 'org.bouncycastle:bcprov-jdk15on:1.50'
+    compile 'org.bouncycastle:bcpkix-jdk15on:1.50'
+
     compile 'com.google.guava:guava:16.0.1'
 
     compile 'com.fasterxml.uuid:java-uuid-generator:3.1.3'
