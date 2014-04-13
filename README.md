@@ -1,5 +1,5 @@
-Grendel
-=======
+
+![](https://travis-ci.org/netmask/grendel.svg "Build Status Images")
 
 Grendel is a RESTful web service which allows for the secure storage of users'
 documents.
