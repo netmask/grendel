@@ -48,8 +48,7 @@ public class UserCreatedDecorator {
     }
 
     @JsonSetter("id")
-    public void setId(String username) {
-        this.id = username;
+    public void setId(String username) { this.id = username;
     }
 
     public void sanitize() {

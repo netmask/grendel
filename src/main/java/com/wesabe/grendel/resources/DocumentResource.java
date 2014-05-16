@@ -8,6 +8,7 @@ import com.wesabe.grendel.openpgp.CryptographicException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,8 +38,10 @@ public class DocumentResource {
     private final Provider<SecureRandom> randomProvider;
     private final UserRepository userRepository;
     private final DocumentRepository documentRepository;
+
     @Inject
-    JpaTransactionManager transactionManager;
+    private JpaTransactionManager transactionManager;
+
     static {
         CACHE_SETTINGS = new CacheControl();
         CACHE_SETTINGS.setNoCache(true);
@@ -106,6 +109,7 @@ public class DocumentResource {
      * <strong>N.B.:</strong> Requires Basic authentication.
      */
     @DELETE
+    @PreAuthorize("hasAuthority('DOCUMENT_ACTIONS')")
     @Transactional
     public Response delete(@Context Request request,
                            @PathParam("user_id") String userId, @PathParam("name") String name) {
@@ -136,6 +140,7 @@ public class DocumentResource {
      * @throws CryptographicException
      */
     @PUT
+    @PreAuthorize("hasAuthority('DOCUMENT_ACTIONS')")
     @Transactional
     public Response store(@Context Request request, @Context HttpHeaders headers,
                           @PathParam("user_id") String userId,

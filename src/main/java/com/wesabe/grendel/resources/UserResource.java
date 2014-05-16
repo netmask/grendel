@@ -9,8 +9,10 @@ import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.UnlockedKeySet;
 import org.joda.time.DateTime;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -42,11 +44,13 @@ public class UserResource {
      * user.
      */
     @GET
+    @Transactional(readOnly = true)
     @Produces(MediaType.APPLICATION_JSON)
     public Response show(@Context Request request, @Context UriInfo uriInfo,
                          @PathParam("id") String id) {
 
         final User user = userRepository.findById(id);
+
         if (user == null) {
             throw new WebApplicationException(Status.NOT_FOUND);
         }
@@ -67,6 +71,7 @@ public class UserResource {
      * @throws CryptographicException
      */
     @PUT
+    @PreAuthorize("hasAuthority('USER_ACTIONS')")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response update(@Context Request request,
                            @PathParam("id") String id,
@@ -103,6 +108,7 @@ public class UserResource {
      * all their {@link Document}s.</strong>
      */
     @DELETE
+    @PreAuthorize("hasAuthority('USER_ACTIONS')")
     public Response delete(@Context Request request,
                            @Context UriInfo uriInfo,
                            @PathParam("id") String id) {

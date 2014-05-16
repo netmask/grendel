@@ -29,9 +29,10 @@ public class GrendelAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        authentication.setAuthenticated(false);
+
         final User user = userRepository.findById((String) authentication.getPrincipal());
 
-        authentication.setAuthenticated(false);
 
         if (user != null) {
             try {
@@ -61,7 +62,9 @@ public class GrendelAuthenticationProvider implements AuthenticationProvider {
 
     private List<GrantedAuthority> grantedAuthorities() {
         List<GrantedAuthority> authorities = Lists.newArrayList();
-        authorities.add(new SimpleGrantedAuthority("USER"));
+        authorities.add(new SimpleGrantedAuthority("USER_ACTIONS"));
+        authorities.add(new SimpleGrantedAuthority("DOCUMENT_ACTIONS"));
+
         return authorities;
     }
 }

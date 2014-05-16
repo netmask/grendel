@@ -2,12 +2,17 @@ package com.wesabe.grendel.entities;
 
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.KeySet;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+import org.hibernate.id.UUIDGenerator;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDateTime;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
+import java.util.UUID;
 
 import static com.google.common.base.Objects.equal;
 import static com.google.common.collect.Sets.newHashSet;
@@ -24,11 +29,19 @@ import static com.wesabe.grendel.util.HashCode.calculate;
 @NamedQueries(value = {
         @NamedQuery(
                 name = "com.wesabe.grendel.entities.User.Exists",
-                query = "SELECT user.id FROM User AS user WHERE user.id = :id"
+                query = "SELECT user.id FROM User AS user WHERE user.id = :id",
+                hints = {
+                        @QueryHint(name = "org.hibernate.cacheable",
+                                value = "false")
+                }
         ),
         @NamedQuery(
                 name = "com.wesabe.grendel.entities.User.All",
-                query = "SELECT user FROM User AS user ORDER BY user.id"
+                query = "SELECT user FROM User AS user ORDER BY user.id",
+                hints = {
+                        @QueryHint(name = "org.hibernate.cacheable",
+                                value = "false")
+                }
         )
 })
 public class User implements Serializable {
@@ -46,10 +59,12 @@ public class User implements Serializable {
     private KeySet keySet = null;
 
     @Column(name = "created_at", nullable = false)
-    private DateTime createdAt;
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+    private LocalDateTime createdAt;
 
     @Column(name = "modified_at", nullable = false)
-    private DateTime modifiedAt;
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+    private LocalDateTime modifiedAt;
 
     // FIXME coda@wesabe.com -- Dec 27, 2009: User#documents double-loads document primary keys.
     // This may be a bug in Hibernate, but the SQL this generates produces
@@ -93,6 +108,12 @@ public class User implements Serializable {
     @Column(name = "version", nullable = false)
     private long version = 0;
 
+
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(generator = "uuid")
+    @Type(type = "pg-uuid")
+    private UUID uuid;
+
     @Deprecated
     public User() {
         // blank constructor to be used by Hibernate
@@ -105,8 +126,9 @@ public class User implements Serializable {
      */
     public User(KeySet keySet) {
         setKeySet(keySet);
-        this.createdAt = new DateTime(DateTimeZone.UTC);
-        this.modifiedAt = new DateTime(DateTimeZone.UTC);
+        this.createdAt = new DateTime(DateTimeZone.UTC).toLocalDateTime();
+        this.modifiedAt = new DateTime(DateTimeZone.UTC).toLocalDateTime();
+        this.uuid = UUID.randomUUID();
     }
 
     /**
@@ -145,28 +167,28 @@ public class User implements Serializable {
      * Returns a UTC timestamp of when this user was created.
      */
     public DateTime getCreatedAt() {
-        return toUTC(createdAt);
+        return toUTC(createdAt.toDateTime());
     }
 
     /**
      * Sets a UTC timestamp of when this user was created.
      */
     public void setCreatedAt(DateTime createdAt) {
-        this.createdAt = toUTC(createdAt);
+        this.createdAt = toUTC(createdAt.toDateTime()).toLocalDateTime();
     }
 
     /**
      * Returns a UTC timestamp of when this user was last modified.
      */
     public DateTime getModifiedAt() {
-        return toUTC(modifiedAt);
+        return toUTC(modifiedAt.toDateTime());
     }
 
     /**
      * Sets a UTC timestamp of when this user was last modified.
      */
     public void setModifiedAt(DateTime modifiedAt) {
-        this.modifiedAt = toUTC(modifiedAt);
+        this.modifiedAt = toUTC(modifiedAt.toDateTime()).toLocalDateTime();
     }
 
     /**
@@ -222,5 +244,9 @@ public class User implements Serializable {
      */
     public String getETag() {
         return "user-" + id + '-' + version;
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 }

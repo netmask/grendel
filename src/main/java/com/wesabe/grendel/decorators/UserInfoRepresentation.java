@@ -55,6 +55,12 @@ public class UserInfoRepresentation {
         return user.getKeySet().toString();
     }
 
+    @JsonGetter("uuid")
+    public String getUUID() {
+        return user.getUuid().toString();
+    }
+
+
     @JsonIgnore
     public User getUser() {
         return user;

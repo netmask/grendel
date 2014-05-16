@@ -7,6 +7,7 @@ import com.wesabe.grendel.entities.dao.UserRepository;
 import com.wesabe.grendel.openpgp.CryptographicException;
 import com.wesabe.grendel.openpgp.KeySet;
 import com.wesabe.grendel.openpgp.KeySetGenerator;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -58,6 +59,7 @@ public class UsersResource {
      * @see UserResource
      */
     @POST
+    @PreAuthorize("hasAuthority('USER_ACTIONS')")
     public Response create(@Context UriInfo uriInfo, UserCreatedDecorator request) throws CryptographicException {
 
         final KeySet keySet = generator.generate(request.getId(), request.getPassword());
