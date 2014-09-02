@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -18,6 +19,9 @@ public class DocumentRepository {
 
     @Inject
     JpaTransactionManager transactionManager;
+
+    @Inject
+    EntityManager entityManager;
 
     /**
      * Returns a new {@link Document} with the provided owner, name, and
@@ -44,10 +48,8 @@ public class DocumentRepository {
      * Writes the {@link Document} to the database.
      */
     public Document saveOrUpdate(Document doc) {
-        return new WithSession<Document>(transactionManager).transaction(entityManager -> {
-            entityManager.persist(doc);
-            return doc;
-        });
+        entityManager.merge(doc);
+        return doc;
     }
 
     /**

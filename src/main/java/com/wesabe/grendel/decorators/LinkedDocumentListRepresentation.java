@@ -9,6 +9,7 @@ import com.wesabe.grendel.resources.LinkedDocumentResource;
 
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -16,16 +17,20 @@ import static com.google.common.collect.Lists.newArrayList;
 public class LinkedDocumentListRepresentation {
     private final UriInfo uriInfo;
     private final User user;
+    private final Set<Document> documentSet;
 
-    public LinkedDocumentListRepresentation(UriInfo uriInfo, User user) {
+    public LinkedDocumentListRepresentation(UriInfo uriInfo, User user, Set<Document> documentSet) {
         this.uriInfo = uriInfo;
         this.user = user;
+        this.documentSet = documentSet;
     }
+
 
     @JsonGetter("linked-documents")
     public List<DocumentListItem> listDocuments() {
         final List<DocumentListItem> items = newArrayList();
-        items.addAll(user.getLinkedDocuments().stream()
+
+        items.addAll(documentSet.stream()
                 .map(doc -> new DocumentListItem(uriInfo, user, doc))
                 .collect(Collectors.toList()));
         return items;
