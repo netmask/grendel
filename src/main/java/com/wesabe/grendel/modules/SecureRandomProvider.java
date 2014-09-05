@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 import static java.security.SecureRandom.getInstance;
 import static java.security.SecureRandom.getSeed;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
-import static org.apache.log4j.Logger.getLogger;
 
 /**
  * A Guice {@link Provider} which manages a {@link SecureRandom} instance.
@@ -24,7 +23,8 @@ import static org.apache.log4j.Logger.getLogger;
 @Service
 public class SecureRandomProvider implements FactoryBean<SecureRandom> {
     private static final int ENTROPY_UPDATE_SIZE = 64;
-    private static final Logger LOGGER = getLogger(SecureRandomProvider.class);
+
+    private static final Logger LOGGER = Logger.getRootLogger();
 
     private static final String PRNG_ALGORITHM = "SHA1PRNG";
     private static final String PRNG_PROVIDER = "SUN";
