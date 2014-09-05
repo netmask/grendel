@@ -1,7 +1,8 @@
 package com.wesabe.grendel.modules;
 
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 public class SecureRandomProvider implements FactoryBean<SecureRandom> {
     private static final int ENTROPY_UPDATE_SIZE = 64;
 
-    private static final Logger LOGGER = Logger.getRootLogger();
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SecureRandomProvider.class);
 
     private static final String PRNG_ALGORITHM = "SHA1PRNG";
     private static final String PRNG_PROVIDER = "SUN";
