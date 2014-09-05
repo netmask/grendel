@@ -45,9 +45,12 @@ public class SecureRandomProvider implements FactoryBean<SecureRandom> {
 
         LOGGER.info("Seeding PRNG");
         random.nextInt(); // force seeding
+        LOGGER.info("Next Seed PRNG");
 
         // update the PRNG every hour, starting in an hour
         pool.scheduleAtFixedRate(new UpdateTask(random, LOGGER), 1, 1, TimeUnit.HOURS);
+
+        LOGGER.info("Scheduled Seed PRNG");
     }
 
     @Override
